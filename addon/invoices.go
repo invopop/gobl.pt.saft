@@ -40,6 +40,11 @@ var (
 	sourceRefRegexp = regexp.MustCompile(sourceRefPattern)
 )
 
+var invoiceTags = &tax.TagSet{
+	Schema: bill.ShortSchemaInvoice,
+	List:   []*cbc.Definition{cashVATTag},
+}
+
 var invoiceWorkTypes = []cbc.Code{
 	WorkTypeProforma,
 	WorkTypeConsignmentInv,
