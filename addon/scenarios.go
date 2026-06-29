@@ -29,6 +29,13 @@ var invoiceScenarios = &tax.ScenarioSet{
 		},
 		{
 			Types: []cbc.Key{bill.InvoiceTypeStandard},
+			Tags:  []cbc.Key{TagCashVAT},
+			Ext: tax.ExtensionsOf(cbc.CodeMap{
+				ExtKeyCashVAT: "1",
+			}),
+		},
+		{
+			Types: []cbc.Key{bill.InvoiceTypeStandard},
 			Filter: func(doc any) bool {
 				inv, ok := doc.(*bill.Invoice)
 				if !ok {

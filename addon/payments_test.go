@@ -175,6 +175,24 @@ func TestPaymentValidation(t *testing.T) {
 		pmt.Ext = pmt.Ext.Set(saft.ExtKeySourceRef, "RGD RG SERIESA/123")
 		require.NoError(t, rules.Validate(pmt, withAddonContext()))
 	})
+
+	t.Run("method date matches issue date", func(t *testing.T) {
+		pmt := validPayment()
+		pmt.Methods[0].Date = cal.NewDate(2024, 3, 10) // == IssueDate
+		require.NoError(t, rules.Validate(pmt, withAddonContext()))
+	})
+
+	t.Run("method without date", func(t *testing.T) {
+		pmt := validPayment()
+		pmt.Methods[0].Date = nil
+		require.NoError(t, rules.Validate(pmt, withAddonContext()))
+	})
+
+	t.Run("method date differs from issue date", func(t *testing.T) {
+		pmt := validPayment()
+		pmt.Methods[0].Date = cal.NewDate(2024, 3, 11) // != IssueDate
+		assert.ErrorContains(t, rules.Validate(pmt, withAddonContext()), "payment method dates must match the issue date")
+	})
 }
 
 func TestPaymentSourceRefFormatValidation(t *testing.T) {
@@ -238,11 +256,13 @@ func TestPaymentNormalization(t *testing.T) {
 		assert.Equal(t, "RG", pmt.Ext.Get(saft.ExtKeyPaymentType).String())
 	})
 
-	t.Run("VAT cash", func(t *testing.T) {
+	t.Run("cash VAT", func(t *testing.T) {
 		pmt := validPayment()
-		pmt.SetTags("vat-cash")
+		pmt.SetTags("cash-vat")
 		norm.Normalize(pmt, tax.AddonContext(saft.V1))
 		assert.Equal(t, "RC", pmt.Ext.Get(saft.ExtKeyPaymentType).String())
+		// The cash-vat extension is invoice-only; payments must not carry it.
+		assert.Empty(t, pmt.Ext.Get(saft.ExtKeyCashVAT).String())
 	})
 
 	t.Run("normalize payment with nil extensions", func(t *testing.T) {

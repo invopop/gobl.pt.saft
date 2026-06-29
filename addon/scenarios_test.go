@@ -3,7 +3,7 @@ package saft_test
 import (
 	"testing"
 
-	"github.com/invopop/gobl.pt.saft/addon"
+	saft "github.com/invopop/gobl.pt.saft/addon"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/pay"
@@ -77,6 +77,32 @@ func TestInvoice(t *testing.T) {
 		assert.Equal(t, "ISE", tc.Ext.Get(saft.ExtKeyTaxRate).String())
 		assert.Equal(t, "reverse-charge", tc.Key.String())
 		assert.Equal(t, "M40", tc.Ext.Get(saft.ExtKeyExemption).String())
+	})
+
+	t.Run("cash-vat tag sets indicator", func(t *testing.T) {
+		inv := validInvoice()
+		inv.SetTags(saft.TagCashVAT)
+		require.NoError(t, inv.Calculate())
+		assert.Equal(t, "FT", inv.Tax.Ext.Get(saft.ExtKeyInvoiceType).String())
+		assert.Equal(t, "1", inv.Tax.Ext.Get(saft.ExtKeyCashVAT).String())
+		assert.NoError(t, rules.Validate(inv))
+	})
+
+	t.Run("no cash-vat tag omits indicator", func(t *testing.T) {
+		inv := validInvoice()
+		require.NoError(t, inv.Calculate())
+		assert.Empty(t, inv.Tax.Ext.Get(saft.ExtKeyCashVAT).String())
+		assert.NoError(t, rules.Validate(inv))
+	})
+
+	t.Run("simplified and cash-vat tags set both extensions", func(t *testing.T) {
+		inv := validInvoice()
+		inv.SetTags(tax.TagSimplified, saft.TagCashVAT)
+		inv.Series = "FS SERIES-A"
+		require.NoError(t, inv.Calculate())
+		assert.Equal(t, "FS", inv.Tax.Ext.Get(saft.ExtKeyInvoiceType).String())
+		assert.Equal(t, "1", inv.Tax.Ext.Get(saft.ExtKeyCashVAT).String())
+		assert.NoError(t, rules.Validate(inv))
 	})
 
 	t.Run("exempt", func(t *testing.T) {

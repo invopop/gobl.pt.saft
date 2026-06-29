@@ -21,6 +21,26 @@ const (
 	V1 cbc.Key = Key + "-v1"
 )
 
+// Add-on custom tags
+const (
+	// TagCashVAT indicates that the document is issued under the Cash VAT scheme
+	// (regime de IVA de Caixa).
+	TagCashVAT cbc.Key = "cash-vat"
+)
+
+var cashVATTag = &cbc.Definition{
+	Key: TagCashVAT,
+	Name: i18n.String{
+		i18n.EN: "Cash VAT Scheme",
+		i18n.PT: "Regime de IVA de Caixa",
+	},
+	Desc: i18n.String{
+		i18n.EN: here.Doc(`
+			Indicates that the document is issued under the Cash VAT scheme (regime de IVA de Caixa).
+		`),
+	},
+}
+
 func init() {
 	tax.RegisterAddonDef(newAddon())
 	rules.RegisterWithGuard(
@@ -91,6 +111,8 @@ func newAddon() *tax.AddonDef {
 		},
 		Tags: []*tax.TagSet{
 			deliveryTags,
+			invoiceTags,
+			paymentTags,
 		},
 		Extensions:  extensions,
 		Scenarios:   scenarios,
