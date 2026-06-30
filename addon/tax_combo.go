@@ -133,14 +133,20 @@ func taxComboRules() *rules.Set {
 	)
 }
 
-func rateTotalRules() *rules.Set {
-	return rules.For(new(tax.RateTotal),
-		rules.Field("ext",
-			rules.Assert("01", "region and tax rate are required",
-				tax.ExtensionsRequire(pt.ExtKeyRegion, ExtKeyTaxRate),
-			),
-			rules.Assert("02", "exemption is required when tax rate is exempt",
-				is.Func("exempt requires exemption", vatExtExemptRequiresExemption),
+func categoryTotalRules() *rules.Set {
+	return rules.For(new(tax.CategoryTotal),
+		rules.When(is.Func("is VAT", categoryTotalIsVAT),
+			rules.Field("rates",
+				rules.Each(
+					rules.Field("ext",
+						rules.Assert("01", "region and tax rate are required",
+							tax.ExtensionsRequire(pt.ExtKeyRegion, ExtKeyTaxRate),
+						),
+						rules.Assert("02", "exemption is required when tax rate is exempt",
+							is.Func("exempt requires exemption", vatExtExemptRequiresExemption),
+						),
+					),
+				),
 			),
 		),
 	)
@@ -150,6 +156,12 @@ func rateTotalRules() *rules.Set {
 func taxComboIsVAT(val any) bool {
 	c, ok := val.(*tax.Combo)
 	return ok && c != nil && c.Category == tax.CategoryVAT
+}
+
+// categoryTotalIsVAT checks if the category total is for the VAT category.
+func categoryTotalIsVAT(val any) bool {
+	ct, ok := val.(*tax.CategoryTotal)
+	return ok && ct != nil && ct.Code == tax.CategoryVAT
 }
 
 // vatExtExemptRequiresExemption checks that when tax rate is exempt, the exemption is present.

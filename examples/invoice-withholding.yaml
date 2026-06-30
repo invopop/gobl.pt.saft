@@ -1,0 +1,34 @@
+$schema: https://gobl.org/draft-0/bill/invoice
+$addons: ["pt-saft-v1"]
+uuid: "3aea7b56-59d8-4beb-90bd-f8f280d852a0"
+type: standard
+currency: EUR
+issue_date: "2024-08-03"
+tax:
+  notes:
+    - cat: IRS
+      text: "Art. 101.º CIRS"
+supplier:
+  uuid: 9de7584f-ea5c-42a7-b159-5e4c6a280a5c
+  tax_id:
+    country: PT
+    code: "545259045"
+  name: João Silva, Trabalhador Independente
+  addresses:
+    - street: Rua das Flores
+      code: 1000-000
+      locality: Lisboa
+customer:
+  name: Empresa Cliente, Lda.
+lines:
+  - i: 1
+    quantity: 1
+    item:
+      name: Serviços de consultoria
+      price: 1000.00
+    sum: 1000.00
+    taxes:
+      - cat: VAT
+        rate: standard
+      - cat: IRS
+        percent: "25%"
