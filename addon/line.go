@@ -119,7 +119,7 @@ func exemptionText(exemptionCode cbc.Code) string {
 }
 
 func isExemptionNote(n *org.Note) bool {
-	return n.Key == org.NoteKeyLegal && n.Src == ExtKeyExemption
+	return n != nil && n.Key == org.NoteKeyLegal && n.Src == ExtKeyExemption
 }
 
 func lineTaxExemptionCode(line *bill.Line) cbc.Code {
