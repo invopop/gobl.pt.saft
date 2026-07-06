@@ -1,4 +1,4 @@
-package saft
+package addon
 
 import (
 	"errors"

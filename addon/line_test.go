@@ -1,4 +1,4 @@
-package saft_test
+package addon_test
 
 import (
 	"testing"
@@ -21,13 +21,13 @@ func TestLineNormalization(t *testing.T) {
 	t.Run("nil line", func(t *testing.T) {
 		assert.NotPanics(t, func() {
 			var line *bill.Line
-			norm.Normalize(line, tax.AddonContext(saft.V1))
+			norm.Normalize(line, tax.AddonContext(addon.V1))
 		})
 	})
 
 	t.Run("line with no taxes", func(t *testing.T) {
 		line := new(bill.Line)
-		norm.Normalize(line, tax.AddonContext(saft.V1))
+		norm.Normalize(line, tax.AddonContext(addon.V1))
 		assert.Nil(t, line.Notes)
 	})
 
@@ -35,7 +35,7 @@ func TestLineNormalization(t *testing.T) {
 		line := &bill.Line{
 			Taxes: tax.Set{nil},
 		}
-		norm.Normalize(line, tax.AddonContext(saft.V1))
+		norm.Normalize(line, tax.AddonContext(addon.V1))
 		assert.Nil(t, line.Notes)
 	})
 
@@ -50,7 +50,7 @@ func TestLineNormalization(t *testing.T) {
 			},
 		}
 
-		norm.Normalize(line, tax.AddonContext(saft.V1))
+		norm.Normalize(line, tax.AddonContext(addon.V1))
 		assert.Nil(t, line.Notes)
 	})
 
@@ -60,19 +60,19 @@ func TestLineNormalization(t *testing.T) {
 				{
 					Category: tax.CategoryVAT,
 					Ext: tax.ExtensionsOf(cbc.CodeMap{
-						saft.ExtKeyExemption: "M04",
+						addon.ExtKeyExemption: "M04",
 					}),
 				},
 			},
 		}
 
-		norm.Normalize(line, tax.AddonContext(saft.V1))
+		norm.Normalize(line, tax.AddonContext(addon.V1))
 		require.Len(t, line.Notes, 1)
 
 		note := line.Notes[0]
 		assert.Equal(t, org.NoteKeyLegal, note.Key)
 		assert.Equal(t, "M04", note.Code.String())
-		assert.Equal(t, saft.ExtKeyExemption, note.Src)
+		assert.Equal(t, addon.ExtKeyExemption, note.Src)
 		assert.Equal(t, "Artigo 13.º do CIVA", note.Text)
 	})
 
@@ -88,13 +88,13 @@ func TestLineNormalization(t *testing.T) {
 				{
 					Category: tax.CategoryVAT,
 					Ext: tax.ExtensionsOf(cbc.CodeMap{
-						saft.ExtKeyExemption: "M04",
+						addon.ExtKeyExemption: "M04",
 					}),
 				},
 			},
 		}
 
-		norm.Normalize(line, tax.AddonContext(saft.V1))
+		norm.Normalize(line, tax.AddonContext(addon.V1))
 		require.Len(t, line.Notes, 2)
 
 		// The existing note is preserved
@@ -104,7 +104,7 @@ func TestLineNormalization(t *testing.T) {
 		exemptionNote := line.Notes[1]
 		assert.Equal(t, org.NoteKeyLegal, exemptionNote.Key)
 		assert.Equal(t, "M04", exemptionNote.Code.String())
-		assert.Equal(t, saft.ExtKeyExemption, exemptionNote.Src)
+		assert.Equal(t, addon.ExtKeyExemption, exemptionNote.Src)
 		assert.Equal(t, "Artigo 13.º do CIVA", exemptionNote.Text)
 	})
 
@@ -114,7 +114,7 @@ func TestLineNormalization(t *testing.T) {
 				{
 					Key:  org.NoteKeyLegal,
 					Code: "M03", // Code doesn't need to match. Validation will check this.
-					Src:  saft.ExtKeyExemption,
+					Src:  addon.ExtKeyExemption,
 					Text: "Artigo 13.º do CIVA",
 				},
 			},
@@ -122,13 +122,13 @@ func TestLineNormalization(t *testing.T) {
 				{
 					Category: tax.CategoryVAT,
 					Ext: tax.ExtensionsOf(cbc.CodeMap{
-						saft.ExtKeyExemption: "M04",
+						addon.ExtKeyExemption: "M04",
 					}),
 				},
 			},
 		}
 
-		norm.Normalize(line, tax.AddonContext(saft.V1))
+		norm.Normalize(line, tax.AddonContext(addon.V1))
 		require.Len(t, line.Notes, 1) // Should not add duplicate
 
 		note := line.Notes[0]
@@ -142,13 +142,13 @@ func TestLineNormalization(t *testing.T) {
 				{
 					Category: tax.CategoryVAT,
 					Ext: tax.ExtensionsOf(cbc.CodeMap{
-						saft.ExtKeyExemption: "INVALID",
+						addon.ExtKeyExemption: "INVALID",
 					}),
 				},
 			},
 		}
 
-		norm.Normalize(line, tax.AddonContext(saft.V1))
+		norm.Normalize(line, tax.AddonContext(addon.V1))
 		assert.Nil(t, line.Notes) // Should not add note for invalid code
 	})
 }
@@ -170,16 +170,16 @@ func TestLineValidation(t *testing.T) {
 			{
 				Category: tax.CategoryVAT,
 				Ext: tax.ExtensionsOf(cbc.CodeMap{
-					saft.ExtKeyExemption: "M04",
-					saft.ExtKeyTaxRate:   saft.TaxRateExempt,
-					"pt-region":          "PT",
+					addon.ExtKeyExemption: "M04",
+					addon.ExtKeyTaxRate:   addon.TaxRateExempt,
+					"pt-region":           "PT",
 				}),
 			},
 		}
 		line.Notes = []*org.Note{
 			{
 				Key:  org.NoteKeyLegal,
-				Src:  saft.ExtKeyExemption,
+				Src:  addon.ExtKeyExemption,
 				Code: "M04",
 				Text: "Artigo 13.º do CIVA",
 			},
@@ -193,7 +193,7 @@ func TestLineValidation(t *testing.T) {
 			{
 				Category: tax.CategoryVAT,
 				Ext: tax.ExtensionsOf(cbc.CodeMap{
-					saft.ExtKeyExemption: "M04",
+					addon.ExtKeyExemption: "M04",
 				}),
 			},
 		}
@@ -206,7 +206,7 @@ func TestLineValidation(t *testing.T) {
 		line.Notes = []*org.Note{
 			{
 				Key:  org.NoteKeyLegal,
-				Src:  saft.ExtKeyExemption,
+				Src:  addon.ExtKeyExemption,
 				Code: "M04",
 				Text: "Artigo 13.º do CIVA",
 			},
@@ -221,14 +221,14 @@ func TestLineValidation(t *testing.T) {
 			{
 				Category: tax.CategoryVAT,
 				Ext: tax.ExtensionsOf(cbc.CodeMap{
-					saft.ExtKeyExemption: "M04",
+					addon.ExtKeyExemption: "M04",
 				}),
 			},
 		}
 		line.Notes = []*org.Note{
 			{
 				Key:  org.NoteKeyLegal,
-				Src:  saft.ExtKeyExemption,
+				Src:  addon.ExtKeyExemption,
 				Code: "M01",
 				Text: "Artigo 13.º do CIVA",
 			},
@@ -243,20 +243,20 @@ func TestLineValidation(t *testing.T) {
 			{
 				Category: tax.CategoryVAT,
 				Ext: tax.ExtensionsOf(cbc.CodeMap{
-					saft.ExtKeyExemption: "M04",
+					addon.ExtKeyExemption: "M04",
 				}),
 			},
 		}
 		line.Notes = []*org.Note{
 			{
 				Key:  org.NoteKeyLegal,
-				Src:  saft.ExtKeyExemption,
+				Src:  addon.ExtKeyExemption,
 				Code: "M04",
 				Text: "Artigo 13.º do CIVA",
 			},
 			{
 				Key:  org.NoteKeyLegal,
-				Src:  saft.ExtKeyExemption,
+				Src:  addon.ExtKeyExemption,
 				Code: "M04",
 				Text: "Duplicate exemption note",
 			},
@@ -324,7 +324,7 @@ func validLine() *bill.Line {
 			Name: "Test Item",
 			Unit: "one",
 			Ext: tax.ExtensionsOf(cbc.CodeMap{
-				saft.ExtKeyProductType: saft.ProductTypeService,
+				addon.ExtKeyProductType: addon.ProductTypeService,
 			}),
 		},
 	}
