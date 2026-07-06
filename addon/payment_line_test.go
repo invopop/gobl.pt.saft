@@ -1,4 +1,4 @@
-package saft_test
+package addon_test
 
 import (
 	"testing"
@@ -57,14 +57,14 @@ func TestPaymentLineValidation(t *testing.T) {
 
 	t.Run("missing line tax exemption", func(t *testing.T) {
 		pl := validPaymentLine()
-		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(saft.ExtKeyTaxRate, saft.TaxRateExempt)
+		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(addon.ExtKeyTaxRate, addon.TaxRateExempt)
 
 		// First check that the exemption extension is required
 		err := rules.Validate(pl, withAddonContext())
 		assert.ErrorContains(t, err, "exemption is required when tax rate is exempt")
 
 		// Then add the exemption extension
-		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(saft.ExtKeyExemption, "M01")
+		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(addon.ExtKeyExemption, "M01")
 
 		// Now it should fail because the exemption note is missing
 		err = rules.Validate(pl, withAddonContext())
@@ -74,7 +74,7 @@ func TestPaymentLineValidation(t *testing.T) {
 		pl.Notes = []*org.Note{
 			{
 				Key:  org.NoteKeyLegal,
-				Src:  saft.ExtKeyExemption,
+				Src:  addon.ExtKeyExemption,
 				Code: "M01",
 				Text: "Artigo 13.º do CIVA",
 			},
@@ -92,8 +92,8 @@ func TestPaymentLineValidation(t *testing.T) {
 		pl := validPaymentLine()
 		pl.Tax.Categories[0].Rates = append(pl.Tax.Categories[0].Rates, &tax.RateTotal{
 			Ext: tax.ExtensionsOf(cbc.CodeMap{
-				pt.ExtKeyRegion:    "PT",
-				saft.ExtKeyTaxRate: "INT",
+				pt.ExtKeyRegion:     "PT",
+				addon.ExtKeyTaxRate: "INT",
 			}),
 		})
 
@@ -109,12 +109,12 @@ func TestPaymentLineValidation(t *testing.T) {
 
 	t.Run("payment line with valid exemption note", func(t *testing.T) {
 		pl := validPaymentLine()
-		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(saft.ExtKeyTaxRate, saft.TaxRateExempt)
-		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(saft.ExtKeyExemption, "M04")
+		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(addon.ExtKeyTaxRate, addon.TaxRateExempt)
+		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(addon.ExtKeyExemption, "M04")
 		pl.Notes = []*org.Note{
 			{
 				Key:  org.NoteKeyLegal,
-				Src:  saft.ExtKeyExemption,
+				Src:  addon.ExtKeyExemption,
 				Code: "M04",
 				Text: "Artigo 13.º do CIVA",
 			},
@@ -124,8 +124,8 @@ func TestPaymentLineValidation(t *testing.T) {
 
 	t.Run("payment line missing exemption note", func(t *testing.T) {
 		pl := validPaymentLine()
-		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(saft.ExtKeyTaxRate, saft.TaxRateExempt)
-		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(saft.ExtKeyExemption, "M05")
+		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(addon.ExtKeyTaxRate, addon.TaxRateExempt)
+		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(addon.ExtKeyExemption, "M05")
 		// No notes added
 		err := rules.Validate(pl, withAddonContext())
 		assert.ErrorContains(t, err, "exemption notes invalid")
@@ -136,7 +136,7 @@ func TestPaymentLineValidation(t *testing.T) {
 		pl.Notes = []*org.Note{
 			{
 				Key:  org.NoteKeyLegal,
-				Src:  saft.ExtKeyExemption,
+				Src:  addon.ExtKeyExemption,
 				Code: "M04",
 				Text: "Artigo 13.º do CIVA",
 			},
@@ -147,12 +147,12 @@ func TestPaymentLineValidation(t *testing.T) {
 
 	t.Run("payment line with mismatched exemption note code", func(t *testing.T) {
 		pl := validPaymentLine()
-		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(saft.ExtKeyTaxRate, saft.TaxRateExempt)
-		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(saft.ExtKeyExemption, "M03")
+		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(addon.ExtKeyTaxRate, addon.TaxRateExempt)
+		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(addon.ExtKeyExemption, "M03")
 		pl.Notes = []*org.Note{
 			{
 				Key:  org.NoteKeyLegal,
-				Src:  saft.ExtKeyExemption,
+				Src:  addon.ExtKeyExemption,
 				Code: "M01",
 				Text: "Artigo 13.º do CIVA",
 			},
@@ -163,18 +163,18 @@ func TestPaymentLineValidation(t *testing.T) {
 
 	t.Run("payment line with too many exemption notes", func(t *testing.T) {
 		pl := validPaymentLine()
-		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(saft.ExtKeyTaxRate, saft.TaxRateExempt)
-		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(saft.ExtKeyExemption, "M02")
+		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(addon.ExtKeyTaxRate, addon.TaxRateExempt)
+		pl.Tax.Categories[0].Rates[0].Ext = pl.Tax.Categories[0].Rates[0].Ext.Set(addon.ExtKeyExemption, "M02")
 		pl.Notes = []*org.Note{
 			{
 				Key:  org.NoteKeyLegal,
-				Src:  saft.ExtKeyExemption,
+				Src:  addon.ExtKeyExemption,
 				Code: "M02",
 				Text: "Artigo 13.º do CIVA",
 			},
 			{
 				Key:  org.NoteKeyLegal,
-				Src:  saft.ExtKeyExemption,
+				Src:  addon.ExtKeyExemption,
 				Code: "M02",
 				Text: "Duplicate exemption note",
 			},
@@ -198,8 +198,8 @@ func validPaymentLine() *bill.PaymentLine {
 					Rates: []*tax.RateTotal{
 						{
 							Ext: tax.ExtensionsOf(cbc.CodeMap{
-								pt.ExtKeyRegion:    "PT",
-								saft.ExtKeyTaxRate: "NOR",
+								pt.ExtKeyRegion:     "PT",
+								addon.ExtKeyTaxRate: "NOR",
 							}),
 						},
 					},
