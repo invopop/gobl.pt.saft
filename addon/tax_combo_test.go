@@ -320,3 +320,63 @@ func TestTaxComboValidate(t *testing.T) {
 	})
 
 }
+
+func TestCategoryTotalValidation(t *testing.T) {
+	t.Run("VAT category total missing extensions is rejected", func(t *testing.T) {
+		ct := &tax.CategoryTotal{
+			Code: tax.CategoryVAT,
+			Rates: []*tax.RateTotal{
+				{Percent: num.NewPercentage(230, 3)}, // no pt-region / pt-saft-tax-rate
+			},
+		}
+		err := rules.Validate(ct, withAddonContext())
+		assert.ErrorContains(t, err, "region and tax rate are required")
+	})
+
+	t.Run("VAT rate total exempt without exemption is rejected", func(t *testing.T) {
+		ct := &tax.CategoryTotal{
+			Code: tax.CategoryVAT,
+			Rates: []*tax.RateTotal{
+				{
+					Ext: tax.ExtensionsOf(cbc.CodeMap{
+						pt.ExtKeyRegion:     "PT",
+						addon.ExtKeyTaxRate: addon.TaxRateExempt,
+					}),
+				},
+			},
+		}
+		err := rules.Validate(ct, withAddonContext())
+		assert.ErrorContains(t, err, "exemption is required when tax rate is exempt")
+	})
+
+	t.Run("valid VAT rate total passes", func(t *testing.T) {
+		ct := &tax.CategoryTotal{
+			Code: tax.CategoryVAT,
+			Rates: []*tax.RateTotal{
+				{
+					Percent: num.NewPercentage(230, 3),
+					Ext: tax.ExtensionsOf(cbc.CodeMap{
+						pt.ExtKeyRegion:     "PT",
+						addon.ExtKeyTaxRate: "NOR",
+					}),
+				},
+			},
+		}
+		err := rules.Validate(ct, withAddonContext())
+		assert.NoError(t, err)
+	})
+
+	t.Run("retained rate total without extensions passes", func(t *testing.T) {
+		for _, cat := range []cbc.Code{pt.TaxCategoryIRS, pt.TaxCategoryIRC} {
+			ct := &tax.CategoryTotal{
+				Code:     cat,
+				Retained: true,
+				Rates: []*tax.RateTotal{
+					{Percent: num.NewPercentage(23, 2)}, // rate-less category: no extensions
+				},
+			}
+			err := rules.Validate(ct, withAddonContext())
+			assert.NoErrorf(t, err, "category %s should not be rejected", cat)
+		}
+	})
+}
