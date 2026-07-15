@@ -14,6 +14,7 @@ const (
 	ExtKeyPaymentMeans cbc.Key = "pt-saft-payment-means"
 	ExtKeySource       cbc.Key = "pt-saft-source"
 	ExtKeySourceRef    cbc.Key = "pt-saft-source-ref"
+	ExtKeyCashVAT      cbc.Key = "pt-saft-cash-vat"
 
 	// Document types extensions
 	ExtKeyInvoiceType  cbc.Key = "pt-saft-invoice-type"
@@ -190,7 +191,7 @@ var extensions = []*cbc.Definition{
 				| Code | Name                                       | GOBL Type | GOBL Tax Tag |
 				| ---- | ------------------------------------------ | --------- | ------------ |
 				| RG   | Outro Recibo                               | ~receipt~ |              |
-				| RC   | Recibo no âmbito do regime de IVA de Caixa | ~receipt~ | ~vat-cash~   |
+				| RC   | Recibo no âmbito do regime de IVA de Caixa | ~receipt~ | ~cash-vat~   |
 
 				For example:
 
@@ -1442,6 +1443,72 @@ var extensions = []*cbc.Definition{
 				Name: i18n.String{
 					i18n.EN: "Returns slip or note",
 					i18n.PT: "Guia ou nota de devolução",
+				},
+			},
+		},
+	},
+	{
+		Key: ExtKeyCashVAT,
+		Name: i18n.String{
+			i18n.EN: "Cash VAT Scheme Indicator",
+			i18n.PT: "Indicador de Regime de IVA de Caixa",
+		},
+		Desc: i18n.String{
+			i18n.EN: here.Doc(`
+				SAF-T's ~CashVATSchemeIndicator~ (Indicador da adesão ao regime de IVA de Caixa) indicates
+				whether the document was issued by a taxpayer that has adhered to the Cash VAT scheme (regime
+				de IVA de Caixa).
+
+				In GOBL, this is set with the ~pt-saft-cash-vat~ extension in the invoice tax section. GOBL
+				sets it automatically to "1" when the invoice carries the ~cash-vat~ tag.
+
+				| Code | Description                                  |
+				| ---- | -------------------------------------------- |
+				| ~0~  | Not adhered to the Cash VAT scheme (default) |
+				| ~1~  | Adhered to the Cash VAT scheme               |
+
+				Example:
+
+				~~~js
+				{
+					"$schema": "https://gobl.org/draft-0/bill/invoice",
+					"$tags": [
+						"cash-vat"
+					],
+					// ...
+					"type": "standard",
+					// ...
+					"tax": {
+						"ext": {
+							"pt-saft-cash-vat": "1"
+						}
+					},
+					// ...
+				}
+				~~~
+			`),
+		},
+		Values: []*cbc.Definition{
+			{
+				Code: "0",
+				Name: i18n.String{
+					i18n.EN: "No",
+					i18n.PT: "Não",
+				},
+				Desc: i18n.String{
+					i18n.EN: "Not adhered to the Cash VAT scheme",
+					i18n.PT: "Sem adesão ao regime de IVA de Caixa",
+				},
+			},
+			{
+				Code: "1",
+				Name: i18n.String{
+					i18n.EN: "Yes",
+					i18n.PT: "Sim",
+				},
+				Desc: i18n.String{
+					i18n.EN: "Adhered to the Cash VAT scheme",
+					i18n.PT: "Adesão ao regime de IVA de Caixa",
 				},
 			},
 		},

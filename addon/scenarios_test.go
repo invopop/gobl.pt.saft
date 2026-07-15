@@ -79,6 +79,32 @@ func TestInvoice(t *testing.T) {
 		assert.Equal(t, "M40", tc.Ext.Get(addon.ExtKeyExemption).String())
 	})
 
+	t.Run("cash-vat tag sets indicator", func(t *testing.T) {
+		inv := validInvoice()
+		inv.SetTags(addon.TagCashVAT)
+		require.NoError(t, inv.Calculate())
+		assert.Equal(t, "FT", inv.Tax.Ext.Get(addon.ExtKeyInvoiceType).String())
+		assert.Equal(t, "1", inv.Tax.Ext.Get(addon.ExtKeyCashVAT).String())
+		assert.NoError(t, rules.Validate(inv))
+	})
+
+	t.Run("no cash-vat tag omits indicator", func(t *testing.T) {
+		inv := validInvoice()
+		require.NoError(t, inv.Calculate())
+		assert.Empty(t, inv.Tax.Ext.Get(addon.ExtKeyCashVAT).String())
+		assert.NoError(t, rules.Validate(inv))
+	})
+
+	t.Run("simplified and cash-vat tags set both extensions", func(t *testing.T) {
+		inv := validInvoice()
+		inv.SetTags(tax.TagSimplified, addon.TagCashVAT)
+		inv.Series = "FS SERIES-A"
+		require.NoError(t, inv.Calculate())
+		assert.Equal(t, "FS", inv.Tax.Ext.Get(addon.ExtKeyInvoiceType).String())
+		assert.Equal(t, "1", inv.Tax.Ext.Get(addon.ExtKeyCashVAT).String())
+		assert.NoError(t, rules.Validate(inv))
+	})
+
 	t.Run("exempt", func(t *testing.T) {
 		inv := validInvoice()
 		tc := inv.Lines[0].Taxes[0]

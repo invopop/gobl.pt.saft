@@ -11,10 +11,10 @@ import (
 	"github.com/invopop/gobl/tax"
 )
 
-// Add-on custom tags
-const (
-	TagVATCash cbc.Key = "vat-cash"
-)
+var paymentTags = &tax.TagSet{
+	Schema: bill.ShortSchemaPayment,
+	List:   []*cbc.Definition{cashVATTag},
+}
 
 func billPaymentRules() *rules.Set {
 	return rules.For(new(bill.Payment),
@@ -58,6 +58,9 @@ func billPaymentRules() *rules.Set {
 		),
 		rules.Field("total",
 			rules.Assert("10", "must be no less than 0", num.ZeroOrPositive),
+		),
+		rules.Assert("11", "payment method dates must match the issue date",
+			is.FuncError("method dates", paymentMethodDatesMatchIssueDate),
 		),
 	)
 }
@@ -106,6 +109,25 @@ func paymentCustomerNamePresent(val any) bool {
 	return pmt.Customer.Name != ""
 }
 
+// paymentMethodDatesMatchIssueDate asserts that any payment method with an
+// explicit date matches the payment's issue date, as required by DL 71/2013
+// Art. 6(3). Methods without a date are skipped.
+func paymentMethodDatesMatchIssueDate(val any) error {
+	pmt, ok := val.(*bill.Payment)
+	if !ok || pmt == nil {
+		return nil
+	}
+	for _, m := range pmt.Methods {
+		if m == nil || m.Date == nil {
+			continue
+		}
+		if *m.Date != pmt.IssueDate {
+			return fmt.Errorf("method date '%s' must match the issue date '%s'", m.Date.String(), pmt.IssueDate.String())
+		}
+	}
+	return nil
+}
+
 func paymentDocType(pmt *bill.Payment) cbc.Code {
 	if pmt.Ext.IsZero() {
 		return cbc.CodeEmpty
@@ -119,7 +141,7 @@ func normalizePayment(pmt *bill.Payment) {
 	}
 
 	// TODO: This could be done with scenarios when supported
-	if pmt.HasTags(TagVATCash) {
+	if pmt.HasTags(TagCashVAT) {
 		pmt.Ext = pmt.Ext.Set(ExtKeyPaymentType, PaymentTypeCash)
 	} else {
 		pmt.Ext = pmt.Ext.Set(ExtKeyPaymentType, PaymentTypeOther)
