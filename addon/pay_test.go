@@ -1,4 +1,4 @@
-package saft_test
+package addon_test
 
 import (
 	"testing"
@@ -12,7 +12,7 @@ import (
 )
 
 func TestPaymentMeansExtensions(t *testing.T) {
-	m := saft.PaymentMeansExtensions()
+	m := addon.PaymentMeansExtensions()
 	assert.False(t, m.IsZero())
 	assert.Equal(t, 11, m.Len())
 	assert.Equal(t, pay.MeansKeyCash, m.Lookup("NU"))
@@ -39,7 +39,7 @@ func TestPayInstructionsNormalization(t *testing.T) {
 			instr: &pay.Instructions{
 				Key: pay.MeansKeyCard,
 				Ext: tax.ExtensionsOf(cbc.CodeMap{
-					saft.ExtKeyPaymentMeans: "CB",
+					addon.ExtKeyPaymentMeans: "CB",
 				}),
 			},
 			out: "CC",
@@ -56,7 +56,7 @@ func TestPayInstructionsNormalization(t *testing.T) {
 			instr: &pay.Instructions{
 				Key: pay.MeansKeyOther,
 				Ext: tax.ExtensionsOf(cbc.CodeMap{
-					saft.ExtKeyPaymentMeans: "CB",
+					addon.ExtKeyPaymentMeans: "CB",
 				}),
 			},
 			out: "CB",
@@ -65,12 +65,12 @@ func TestPayInstructionsNormalization(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			norm.Normalize(tt.instr, tax.AddonContext(saft.V1))
+			norm.Normalize(tt.instr, tax.AddonContext(addon.V1))
 			if tt.instr == nil {
 				// Nothing to check. Not panicking is enough.
 				return
 			}
-			assert.Equal(t, tt.out, tt.instr.Ext.Get(saft.ExtKeyPaymentMeans))
+			assert.Equal(t, tt.out, tt.instr.Ext.Get(addon.ExtKeyPaymentMeans))
 		})
 	}
 }
@@ -96,7 +96,7 @@ func TestPayAdvanceNormalization(t *testing.T) {
 			adv: &pay.Record{
 				Key: pay.MeansKeyCard,
 				Ext: tax.ExtensionsOf(cbc.CodeMap{
-					saft.ExtKeyPaymentMeans: "CB",
+					addon.ExtKeyPaymentMeans: "CB",
 				}),
 			},
 			out: "CC",
@@ -113,7 +113,7 @@ func TestPayAdvanceNormalization(t *testing.T) {
 			adv: &pay.Record{
 				Key: pay.MeansKeyOther,
 				Ext: tax.ExtensionsOf(cbc.CodeMap{
-					saft.ExtKeyPaymentMeans: "CB",
+					addon.ExtKeyPaymentMeans: "CB",
 				}),
 			},
 			out: "CB",
@@ -122,12 +122,12 @@ func TestPayAdvanceNormalization(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			norm.Normalize(tt.adv, tax.AddonContext(saft.V1))
+			norm.Normalize(tt.adv, tax.AddonContext(addon.V1))
 			if tt.adv == nil {
 				// Nothing to check. Not panicking is enough.
 				return
 			}
-			assert.Equal(t, tt.out, tt.adv.Ext.Get(saft.ExtKeyPaymentMeans))
+			assert.Equal(t, tt.out, tt.adv.Ext.Get(addon.ExtKeyPaymentMeans))
 		})
 	}
 }

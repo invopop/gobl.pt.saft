@@ -1,5 +1,5 @@
-// Package saft provides the SAF-T addon for Portuguese invoices.
-package saft
+// package addon provides the SAF-T addon for Portuguese invoices.
+package addon
 
 import (
 	"github.com/invopop/gobl/cbc"

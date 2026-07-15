@@ -1,4 +1,4 @@
-package saft_test
+package addon_test
 
 import (
 	"testing"
@@ -24,7 +24,7 @@ func TestItemValidation(t *testing.T) {
 				Name: "Test Item",
 				Unit: "kg",
 				Ext: tax.ExtensionsOf(cbc.CodeMap{
-					saft.ExtKeyProductType: "P",
+					addon.ExtKeyProductType: "P",
 				}),
 			},
 		},
@@ -82,7 +82,7 @@ func TestItemExtProductTypeNormalization(t *testing.T) {
 			name: "extension present",
 			item: &org.Item{
 				Ext: tax.ExtensionsOf(cbc.CodeMap{
-					saft.ExtKeyProductType: "P",
+					addon.ExtKeyProductType: "P",
 				}),
 			},
 			out: "P",
@@ -125,9 +125,9 @@ func TestItemExtProductTypeNormalization(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			norm.Normalize(tt.item, tax.AddonContext(saft.V1))
+			norm.Normalize(tt.item, tax.AddonContext(addon.V1))
 			if tt.item != nil {
-				assert.Equal(t, tt.out, tt.item.Ext.Get(saft.ExtKeyProductType))
+				assert.Equal(t, tt.out, tt.item.Ext.Get(addon.ExtKeyProductType))
 			}
 		})
 	}
@@ -159,7 +159,7 @@ func TestItemUnitNormalization(t *testing.T) {
 
 	for _, ts := range tests {
 		t.Run(ts.name, func(t *testing.T) {
-			norm.Normalize(ts.item, tax.AddonContext(saft.V1))
+			norm.Normalize(ts.item, tax.AddonContext(addon.V1))
 			if ts.out != "" {
 				assert.Equal(t, ts.out, ts.item.Unit)
 			}

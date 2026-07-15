@@ -1,9 +1,9 @@
-package saft_test
+package addon_test
 
 import (
 	"testing"
 
-	saft "github.com/invopop/gobl.pt.saft/addon"
+	"github.com/invopop/gobl.pt.saft/addon"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/pay"
@@ -17,8 +17,8 @@ func TestInvoice(t *testing.T) {
 	t.Run("regular", func(t *testing.T) {
 		inv := validInvoice()
 		require.NoError(t, inv.Calculate())
-		assert.Equal(t, "FT", inv.Tax.Ext.Get(saft.ExtKeyInvoiceType).String())
-		assert.Equal(t, "NOR", inv.Lines[0].Taxes[0].Ext.Get(saft.ExtKeyTaxRate).String())
+		assert.Equal(t, "FT", inv.Tax.Ext.Get(addon.ExtKeyInvoiceType).String())
+		assert.Equal(t, "NOR", inv.Lines[0].Taxes[0].Ext.Get(addon.ExtKeyTaxRate).String())
 
 		assert.NoError(t, rules.Validate(inv))
 	})
@@ -35,7 +35,7 @@ func TestInvoice(t *testing.T) {
 		}
 		inv.Series = "FR SERIES-A"
 		require.NoError(t, inv.Calculate())
-		assert.Equal(t, "FR", inv.Tax.Ext.Get(saft.ExtKeyInvoiceType).String())
+		assert.Equal(t, "FR", inv.Tax.Ext.Get(addon.ExtKeyInvoiceType).String())
 		assert.NoError(t, rules.Validate(inv))
 	})
 
@@ -43,7 +43,7 @@ func TestInvoice(t *testing.T) {
 		inv := validInvoice()
 		inv.Lines[0].Taxes[0].Rate = tax.RateReduced
 		require.NoError(t, inv.Calculate())
-		assert.Equal(t, "RED", inv.Lines[0].Taxes[0].Ext.Get(saft.ExtKeyTaxRate).String())
+		assert.Equal(t, "RED", inv.Lines[0].Taxes[0].Ext.Get(addon.ExtKeyTaxRate).String())
 		assert.NoError(t, rules.Validate(inv))
 	})
 
@@ -51,7 +51,7 @@ func TestInvoice(t *testing.T) {
 		inv := validInvoice()
 		inv.Lines[0].Taxes[0].Rate = tax.RateIntermediate
 		require.NoError(t, inv.Calculate())
-		assert.Equal(t, "INT", inv.Lines[0].Taxes[0].Ext.Get(saft.ExtKeyTaxRate).String())
+		assert.Equal(t, "INT", inv.Lines[0].Taxes[0].Ext.Get(addon.ExtKeyTaxRate).String())
 		assert.NoError(t, rules.Validate(inv))
 	})
 
@@ -63,45 +63,45 @@ func TestInvoice(t *testing.T) {
 		tc := inv.Lines[0].Taxes[0]
 		tc.Key = ""
 		tc.Rate = tax.KeyExempt
-		tc.Ext = tc.Ext.Set(saft.ExtKeyExemption, "M40")
+		tc.Ext = tc.Ext.Set(addon.ExtKeyExemption, "M40")
 
 		require.NoError(t, inv.Calculate())
 
-		assert.Empty(t, tc.Ext.Get(saft.ExtKeyTaxRate).String())
+		assert.Empty(t, tc.Ext.Get(addon.ExtKeyTaxRate).String())
 		assert.Equal(t, "exempt", tc.Key.String())
-		assert.Equal(t, "M40", tc.Ext.Get(saft.ExtKeyExemption).String())
+		assert.Equal(t, "M40", tc.Ext.Get(addon.ExtKeyExemption).String())
 
 		// Add the addon and re-calculate
-		inv.Addons = tax.WithAddons(saft.V1)
+		inv.Addons = tax.WithAddons(addon.V1)
 		require.NoError(t, inv.Calculate())
-		assert.Equal(t, "ISE", tc.Ext.Get(saft.ExtKeyTaxRate).String())
+		assert.Equal(t, "ISE", tc.Ext.Get(addon.ExtKeyTaxRate).String())
 		assert.Equal(t, "reverse-charge", tc.Key.String())
-		assert.Equal(t, "M40", tc.Ext.Get(saft.ExtKeyExemption).String())
+		assert.Equal(t, "M40", tc.Ext.Get(addon.ExtKeyExemption).String())
 	})
 
 	t.Run("cash-vat tag sets indicator", func(t *testing.T) {
 		inv := validInvoice()
-		inv.SetTags(saft.TagCashVAT)
+		inv.SetTags(addon.TagCashVAT)
 		require.NoError(t, inv.Calculate())
-		assert.Equal(t, "FT", inv.Tax.Ext.Get(saft.ExtKeyInvoiceType).String())
-		assert.Equal(t, "1", inv.Tax.Ext.Get(saft.ExtKeyCashVAT).String())
+		assert.Equal(t, "FT", inv.Tax.Ext.Get(addon.ExtKeyInvoiceType).String())
+		assert.Equal(t, "1", inv.Tax.Ext.Get(addon.ExtKeyCashVAT).String())
 		assert.NoError(t, rules.Validate(inv))
 	})
 
 	t.Run("no cash-vat tag omits indicator", func(t *testing.T) {
 		inv := validInvoice()
 		require.NoError(t, inv.Calculate())
-		assert.Empty(t, inv.Tax.Ext.Get(saft.ExtKeyCashVAT).String())
+		assert.Empty(t, inv.Tax.Ext.Get(addon.ExtKeyCashVAT).String())
 		assert.NoError(t, rules.Validate(inv))
 	})
 
 	t.Run("simplified and cash-vat tags set both extensions", func(t *testing.T) {
 		inv := validInvoice()
-		inv.SetTags(tax.TagSimplified, saft.TagCashVAT)
+		inv.SetTags(tax.TagSimplified, addon.TagCashVAT)
 		inv.Series = "FS SERIES-A"
 		require.NoError(t, inv.Calculate())
-		assert.Equal(t, "FS", inv.Tax.Ext.Get(saft.ExtKeyInvoiceType).String())
-		assert.Equal(t, "1", inv.Tax.Ext.Get(saft.ExtKeyCashVAT).String())
+		assert.Equal(t, "FS", inv.Tax.Ext.Get(addon.ExtKeyInvoiceType).String())
+		assert.Equal(t, "1", inv.Tax.Ext.Get(addon.ExtKeyCashVAT).String())
 		assert.NoError(t, rules.Validate(inv))
 	})
 
@@ -111,20 +111,20 @@ func TestInvoice(t *testing.T) {
 		tc.Key = tax.KeyExempt
 		tc.Rate = ""
 		require.NoError(t, inv.Calculate())
-		assert.Equal(t, "ISE", tc.Ext.Get(saft.ExtKeyTaxRate).String())
-		assert.Equal(t, "M07", tc.Ext.Get(saft.ExtKeyExemption).String())
+		assert.Equal(t, "ISE", tc.Ext.Get(addon.ExtKeyTaxRate).String())
+		assert.Equal(t, "M07", tc.Ext.Get(addon.ExtKeyExemption).String())
 
 		// Allow override as this is "exempt"
-		tc.Ext = tc.Ext.Set(saft.ExtKeyExemption, "M04")
+		tc.Ext = tc.Ext.Set(addon.ExtKeyExemption, "M04")
 		require.NoError(t, inv.Calculate())
 		assert.Equal(t, "export", tc.Key.String())
-		assert.Equal(t, "M04", tc.Ext.Get(saft.ExtKeyExemption).String())
+		assert.Equal(t, "M04", tc.Ext.Get(addon.ExtKeyExemption).String())
 
 		// Do not allow override from "export" back to "exempt", but
 		// force the code back to default "M05"
-		tc.Ext = tc.Ext.Set(saft.ExtKeyExemption, "M01")
+		tc.Ext = tc.Ext.Set(addon.ExtKeyExemption, "M01")
 		require.NoError(t, inv.Calculate())
 		assert.Equal(t, "export", tc.Key.String())
-		assert.Equal(t, "M05", tc.Ext.Get(saft.ExtKeyExemption).String())
+		assert.Equal(t, "M05", tc.Ext.Get(addon.ExtKeyExemption).String())
 	})
 }

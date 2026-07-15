@@ -1,4 +1,4 @@
-package saft_test
+package addon_test
 
 import (
 	"testing"
@@ -23,17 +23,17 @@ import (
 // addon into the validation context. Used for standalone objects that don't
 // have Addons embedded (like bill.Payment, bill.Delivery, etc.).
 func withAddonContext() rules.WithContext {
-	return tax.AddonContext(saft.V1)
+	return tax.AddonContext(addon.V1)
 }
 
 func validInvoice() *bill.Invoice {
 	return &bill.Invoice{
 		Regime: tax.WithRegime("PT"),
-		Addons: tax.WithAddons(saft.V1),
+		Addons: tax.WithAddons(addon.V1),
 		Tax: &bill.Tax{
 			Ext: tax.ExtensionsOf(cbc.CodeMap{
-				saft.ExtKeyInvoiceType: saft.InvoiceTypeStandard,
-				saft.ExtKeySource:      saft.SourceBillingProduced,
+				addon.ExtKeyInvoiceType: addon.InvoiceTypeStandard,
+				addon.ExtKeySource:      addon.SourceBillingProduced,
 			}),
 		},
 		Supplier: &org.Party{
@@ -97,7 +97,7 @@ func TestInvoiceValidation(t *testing.T) {
 
 	t.Run("both doc types set", func(t *testing.T) {
 		inv := calculatedInvoice(t)
-		inv.Tax.Ext = inv.Tax.Ext.Set(saft.ExtKeyWorkType, saft.WorkTypeProforma)
+		inv.Tax.Ext = inv.Tax.Ext.Set(addon.ExtKeyWorkType, addon.WorkTypeProforma)
 		assert.ErrorContains(t, rules.Validate(inv), "but not both")
 	})
 
@@ -105,16 +105,16 @@ func TestInvoiceValidation(t *testing.T) {
 		inv := calculatedInvoice(t)
 		inv.Series = "PF SERIES-A"
 		inv.Tax.Ext = tax.ExtensionsOf(cbc.CodeMap{
-			saft.ExtKeyWorkType: saft.WorkTypeProforma,
-			saft.ExtKeySource:   saft.SourceBillingProduced,
+			addon.ExtKeyWorkType: addon.WorkTypeProforma,
+			addon.ExtKeySource:   addon.SourceBillingProduced,
 		})
 		require.NoError(t, rules.Validate(inv))
 	})
 
 	t.Run("invalid work type", func(t *testing.T) {
 		inv := calculatedInvoice(t)
-		inv.Tax.Ext = inv.Tax.Ext.Delete(saft.ExtKeyInvoiceType)
-		inv.Tax.Ext = inv.Tax.Ext.Set(saft.ExtKeyWorkType, saft.WorkTypeBudgets)
+		inv.Tax.Ext = inv.Tax.Ext.Delete(addon.ExtKeyInvoiceType)
+		inv.Tax.Ext = inv.Tax.Ext.Set(addon.ExtKeyWorkType, addon.WorkTypeBudgets)
 		assert.ErrorContains(t, rules.Validate(inv), "invoice work type is not valid")
 	})
 
@@ -145,40 +145,40 @@ func TestInvoiceValidation(t *testing.T) {
 
 	t.Run("missing source billing", func(t *testing.T) {
 		inv := calculatedInvoice(t)
-		inv.Tax.Ext = inv.Tax.Ext.Delete(saft.ExtKeySource)
+		inv.Tax.Ext = inv.Tax.Ext.Delete(addon.ExtKeySource)
 		assert.ErrorContains(t, rules.Validate(inv), "tax requires 'pt-saft-source' extension")
 	})
 
 	t.Run("source billing produced - no source doc ref required", func(t *testing.T) {
 		inv := calculatedInvoice(t)
-		inv.Tax.Ext = inv.Tax.Ext.Set(saft.ExtKeySource, saft.SourceBillingProduced)
+		inv.Tax.Ext = inv.Tax.Ext.Set(addon.ExtKeySource, addon.SourceBillingProduced)
 		require.NoError(t, rules.Validate(inv))
 	})
 
 	t.Run("source billing integrated - source doc ref required", func(t *testing.T) {
 		inv := calculatedInvoice(t)
-		inv.Tax.Ext = inv.Tax.Ext.Set(saft.ExtKeySource, saft.SourceBillingIntegrated)
+		inv.Tax.Ext = inv.Tax.Ext.Set(addon.ExtKeySource, addon.SourceBillingIntegrated)
 		assert.ErrorContains(t, rules.Validate(inv), "tax requires 'pt-saft-source-ref' extension when source is not produced")
 
 		// Add source doc ref - should pass
-		inv.Tax.Ext = inv.Tax.Ext.Set(saft.ExtKeySourceRef, "FTM abc/00001")
+		inv.Tax.Ext = inv.Tax.Ext.Set(addon.ExtKeySourceRef, "FTM abc/00001")
 		require.NoError(t, rules.Validate(inv))
 	})
 
 	t.Run("source billing manual - source doc ref required", func(t *testing.T) {
 		inv := calculatedInvoice(t)
-		inv.Tax.Ext = inv.Tax.Ext.Set(saft.ExtKeySource, saft.SourceBillingManual)
+		inv.Tax.Ext = inv.Tax.Ext.Set(addon.ExtKeySource, addon.SourceBillingManual)
 		assert.ErrorContains(t, rules.Validate(inv), "tax requires 'pt-saft-source-ref' extension when source is not produced")
 
 		// Add source doc ref
-		inv.Tax.Ext = inv.Tax.Ext.Set(saft.ExtKeySourceRef, "FTD FT SERIESA/123")
+		inv.Tax.Ext = inv.Tax.Ext.Set(addon.ExtKeySourceRef, "FTD FT SERIESA/123")
 		require.NoError(t, rules.Validate(inv))
 	})
 
 	t.Run("unpaid invoice-receipt", func(t *testing.T) {
 		inv := calculatedInvoice(t)
 		inv.Series = "FR SERIES-A"
-		inv.Tax.Ext = inv.Tax.Ext.Set(saft.ExtKeyInvoiceType, saft.InvoiceTypeInvoiceReceipt)
+		inv.Tax.Ext = inv.Tax.Ext.Set(addon.ExtKeyInvoiceType, addon.InvoiceTypeInvoiceReceipt)
 		inv.Totals = &bill.Totals{
 			Due: num.NewAmount(10, 2),
 		}
@@ -247,22 +247,22 @@ func TestInvoiceSeriesValidation(t *testing.T) {
 func TestSourceRefFormatValidation(t *testing.T) {
 	t.Run("missing source ref", func(t *testing.T) {
 		inv := calculatedInvoice(t)
-		inv.Tax.Ext = inv.Tax.Ext.Delete(saft.ExtKeySourceRef)
+		inv.Tax.Ext = inv.Tax.Ext.Delete(addon.ExtKeySourceRef)
 		require.NoError(t, rules.Validate(inv))
 	})
 
 	t.Run("missing invoice type", func(t *testing.T) {
 		inv := calculatedInvoice(t)
-		inv.Tax.Ext = inv.Tax.Ext.Delete(saft.ExtKeyInvoiceType)
-		inv.Tax.Ext = inv.Tax.Ext.Set(saft.ExtKeyWorkType, saft.WorkTypeProforma)
+		inv.Tax.Ext = inv.Tax.Ext.Delete(addon.ExtKeyInvoiceType)
+		inv.Tax.Ext = inv.Tax.Ext.Set(addon.ExtKeyWorkType, addon.WorkTypeProforma)
 		inv.Series = "PF SERIES-A"
 		require.NoError(t, rules.Validate(inv))
 	})
 
 	t.Run("integrated document", func(t *testing.T) {
 		inv := calculatedInvoice(t)
-		inv.Tax.Ext = inv.Tax.Ext.Set(saft.ExtKeySource, saft.SourceBillingIntegrated)
-		inv.Tax.Ext = inv.Tax.Ext.Set(saft.ExtKeySourceRef, "FTR abc/00001")
+		inv.Tax.Ext = inv.Tax.Ext.Set(addon.ExtKeySource, addon.SourceBillingIntegrated)
+		inv.Tax.Ext = inv.Tax.Ext.Set(addon.ExtKeySourceRef, "FTR abc/00001")
 		require.NoError(t, rules.Validate(inv))
 	})
 
@@ -285,8 +285,8 @@ func TestSourceRefFormatValidation(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.ref, func(t *testing.T) {
 			inv := calculatedInvoice(t)
-			inv.Tax.Ext = inv.Tax.Ext.Set(saft.ExtKeySource, saft.SourceBillingManual)
-			inv.Tax.Ext = inv.Tax.Ext.Set(saft.ExtKeySourceRef, cbc.Code(test.ref))
+			inv.Tax.Ext = inv.Tax.Ext.Set(addon.ExtKeySource, addon.SourceBillingManual)
+			inv.Tax.Ext = inv.Tax.Ext.Set(addon.ExtKeySourceRef, cbc.Code(test.ref))
 
 			err := rules.Validate(inv)
 			if test.err == "" {
@@ -303,52 +303,52 @@ func TestInvoiceNormalization(t *testing.T) {
 		inv := validInvoice()
 		inv.Tax = nil
 
-		norm.Normalize(inv, tax.AddonContext(saft.V1))
+		norm.Normalize(inv, tax.AddonContext(addon.V1))
 
 		require.NotNil(t, inv.Tax)
 		require.NotNil(t, inv.Tax.Ext)
-		assert.Equal(t, saft.SourceBillingProduced, inv.Tax.Ext.Get(saft.ExtKeySource))
+		assert.Equal(t, addon.SourceBillingProduced, inv.Tax.Ext.Get(addon.ExtKeySource))
 	})
 
 	t.Run("normalize invoice with nil tax extensions", func(t *testing.T) {
 		inv := validInvoice()
 		inv.Tax = &bill.Tax{}
 
-		norm.Normalize(inv, tax.AddonContext(saft.V1))
+		norm.Normalize(inv, tax.AddonContext(addon.V1))
 
 		require.NotNil(t, inv.Tax.Ext)
-		assert.Equal(t, saft.SourceBillingProduced, inv.Tax.Ext.Get(saft.ExtKeySource))
+		assert.Equal(t, addon.SourceBillingProduced, inv.Tax.Ext.Get(addon.ExtKeySource))
 	})
 
 	t.Run("normalize invoice with missing source billing", func(t *testing.T) {
 		inv := validInvoice()
-		inv.Tax.Ext = inv.Tax.Ext.Delete(saft.ExtKeySource)
+		inv.Tax.Ext = inv.Tax.Ext.Delete(addon.ExtKeySource)
 
-		norm.Normalize(inv, tax.AddonContext(saft.V1))
+		norm.Normalize(inv, tax.AddonContext(addon.V1))
 
-		assert.Equal(t, saft.SourceBillingProduced, inv.Tax.Ext.Get(saft.ExtKeySource))
+		assert.Equal(t, addon.SourceBillingProduced, inv.Tax.Ext.Get(addon.ExtKeySource))
 	})
 
 	t.Run("normalize invoice with existing source billing", func(t *testing.T) {
 		inv := validInvoice()
-		inv.Tax.Ext = inv.Tax.Ext.Set(saft.ExtKeySource, saft.SourceBillingIntegrated)
+		inv.Tax.Ext = inv.Tax.Ext.Set(addon.ExtKeySource, addon.SourceBillingIntegrated)
 
-		norm.Normalize(inv, tax.AddonContext(saft.V1))
+		norm.Normalize(inv, tax.AddonContext(addon.V1))
 
-		assert.Equal(t, saft.SourceBillingIntegrated, inv.Tax.Ext.Get(saft.ExtKeySource))
+		assert.Equal(t, addon.SourceBillingIntegrated, inv.Tax.Ext.Get(addon.ExtKeySource))
 	})
 
 	t.Run("nil invoice", func(t *testing.T) {
 		assert.NotPanics(t, func() {
 			var inv *bill.Invoice
-			norm.Normalize(inv, tax.AddonContext(saft.V1))
+			norm.Normalize(inv, tax.AddonContext(addon.V1))
 		})
 	})
 
 	t.Run("sets default value date from issue date", func(t *testing.T) {
 		inv := validInvoice()
 		inv.ValueDate = nil
-		norm.Normalize(inv, tax.AddonContext(saft.V1))
+		norm.Normalize(inv, tax.AddonContext(addon.V1))
 		assert.Equal(t, &inv.IssueDate, inv.ValueDate)
 	})
 
@@ -356,14 +356,14 @@ func TestInvoiceNormalization(t *testing.T) {
 		inv := validInvoice()
 		inv.OperationDate = cal.NewDate(2022, 12, 30)
 		inv.ValueDate = nil
-		norm.Normalize(inv, tax.AddonContext(saft.V1))
+		norm.Normalize(inv, tax.AddonContext(addon.V1))
 		assert.Equal(t, inv.OperationDate, inv.ValueDate)
 	})
 
 	t.Run("keeps existing value date", func(t *testing.T) {
 		inv := validInvoice()
 		inv.ValueDate = cal.NewDate(2022, 12, 30)
-		norm.Normalize(inv, tax.AddonContext(saft.V1))
+		norm.Normalize(inv, tax.AddonContext(addon.V1))
 		assert.Equal(t, cal.NewDate(2022, 12, 30), inv.ValueDate)
 	})
 
@@ -372,7 +372,7 @@ func TestInvoiceNormalization(t *testing.T) {
 		inv.IssueDate = cal.Date{}
 		inv.ValueDate = nil
 
-		norm.Normalize(inv, tax.AddonContext(saft.V1))
+		norm.Normalize(inv, tax.AddonContext(addon.V1))
 
 		loc, err := time.LoadLocation("Europe/Lisbon")
 		require.NoError(t, err)
@@ -385,14 +385,14 @@ func TestInvoiceNormalization(t *testing.T) {
 			Category: tax.CategoryVAT,
 			Key:      tax.KeyReverseCharge,
 		}
-		norm.Normalize(inv, tax.AddonContext(saft.V1))
+		norm.Normalize(inv, tax.AddonContext(addon.V1))
 		assert.Equal(t, tax.KeyReverseCharge, inv.Lines[0].Taxes[0].Key)
-		assert.Equal(t, "ISE", inv.Lines[0].Taxes[0].Ext.Get(saft.ExtKeyTaxRate).String())
-		assert.Equal(t, "M40", inv.Lines[0].Taxes[0].Ext.Get(saft.ExtKeyExemption).String())
+		assert.Equal(t, "ISE", inv.Lines[0].Taxes[0].Ext.Get(addon.ExtKeyTaxRate).String())
+		assert.Equal(t, "M40", inv.Lines[0].Taxes[0].Ext.Get(addon.ExtKeyExemption).String())
 		require.Len(t, inv.Lines[0].Notes, 1)
 		assert.Equal(t, org.NoteKeyLegal, inv.Lines[0].Notes[0].Key)
 		assert.Equal(t, "M40", inv.Lines[0].Notes[0].Code.String())
-		assert.Equal(t, saft.ExtKeyExemption, inv.Lines[0].Notes[0].Src)
+		assert.Equal(t, addon.ExtKeyExemption, inv.Lines[0].Notes[0].Src)
 		assert.Equal(t, "Artigo 6.º n.º 6 alínea a) do CIVA, a contrário", inv.Lines[0].Notes[0].Text)
 	})
 }
@@ -445,7 +445,7 @@ func TestInvoicePaymentNormalization(t *testing.T) {
 			},
 		}
 
-		norm.Normalize(inv, tax.AddonContext(saft.V1))
+		norm.Normalize(inv, tax.AddonContext(addon.V1))
 
 		assert.Equal(t, &inv.IssueDate, inv.Payment.Advances[0].Date)
 	})
@@ -461,7 +461,7 @@ func TestInvoicePaymentNormalization(t *testing.T) {
 			},
 		}
 
-		norm.Normalize(inv, tax.AddonContext(saft.V1))
+		norm.Normalize(inv, tax.AddonContext(addon.V1))
 
 		loc, err := time.LoadLocation("Europe/Lisbon")
 		require.NoError(t, err)
@@ -474,7 +474,7 @@ func TestInvoicePaymentNormalization(t *testing.T) {
 		inv := validInvoice()
 		inv.Payment = nil
 
-		norm.Normalize(inv, tax.AddonContext(saft.V1))
+		norm.Normalize(inv, tax.AddonContext(addon.V1))
 
 		assert.Nil(t, inv.Payment)
 	})
@@ -534,7 +534,7 @@ func TestInvoiceTotalsValidation(t *testing.T) {
 
 func TestCorrectionDefinitions(t *testing.T) {
 	t.Run("addon requires a reason but does not duplicate regime types", func(t *testing.T) {
-		addon := tax.AddonForKey(saft.V1)
+		addon := tax.AddonForKey(addon.V1)
 		require.NotNil(t, addon.Corrections)
 		def := addon.Corrections.Def(bill.ShortSchemaInvoice)
 		require.NotNil(t, def)

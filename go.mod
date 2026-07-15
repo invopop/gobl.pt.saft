@@ -3,7 +3,7 @@ module github.com/invopop/gobl.pt.saft
 go 1.25.0
 
 require (
-	github.com/invopop/gobl v0.501.1-0.20260626173928-312f415519ad
+	github.com/invopop/gobl v0.502.2
 	github.com/stretchr/testify v1.11.1
 )
 

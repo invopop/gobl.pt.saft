@@ -1,4 +1,4 @@
-package saft_test
+package addon_test
 
 import (
 	"testing"
@@ -19,7 +19,7 @@ func TestNoteValidation(t *testing.T) {
 	t.Run("invalid exemption note - too long", func(t *testing.T) {
 		note := &org.Note{
 			Key:  org.NoteKeyLegal,
-			Src:  saft.ExtKeyExemption,
+			Src:  addon.ExtKeyExemption,
 			Text: "1234567890123456789012345678901234567890123456789012345678901", // 61 chars
 		}
 		err := rules.Validate(note, withAddonContext())
@@ -29,7 +29,7 @@ func TestNoteValidation(t *testing.T) {
 	t.Run("invalid exemption note - too short", func(t *testing.T) {
 		note := &org.Note{
 			Key:  org.NoteKeyLegal,
-			Src:  saft.ExtKeyExemption,
+			Src:  addon.ExtKeyExemption,
 			Text: "12345",
 		}
 		err := rules.Validate(note, withAddonContext())
@@ -39,7 +39,7 @@ func TestNoteValidation(t *testing.T) {
 	t.Run("valid exemption note - min length", func(t *testing.T) {
 		note := &org.Note{
 			Key:  org.NoteKeyLegal,
-			Src:  saft.ExtKeyExemption,
+			Src:  addon.ExtKeyExemption,
 			Text: "123456",
 		}
 
@@ -50,7 +50,7 @@ func TestNoteValidation(t *testing.T) {
 	t.Run("valid exemption note - max length", func(t *testing.T) {
 		note := &org.Note{
 			Key:  org.NoteKeyLegal,
-			Src:  saft.ExtKeyExemption,
+			Src:  addon.ExtKeyExemption,
 			Text: "123456789012345678901234567890123456789012345678901234567890", // 60 chars
 		}
 
