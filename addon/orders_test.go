@@ -1,4 +1,4 @@
-package saft_test
+package addon_test
 
 import (
 	"testing"
@@ -37,7 +37,7 @@ func TestOrderValidation(t *testing.T) {
 		ord := validOrder()
 
 		ord.Tax.Ext = tax.ExtensionsOf(cbc.CodeMap{
-			saft.ExtKeyWorkType: saft.WorkTypeProforma,
+			addon.ExtKeyWorkType: addon.WorkTypeProforma,
 		})
 
 		assert.ErrorContains(t, rules.Validate(ord, withAddonContext()), "work type must not be an invoice work type")
@@ -62,7 +62,7 @@ func TestOrderNormalization(t *testing.T) {
 	t.Run("nil order", func(t *testing.T) {
 		assert.NotPanics(t, func() {
 			var inv *bill.Order
-			norm.Normalize(inv, tax.AddonContext(saft.V1))
+			norm.Normalize(inv, tax.AddonContext(addon.V1))
 		})
 	})
 
@@ -70,20 +70,20 @@ func TestOrderNormalization(t *testing.T) {
 		ord := &bill.Order{
 			Type: bill.OrderTypePurchase,
 		}
-		norm.Normalize(ord, tax.AddonContext(saft.V1))
+		norm.Normalize(ord, tax.AddonContext(addon.V1))
 		require.NotNil(t, ord.Tax)
 		require.NotNil(t, ord.Tax.Ext)
-		assert.Equal(t, saft.WorkTypePurchaseOrder, ord.Tax.Ext.Get(saft.ExtKeyWorkType))
+		assert.Equal(t, addon.WorkTypePurchaseOrder, ord.Tax.Ext.Get(addon.ExtKeyWorkType))
 	})
 
 	t.Run("quote order type", func(t *testing.T) {
 		ord := &bill.Order{
 			Type: bill.OrderTypeQuote,
 		}
-		norm.Normalize(ord, tax.AddonContext(saft.V1))
+		norm.Normalize(ord, tax.AddonContext(addon.V1))
 		require.NotNil(t, ord.Tax)
 		require.NotNil(t, ord.Tax.Ext)
-		assert.Equal(t, saft.WorkTypeBudgets, ord.Tax.Ext.Get(saft.ExtKeyWorkType))
+		assert.Equal(t, addon.WorkTypeBudgets, ord.Tax.Ext.Get(addon.ExtKeyWorkType))
 	})
 
 	t.Run("respect existing value", func(t *testing.T) {
@@ -91,18 +91,18 @@ func TestOrderNormalization(t *testing.T) {
 			Type: bill.OrderTypePurchase,
 			Tax: &bill.Tax{
 				Ext: tax.ExtensionsOf(cbc.CodeMap{
-					saft.ExtKeyWorkType: saft.WorkTypeOther,
+					addon.ExtKeyWorkType: addon.WorkTypeOther,
 				}),
 			},
 		}
-		norm.Normalize(ord, tax.AddonContext(saft.V1))
-		assert.Equal(t, saft.WorkTypeOther, ord.Tax.Ext.Get(saft.ExtKeyWorkType))
+		norm.Normalize(ord, tax.AddonContext(addon.V1))
+		assert.Equal(t, addon.WorkTypeOther, ord.Tax.Ext.Get(addon.ExtKeyWorkType))
 	})
 
 	t.Run("sets default value date from issue date", func(t *testing.T) {
 		ord := validOrder()
 		ord.ValueDate = nil
-		norm.Normalize(ord, tax.AddonContext(saft.V1))
+		norm.Normalize(ord, tax.AddonContext(addon.V1))
 		assert.Equal(t, &ord.IssueDate, ord.ValueDate)
 	})
 
@@ -110,14 +110,14 @@ func TestOrderNormalization(t *testing.T) {
 		ord := validOrder()
 		ord.OperationDate = cal.NewDate(2024, 12, 2)
 		ord.ValueDate = nil
-		norm.Normalize(ord, tax.AddonContext(saft.V1))
+		norm.Normalize(ord, tax.AddonContext(addon.V1))
 		assert.Equal(t, ord.OperationDate, ord.ValueDate)
 	})
 
 	t.Run("keeps existing value date", func(t *testing.T) {
 		ord := validOrder()
 		ord.ValueDate = cal.NewDate(2024, 12, 2)
-		norm.Normalize(ord, tax.AddonContext(saft.V1))
+		norm.Normalize(ord, tax.AddonContext(addon.V1))
 		assert.Equal(t, cal.NewDate(2024, 12, 2), ord.ValueDate)
 	})
 
@@ -126,7 +126,7 @@ func TestOrderNormalization(t *testing.T) {
 		ord.IssueDate = cal.Date{}
 		ord.ValueDate = nil
 
-		norm.Normalize(ord, tax.AddonContext(saft.V1))
+		norm.Normalize(ord, tax.AddonContext(addon.V1))
 
 		loc, err := time.LoadLocation("Europe/Lisbon")
 		require.NoError(t, err)
@@ -139,11 +139,11 @@ func TestOrderNormalization(t *testing.T) {
 func validOrder() *bill.Order {
 	return &bill.Order{
 		Regime: tax.WithRegime("PT"),
-		Addons: tax.WithAddons(saft.V1),
+		Addons: tax.WithAddons(addon.V1),
 		Type:   bill.OrderTypePurchase,
 		Tax: &bill.Tax{
 			Ext: tax.ExtensionsOf(cbc.CodeMap{
-				saft.ExtKeyWorkType: saft.WorkTypePurchaseOrder,
+				addon.ExtKeyWorkType: addon.WorkTypePurchaseOrder,
 			}),
 		},
 		Supplier: &org.Party{
@@ -177,7 +177,7 @@ func validOrderLines() []*bill.Line {
 				Price: num.NewAmount(100, 0),
 				Unit:  "one",
 				Ext: tax.ExtensionsOf(cbc.CodeMap{
-					saft.ExtKeyProductType: saft.ProductTypeService,
+					addon.ExtKeyProductType: addon.ProductTypeService,
 				}),
 			},
 			Taxes: tax.Set{
@@ -185,8 +185,8 @@ func validOrderLines() []*bill.Line {
 					Category: "VAT",
 					Percent:  num.NewPercentage(230, 3),
 					Ext: tax.ExtensionsOf(cbc.CodeMap{
-						"pt-region":        "PT",
-						saft.ExtKeyTaxRate: saft.TaxRateNormal,
+						"pt-region":         "PT",
+						addon.ExtKeyTaxRate: addon.TaxRateNormal,
 					}),
 				},
 			},
