@@ -57,6 +57,7 @@ func billDeliveryRules() *rules.Set {
 					rules.Assert("05", "delivery supplier tax ID code is required", is.Present),
 				),
 			),
+			portuguesePostCodeRule("10", "delivery supplier post code must be in the 'NNNN-NNN' format"),
 		),
 		rules.Field("despatch_date",
 			rules.Assert("06", "delivery despatch date is required", is.Present),
@@ -71,6 +72,15 @@ func billDeliveryRules() *rules.Set {
 					rules.Assert("09", "delivery preceding code is required", is.Present),
 				),
 			),
+		),
+		rules.Field("customer",
+			portuguesePostCodeRule("11", "delivery customer post code must be in the 'NNNN-NNN' format"),
+		),
+		rules.Field("despatcher",
+			portuguesePostCodeRule("12", "delivery despatcher post code must be in the 'NNNN-NNN' format"),
+		),
+		rules.Field("receiver",
+			portuguesePostCodeRule("13", "delivery receiver post code must be in the 'NNNN-NNN' format"),
 		),
 	)
 }

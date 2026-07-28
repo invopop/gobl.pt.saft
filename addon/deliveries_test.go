@@ -134,6 +134,84 @@ func TestDeliveryValidation(t *testing.T) {
 		assert.ErrorContains(t, rules.Validate(dlv, withAddonContext()), "preceding code is required")
 	})
 
+	t.Run("valid post codes", func(t *testing.T) {
+		dlv := validDelivery()
+		dlv.Supplier.Addresses = []*org.Address{{Code: "1000-100", Country: "PT"}}
+		dlv.Customer.Addresses = []*org.Address{{Code: "2000-200"}}
+		dlv.Despatcher = &org.Party{
+			Name:      "Test Despatcher",
+			Addresses: []*org.Address{{Code: "3000-300", Country: "PT"}},
+		}
+		dlv.Receiver = &org.Party{
+			Name:      "Test Receiver",
+			Addresses: []*org.Address{{Code: "4000-400", Country: "PT"}},
+		}
+		require.NoError(t, rules.Validate(dlv, withAddonContext()))
+	})
+
+	t.Run("invalid supplier post code", func(t *testing.T) {
+		dlv := validDelivery()
+		dlv.Supplier.Addresses = []*org.Address{{Code: "2050", Country: "PT"}}
+		assert.ErrorContains(t, rules.Validate(dlv, withAddonContext()), "delivery supplier post code must be in the 'NNNN-NNN' format")
+	})
+
+	t.Run("invalid customer post code", func(t *testing.T) {
+		dlv := validDelivery()
+		dlv.Customer.Addresses = []*org.Address{{Code: "2050", Country: "PT"}}
+		assert.ErrorContains(t, rules.Validate(dlv, withAddonContext()), "delivery customer post code must be in the 'NNNN-NNN' format")
+	})
+
+	t.Run("invalid despatcher post code", func(t *testing.T) {
+		dlv := validDelivery()
+		dlv.Despatcher = &org.Party{
+			Name:      "Test Despatcher",
+			Addresses: []*org.Address{{Code: "2050", Country: "PT"}},
+		}
+		faults := rules.Validate(dlv, withAddonContext())
+		require.Error(t, faults)
+		assert.ErrorContains(t, faults, "delivery despatcher post code must be in the 'NNNN-NNN' format")
+		assert.True(t, faults.HasPath("$.despatcher.addresses[0].code"))
+		assert.True(t, faults.HasCode("GOBL-PT-SAFT-BILL-DELIVERY-12"))
+	})
+
+	t.Run("invalid receiver post code", func(t *testing.T) {
+		dlv := validDelivery()
+		dlv.Receiver = &org.Party{
+			Name:      "Test Receiver",
+			Addresses: []*org.Address{{Code: "1000 100", Country: "PT"}},
+		}
+		assert.ErrorContains(t, rules.Validate(dlv, withAddonContext()), "delivery receiver post code must be in the 'NNNN-NNN' format")
+	})
+
+	t.Run("invalid post code without country", func(t *testing.T) {
+		dlv := validDelivery()
+		dlv.Supplier.Addresses = []*org.Address{{Code: "2050"}}
+		assert.ErrorContains(t, rules.Validate(dlv, withAddonContext()), "delivery supplier post code must be in the 'NNNN-NNN' format")
+	})
+
+	t.Run("foreign post code", func(t *testing.T) {
+		dlv := validDelivery()
+		dlv.Customer.Addresses = []*org.Address{{Code: "28001", Country: "ES"}}
+		require.NoError(t, rules.Validate(dlv, withAddonContext()))
+	})
+
+	t.Run("missing post code", func(t *testing.T) {
+		dlv := validDelivery()
+		dlv.Supplier.Addresses = []*org.Address{{Country: "PT"}}
+		require.NoError(t, rules.Validate(dlv, withAddonContext()))
+	})
+
+	t.Run("several addresses", func(t *testing.T) {
+		dlv := validDelivery()
+		dlv.Supplier.Addresses = []*org.Address{
+			{Code: "1000-100", Country: "PT"},
+			{Code: "2050", Country: "PT"},
+		}
+		faults := rules.Validate(dlv, withAddonContext())
+		require.Error(t, faults)
+		assert.True(t, faults.HasPath("$.supplier.addresses[1].code"))
+	})
+
 	t.Run("several preceding documents", func(t *testing.T) {
 		dlv := validDelivery()
 		dlv.Preceding = []*org.DocumentRef{
