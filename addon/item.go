@@ -3,6 +3,8 @@ package addon
 import (
 	"slices"
 
+	"github.com/invopop/gobl/catalogues/untdid"
+	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/org"
 	"github.com/invopop/gobl/rules"
 	"github.com/invopop/gobl/rules/is"
@@ -10,8 +12,8 @@ import (
 )
 
 // List of units typically used for services. Used to infer a default product type.
-var serviceUnits = []org.Unit{
-	org.UnitEmpty,
+var serviceUnits = []cbc.Key{
+	cbc.KeyEmpty,
 	org.UnitKilometre,
 	org.UnitWatt,
 	org.UnitKilowatt,
@@ -64,12 +66,25 @@ func setDefaultProductType(item *org.Item) {
 	}
 }
 
+// setDefaultUnit ensures every item carries a unit, which the AT requires as
+// the line's `UnitOfMeasure`. Core normalization moves raw UN/ECE codes out of
+// the unit field and into the `untdid-unit` extension, so recover the GOBL key
+// from there before falling back to the generic unit. Without this a document
+// using, say, `KGM` would silently end up as `one`, and be classified as a
+// service instead of goods.
 func setDefaultUnit(item *org.Item) {
 	if item == nil {
 		return
 	}
 
-	if item.Unit == "" {
-		item.Unit = org.UnitOne
+	if item.Unit != cbc.KeyEmpty {
+		return
 	}
+
+	if unit := untdid.UnitKey(item.Ext.Get(untdid.ExtKeyUnit)); unit != cbc.KeyEmpty {
+		item.Unit = unit
+		return
+	}
+
+	item.Unit = org.UnitOne
 }

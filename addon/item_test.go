@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/invopop/gobl.pt.saft/addon"
+	"github.com/invopop/gobl/catalogues/untdid"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/norm"
 	"github.com/invopop/gobl/org"
@@ -137,7 +138,8 @@ func TestItemUnitNormalization(t *testing.T) {
 	tests := []struct {
 		name string
 		item *org.Item
-		out  org.Unit
+		out  cbc.Key
+		ext  cbc.Code
 	}{
 		{
 			name: "unit present",
@@ -155,6 +157,34 @@ func TestItemUnitNormalization(t *testing.T) {
 			item: &org.Item{},
 			out:  "one",
 		},
+		{
+			name: "legacy UN/ECE unit code",
+			item: &org.Item{
+				Unit: "KGM",
+			},
+			out: "kg",
+			ext: "KGM",
+		},
+		{
+			name: "UN/ECE unit code in extension",
+			item: &org.Item{
+				Ext: tax.ExtensionsOf(cbc.CodeMap{
+					untdid.ExtKeyUnit: "HUR",
+				}),
+			},
+			out: "h",
+			ext: "HUR",
+		},
+		{
+			name: "unknown UN/ECE unit code in extension",
+			item: &org.Item{
+				Ext: tax.ExtensionsOf(cbc.CodeMap{
+					untdid.ExtKeyUnit: "ZZ",
+				}),
+			},
+			out: "one",
+			ext: "ZZ",
+		},
 	}
 
 	for _, ts := range tests {
@@ -163,6 +193,21 @@ func TestItemUnitNormalization(t *testing.T) {
 			if ts.out != "" {
 				assert.Equal(t, ts.out, ts.item.Unit)
 			}
+			if ts.ext != "" {
+				assert.Equal(t, ts.ext, ts.item.Ext.Get(untdid.ExtKeyUnit))
+			}
 		})
 	}
+}
+
+func TestItemProductTypeFromUNTDIDUnit(t *testing.T) {
+	// A UN/ECE code moved into the extension must still drive the product
+	// type, or goods would be reported to the AT as services.
+	item := &org.Item{Unit: "KGM"}
+	norm.Normalize(item, tax.AddonContext(addon.V1))
+	assert.Equal(t, cbc.Code("P"), item.Ext.Get(addon.ExtKeyProductType))
+
+	item = &org.Item{Unit: "HUR"}
+	norm.Normalize(item, tax.AddonContext(addon.V1))
+	assert.Equal(t, cbc.Code("S"), item.Ext.Get(addon.ExtKeyProductType))
 }
