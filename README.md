@@ -55,10 +55,10 @@ Declare the addon on a document (or let the regime/scenario add it) and
 
 ## Development
 
-The addon builds on core GOBL features (the approved external-addon registry)
-that are not yet in a tagged release. The `go.mod` therefore pins
-`github.com/invopop/gobl` to the core checkout via a `replace` directive; bump it
-to the release tag and drop the replace once core is published.
+The addon tracks tagged releases of `github.com/invopop/gobl`. A commented-out
+`replace` directive sits at the bottom of `go.mod` for working against a local
+core checkout; uncomment it while developing against unreleased core changes,
+and re-comment it before merging.
 
 ```sh
 go test ./...
