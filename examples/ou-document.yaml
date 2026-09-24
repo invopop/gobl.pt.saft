@@ -1,0 +1,41 @@
+$schema: https://gobl.org/draft-0/bill/order
+$addons: ["pt-saft-v1"]
+uuid: "0199a0d2-8c21-7b4e-9a3f-1f2d4c6e8a10"
+type: sale
+currency: EUR
+tax:
+  ext:
+    pt-saft-work-type: OU
+series: "OU SERIES-A"
+code: "123"
+issue_date: "2023-01-30"
+supplier:
+  tax_id:
+    country: PT
+    code: "545259045"
+  name: Hotelzinho
+  addresses:
+    - street: Rua do Hotelzinho
+      code: 1000-000
+      locality: Lisboa
+customer:
+  name: Maria Santos Silva
+lines:
+  - i: 1
+    quantity: 2
+    item:
+      name: Noite em quarto duplo
+      price: 100.00
+    sum: 200.00
+    taxes:
+      - cat: VAT
+        rate: standard
+  - i: 2
+    quantity: 1
+    item:
+      name: Jantar no restaurante
+      price: 45.00
+    sum: 45.00
+    taxes:
+      - cat: VAT
+        rate: standard

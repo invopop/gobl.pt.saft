@@ -4,7 +4,7 @@
 		"uuid": "8a51fd30-2a27-11ee-be56-0242ac120002",
 		"dig": {
 			"alg": "sha256",
-			"val": "c36776ca6c4692bb40eedf26866692dc5d0ff97a6fb3db5c55c641b888b29766"
+			"val": "6593eff5aad26f9447205c2cbad877786c793c4f6fdd3b1c142ae21fd5b8c48d"
 		}
 	},
 	"doc": {
@@ -13,9 +13,9 @@
 		"$addons": [
 			"pt-saft-v1"
 		],
-		"uuid": "21cc05ec-04b6-11f0-9bbd-325096b39f47",
-		"type": "purchase",
-		"series": "NE SERIES-A",
+		"uuid": "0199a0d2-8c21-7b4e-9a3f-1f2d4c6e8a10",
+		"type": "sale",
+		"series": "OU SERIES-A",
 		"code": "123",
 		"issue_date": "2023-01-30",
 		"value_date": "2023-01-30",
@@ -23,7 +23,7 @@
 		"tax": {
 			"ext": {
 				"pt-saft-source": "P",
-				"pt-saft-work-type": "NE"
+				"pt-saft-work-type": "OU"
 			}
 		},
 		"supplier": {
@@ -46,7 +46,7 @@
 		"lines": [
 			{
 				"i": 1,
-				"quantity": "1",
+				"quantity": "2",
 				"item": {
 					"name": "Noite em quarto duplo",
 					"price": "100.00",
@@ -55,7 +55,7 @@
 						"pt-saft-product-type": "S"
 					}
 				},
-				"sum": "100.00",
+				"sum": "200.00",
 				"taxes": [
 					{
 						"cat": "VAT",
@@ -68,12 +68,38 @@
 						}
 					}
 				],
-				"total": "100.00"
+				"total": "200.00"
+			},
+			{
+				"i": 2,
+				"quantity": "1",
+				"item": {
+					"name": "Jantar no restaurante",
+					"price": "45.00",
+					"unit": "one",
+					"ext": {
+						"pt-saft-product-type": "S"
+					}
+				},
+				"sum": "45.00",
+				"taxes": [
+					{
+						"cat": "VAT",
+						"key": "standard",
+						"rate": "general",
+						"percent": "23.0%",
+						"ext": {
+							"pt-region": "PT",
+							"pt-saft-tax-rate": "NOR"
+						}
+					}
+				],
+				"total": "45.00"
 			}
 		],
 		"totals": {
-			"sum": "100.00",
-			"total": "100.00",
+			"sum": "245.00",
+			"total": "245.00",
 			"taxes": {
 				"categories": [
 					{
@@ -85,19 +111,19 @@
 									"pt-region": "PT",
 									"pt-saft-tax-rate": "NOR"
 								},
-								"base": "100.00",
+								"base": "245.00",
 								"percent": "23.0%",
-								"amount": "23.00"
+								"amount": "56.35"
 							}
 						],
-						"amount": "23.00"
+						"amount": "56.35"
 					}
 				],
-				"sum": "23.00"
+				"sum": "56.35"
 			},
-			"tax": "23.00",
-			"total_with_tax": "123.00",
-			"payable": "123.00"
+			"tax": "56.35",
+			"total_with_tax": "301.35",
+			"payable": "301.35"
 		}
 	}
 }

@@ -55,6 +55,46 @@ func TestOrderValidation(t *testing.T) {
 		ord.ValueDate = nil
 		assert.ErrorContains(t, rules.Validate(ord, withAddonContext()), "cannot be blank")
 	})
+
+	t.Run("missing line item price", func(t *testing.T) {
+		ord := validOrder()
+		ord.Lines[0].Item.Price = nil
+		assert.ErrorContains(t, rules.Validate(ord, withAddonContext()), "cannot be blank")
+	})
+
+	t.Run("missing source", func(t *testing.T) {
+		ord := validOrder()
+		ord.Tax.Ext = ord.Tax.Ext.Delete(addon.ExtKeySource)
+		assert.ErrorContains(t, rules.Validate(ord, withAddonContext()), "tax requires 'pt-saft-source' extension")
+	})
+
+	t.Run("missing source ref when source is not produced", func(t *testing.T) {
+		ord := validOrder()
+		ord.Tax.Ext = ord.Tax.Ext.Set(addon.ExtKeySource, addon.SourceBillingManual)
+		assert.ErrorContains(t, rules.Validate(ord, withAddonContext()), "tax requires 'pt-saft-source-ref' extension when source is not produced")
+	})
+
+	t.Run("invalid source ref format", func(t *testing.T) {
+		ord := validOrder()
+		ord.Tax.Ext = ord.Tax.Ext.
+			Set(addon.ExtKeySource, addon.SourceBillingManual).
+			Set(addon.ExtKeySourceRef, "not a valid ref")
+		assert.ErrorContains(t, rules.Validate(ord, withAddonContext()), "source ref format is invalid")
+	})
+
+	t.Run("valid source ref for a manual order", func(t *testing.T) {
+		ord := validOrder()
+		ord.Tax.Ext = ord.Tax.Ext.
+			Set(addon.ExtKeySource, addon.SourceBillingManual).
+			Set(addon.ExtKeySourceRef, "NEM SERIES-A/1")
+		require.NoError(t, rules.Validate(ord, withAddonContext()))
+	})
+
+	t.Run("negative total", func(t *testing.T) {
+		ord := validOrder()
+		ord.Totals = &bill.Totals{Total: num.MakeAmount(-100, 2)}
+		assert.ErrorContains(t, rules.Validate(ord, withAddonContext()), "must be no less than 0")
+	})
 }
 
 func TestOrderNormalization(t *testing.T) {
@@ -84,6 +124,50 @@ func TestOrderNormalization(t *testing.T) {
 		require.NotNil(t, ord.Tax)
 		require.NotNil(t, ord.Tax.Ext)
 		assert.Equal(t, addon.WorkTypeBudgets, ord.Tax.Ext.Get(addon.ExtKeyWorkType))
+	})
+
+	t.Run("defaults the source to produced", func(t *testing.T) {
+		ord := &bill.Order{
+			Type: bill.OrderTypePurchase,
+		}
+		norm.Normalize(ord, tax.AddonContext(addon.V1))
+		require.NotNil(t, ord.Tax)
+		assert.Equal(t, addon.SourceBillingProduced, ord.Tax.Ext.Get(addon.ExtKeySource))
+	})
+
+	t.Run("keeps an explicit source", func(t *testing.T) {
+		ord := &bill.Order{
+			Type: bill.OrderTypePurchase,
+			Tax: &bill.Tax{
+				Ext: tax.ExtensionsOf(cbc.CodeMap{
+					addon.ExtKeySource: addon.SourceBillingManual,
+				}),
+			},
+		}
+		norm.Normalize(ord, tax.AddonContext(addon.V1))
+		assert.Equal(t, addon.SourceBillingManual, ord.Tax.Ext.Get(addon.ExtKeySource))
+	})
+
+	t.Run("sale order type has no work type of its own", func(t *testing.T) {
+		ord := &bill.Order{
+			Type: bill.OrderTypeSale,
+		}
+		norm.Normalize(ord, tax.AddonContext(addon.V1))
+		require.NotNil(t, ord.Tax)
+		assert.Empty(t, ord.Tax.Ext.Get(addon.ExtKeyWorkType))
+	})
+
+	t.Run("sale order type keeps an explicit work type", func(t *testing.T) {
+		ord := &bill.Order{
+			Type: bill.OrderTypeSale,
+			Tax: &bill.Tax{
+				Ext: tax.ExtensionsOf(cbc.CodeMap{
+					addon.ExtKeyWorkType: addon.WorkTypeOther,
+				}),
+			},
+		}
+		norm.Normalize(ord, tax.AddonContext(addon.V1))
+		assert.Equal(t, addon.WorkTypeOther, ord.Tax.Ext.Get(addon.ExtKeyWorkType))
 	})
 
 	t.Run("respect existing value", func(t *testing.T) {
@@ -143,6 +227,7 @@ func validOrder() *bill.Order {
 		Type:   bill.OrderTypePurchase,
 		Tax: &bill.Tax{
 			Ext: tax.ExtensionsOf(cbc.CodeMap{
+				addon.ExtKeySource:   addon.SourceBillingProduced,
 				addon.ExtKeyWorkType: addon.WorkTypePurchaseOrder,
 			}),
 		},
