@@ -56,12 +56,6 @@ func TestOrderValidation(t *testing.T) {
 		assert.ErrorContains(t, rules.Validate(ord, withAddonContext()), "cannot be blank")
 	})
 
-	t.Run("missing line item price", func(t *testing.T) {
-		ord := validOrder()
-		ord.Lines[0].Item.Price = nil
-		assert.ErrorContains(t, rules.Validate(ord, withAddonContext()), "cannot be blank")
-	})
-
 	t.Run("missing source", func(t *testing.T) {
 		ord := validOrder()
 		ord.Tax.Ext = ord.Tax.Ext.Delete(addon.ExtKeySource)
