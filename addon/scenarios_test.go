@@ -7,6 +7,7 @@ import (
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/pay"
+	"github.com/invopop/gobl/regimes/pt"
 	"github.com/invopop/gobl/rules"
 	"github.com/invopop/gobl/tax"
 	"github.com/stretchr/testify/assert"
@@ -25,6 +26,43 @@ func TestInvoice(t *testing.T) {
 
 	t.Run("prepaid", func(t *testing.T) {
 		inv := validInvoice()
+		inv.Tax.Ext = inv.Tax.Ext.Delete(addon.ExtKeyInvoiceType)
+		inv.Payment = &bill.PaymentDetails{
+			Advances: []*pay.Record{
+				{
+					Percent:     num.NewPercentage(1, 0),
+					Description: "prepaid",
+				},
+			},
+		}
+		inv.Series = "FR SERIES-A"
+		require.NoError(t, inv.Calculate())
+		assert.Equal(t, "FR", inv.Tax.Ext.Get(addon.ExtKeyInvoiceType).String())
+		assert.NoError(t, rules.Validate(inv))
+
+		require.NoError(t, inv.Calculate())
+		assert.Equal(t, "FR", inv.Tax.Ext.Get(addon.ExtKeyInvoiceType).String())
+	})
+
+	t.Run("prepaid with explicit FT", func(t *testing.T) {
+		inv := validInvoice()
+		inv.Payment = &bill.PaymentDetails{
+			Advances: []*pay.Record{
+				{
+					Percent:     num.NewPercentage(1, 0),
+					Description: "prepaid",
+				},
+			},
+		}
+		require.NoError(t, inv.Calculate())
+		assert.True(t, inv.Totals.Paid())
+		assert.Equal(t, "FT", inv.Tax.Ext.Get(addon.ExtKeyInvoiceType).String())
+		assert.NoError(t, rules.Validate(inv))
+	})
+
+	t.Run("prepaid with explicit FT and invoice-receipt tag", func(t *testing.T) {
+		inv := validInvoice()
+		inv.SetTags(pt.TagInvoiceReceipt)
 		inv.Payment = &bill.PaymentDetails{
 			Advances: []*pay.Record{
 				{
