@@ -41,7 +41,10 @@ var invoiceScenarios = &tax.ScenarioSet{
 				if !ok {
 					return false
 				}
-				return inv.HasTags(pt.TagInvoiceReceipt) || inv.Totals.Paid()
+				if inv.HasTags(pt.TagInvoiceReceipt) {
+					return true
+				}
+				return inv.Totals.Paid() && invoiceDocType(inv) != InvoiceTypeStandard
 			},
 			Ext: tax.ExtensionsOf(cbc.CodeMap{
 				ExtKeyInvoiceType: InvoiceTypeInvoiceReceipt,
