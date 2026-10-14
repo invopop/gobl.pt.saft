@@ -1,0 +1,1478 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<AuditFile xmlns="urn:OECD:StandardAuditFile-Tax:PT_1.04_01">
+  <Header>
+    <AuditFileVersion>1.04_01</AuditFileVersion>
+    <CompanyID>770013813</CompanyID>
+    <TaxRegistrationNumber>770013813</TaxRegistrationNumber>
+    <TaxAccountingBasis>F</TaxAccountingBasis>
+    <CompanyName>Innovatech Lda</CompanyName>
+    <CompanyAddress>
+      <StreetName>Rua das Flores 200 3º Esquerdo</StreetName>
+      <AddressDetail>Rua das Flores 200 3º Esquerdo</AddressDetail>
+      <City>Porto</City>
+      <PostalCode>4050-265</PostalCode>
+      <Country>PT</Country>
+    </CompanyAddress>
+    <FiscalYear>2024</FiscalYear>
+    <StartDate>2024-08-01</StartDate>
+    <EndDate>2024-08-03</EndDate>
+    <CurrencyCode>EUR</CurrencyCode>
+    <DateCreated>2024-08-03</DateCreated>
+    <TaxEntity>Global</TaxEntity>
+    <ProductCompanyTaxID>999999999</ProductCompanyTaxID>
+    <SoftwareCertificateNumber>123</SoftwareCertificateNumber>
+    <ProductID>App Name/Software Company</ProductID>
+    <ProductVersion>1.0</ProductVersion>
+  </Header>
+  <MasterFiles>
+    <Customer>
+      <CustomerID>514329874</CustomerID>
+      <AccountID>Desconhecido</AccountID>
+      <CustomerTaxID>514329874</CustomerTaxID>
+      <CompanyName>Gusto Unipessoal Lda</CompanyName>
+      <BillingAddress>
+        <StreetName>Avenida da Liberdade 152 2º Direito</StreetName>
+        <AddressDetail>Avenida da Liberdade 152 2º Direito</AddressDetail>
+        <City>Lisboa</City>
+        <PostalCode>1250-146</PostalCode>
+        <Country>PT</Country>
+      </BillingAddress>
+      <Telephone>+351912345678</Telephone>
+      <Email>gusto@example.com</Email>
+      <Website>https://gusto.example.com</Website>
+      <SelfBillingIndicator>0</SelfBillingIndicator>
+    </Customer>
+    <Customer>
+      <CustomerID>Consumidor final</CustomerID>
+      <AccountID>Desconhecido</AccountID>
+      <CustomerTaxID>999999990</CustomerTaxID>
+      <CompanyName>Consumidor final</CompanyName>
+      <BillingAddress>
+        <AddressDetail>Desconhecido</AddressDetail>
+        <City>Desconhecido</City>
+        <PostalCode>Desconhecido</PostalCode>
+        <Country>Desconhecido</Country>
+      </BillingAddress>
+      <SelfBillingIndicator>0</SelfBillingIndicator>
+    </Customer>
+    <Customer>
+      <CustomerID>95b463c8991d1ef55f1781222b0501</CustomerID>
+      <AccountID>Desconhecido</AccountID>
+      <CustomerTaxID>999999990</CustomerTaxID>
+      <CompanyName>Juan García</CompanyName>
+      <BillingAddress>
+        <StreetName>Calle de la Princesa 123</StreetName>
+        <AddressDetail>Calle de la Princesa 123</AddressDetail>
+        <City>Madrid</City>
+        <PostalCode>28001</PostalCode>
+        <Country>ES</Country>
+      </BillingAddress>
+      <SelfBillingIndicator>0</SelfBillingIndicator>
+    </Customer>
+    <Product>
+      <ProductType>S</ProductType>
+      <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+      <ProductDescription>Development services</ProductDescription>
+      <ProductNumberCode>5fda3df1ffe4720f3a3a1361528739</ProductNumberCode>
+    </Product>
+    <Product>
+      <ProductType>P</ProductType>
+      <ProductCode>9abfe5690401407519ed6dd6ab4d08</ProductCode>
+      <ProductDescription>MacBook Air 13</ProductDescription>
+      <ProductNumberCode>9abfe5690401407519ed6dd6ab4d08</ProductNumberCode>
+    </Product>
+    <Product>
+      <ProductType>S</ProductType>
+      <ProductCode>1b68502e7947cd6ae7904a3d68df3c</ProductCode>
+      <ProductDescription>Exempt item</ProductDescription>
+      <ProductNumberCode>1b68502e7947cd6ae7904a3d68df3c</ProductNumberCode>
+    </Product>
+    <Product>
+      <ProductType>S</ProductType>
+      <ProductCode>fd646ee5b248df3ed051cfb9d36d35</ProductCode>
+      <ProductDescription>Returned development services</ProductDescription>
+      <ProductNumberCode>fd646ee5b248df3ed051cfb9d36d35</ProductNumberCode>
+    </Product>
+    <Product>
+      <ProductType>S</ProductType>
+      <ProductCode>94a85f27486e0a6dacce8e7b7adffe</ProductCode>
+      <ProductDescription>Pêssego&#65292;fullwidth comma test</ProductDescription>
+      <ProductNumberCode>94a85f27486e0a6dacce8e7b7adffe</ProductNumberCode>
+    </Product>
+    <Product>
+      <ProductType>P</ProductType>
+      <ProductCode>7ce5a1a16597a1c45c564033124fed</ProductCode>
+      <ProductDescription>Hardware components</ProductDescription>
+      <ProductNumberCode>7ce5a1a16597a1c45c564033124fed</ProductNumberCode>
+    </Product>
+    <Product>
+      <ProductType>S</ProductType>
+      <ProductCode>a97a2cd03647fa716bd25864401dbf</ProductCode>
+      <ProductDescription>Noite em quarto duplo</ProductDescription>
+      <ProductNumberCode>a97a2cd03647fa716bd25864401dbf</ProductNumberCode>
+    </Product>
+    <TaxTable>
+      <TaxTableEntry>
+        <TaxType>IVA</TaxType>
+        <TaxCountryRegion>PT</TaxCountryRegion>
+        <TaxCode>NOR</TaxCode>
+        <Description>NOR-PT-23.0</Description>
+        <TaxPercentage>23.0</TaxPercentage>
+      </TaxTableEntry>
+      <TaxTableEntry>
+        <TaxType>IVA</TaxType>
+        <TaxCountryRegion>PT-AC</TaxCountryRegion>
+        <TaxCode>NOR</TaxCode>
+        <Description>NOR-PT-AC-16.0</Description>
+        <TaxPercentage>16.0</TaxPercentage>
+      </TaxTableEntry>
+      <TaxTableEntry>
+        <TaxType>IVA</TaxType>
+        <TaxCountryRegion>PT</TaxCountryRegion>
+        <TaxCode>ISE</TaxCode>
+        <Description>ISE-PT-0</Description>
+        <TaxPercentage>0</TaxPercentage>
+      </TaxTableEntry>
+      <TaxTableEntry>
+        <TaxType>IVA</TaxType>
+        <TaxCountryRegion>ES</TaxCountryRegion>
+        <TaxCode>OUT</TaxCode>
+        <Description>OUT-ES-21.0</Description>
+        <TaxPercentage>21.0</TaxPercentage>
+      </TaxTableEntry>
+    </TaxTable>
+  </MasterFiles>
+  <SourceDocuments>
+    <SalesInvoices>
+      <NumberOfEntries>11</NumberOfEntries>
+      <TotalDebit>50.00</TotalDebit>
+      <TotalCredit>1668.30000000</TotalCredit>
+      <Invoice>
+        <InvoiceNo>NC SERIES-A/1</InvoiceNo>
+        <ATCUD>AAJFJHNC82-1</ATCUD>
+        <DocumentStatus>
+          <InvoiceStatus>N</InvoiceStatus>
+          <InvoiceStatusDate>2024-08-03T00:00:00</InvoiceStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>RfO64BJWXgUoc33R64oOGp9WcZV5VSbCmM26rRDAYBo6mClKKHxENwizA/532aPI3oqieWIz7LuA2Hv3WUCGIcXBTLdpAM0N4Kw/+bsuSk0SDINl9c81CQg5Pr1FHKKGgw9PLYlk13dzc0PzYEuqkSBSfA4yI9CDuCOPKa8NAPw=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <InvoiceDate>2024-08-03</InvoiceDate>
+        <InvoiceType>NC</InvoiceType>
+        <SpecialRegimes>
+          <SelfBillingIndicator>0</SelfBillingIndicator>
+          <CashVATSchemeIndicator>0</CashVATSchemeIndicator>
+          <ThirdPartiesBillingIndicator>0</ThirdPartiesBillingIndicator>
+        </SpecialRegimes>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+          <ProductDescription>Development services</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>item</UnitOfMeasure>
+          <UnitPrice>50.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <References>
+            <Reference>FT SERIES-A/1</Reference>
+            <Reason>Reimbursement</Reason>
+          </References>
+          <Description>Development services</Description>
+          <DebitAmount>50.00</DebitAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>11.50</TaxPayable>
+          <NetTotal>50.00</NetTotal>
+          <GrossTotal>61.50</GrossTotal>
+        </DocumentTotals>
+      </Invoice>
+      <Invoice>
+        <InvoiceNo>ND SERIES-A/1</InvoiceNo>
+        <ATCUD>AAJFJHNC82-1</ATCUD>
+        <DocumentStatus>
+          <InvoiceStatus>N</InvoiceStatus>
+          <InvoiceStatusDate>2024-08-03T00:00:00</InvoiceStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>soKPEnITrc+KmUulQcy2Xm1S82Up3lqIiMCBOwFBgYjEM6NblxBgjMHWfB2AR4TirB9P7hmna449Ij9VpYNoR5Kq8WHs+0CImEm34adQJXoJGiHoq8ivz7PU3VI5TFdLtTjmV2JgAaJRE3796OKHHu4hkkT+5ZVlb34TOqrK/EI=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <InvoiceDate>2024-08-03</InvoiceDate>
+        <InvoiceType>ND</InvoiceType>
+        <SpecialRegimes>
+          <SelfBillingIndicator>0</SelfBillingIndicator>
+          <CashVATSchemeIndicator>0</CashVATSchemeIndicator>
+          <ThirdPartiesBillingIndicator>0</ThirdPartiesBillingIndicator>
+        </SpecialRegimes>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>Consumidor final</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <ProductCode>9abfe5690401407519ed6dd6ab4d08</ProductCode>
+          <ProductDescription>MacBook Air 13</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>item</UnitOfMeasure>
+          <UnitPrice>50.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <References>
+            <Reference>FS SERIES-A/1</Reference>
+            <Reason>Error in the invoice</Reason>
+          </References>
+          <Description>MacBook Air 13</Description>
+          <CreditAmount>50.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT-AC</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>16.0</TaxPercentage>
+          </Tax>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>8.00</TaxPayable>
+          <NetTotal>50.00</NetTotal>
+          <GrossTotal>58.00</GrossTotal>
+        </DocumentTotals>
+      </Invoice>
+      <Invoice>
+        <InvoiceNo>FT SERIES-A/1</InvoiceNo>
+        <ATCUD>AAJFJHNC82-1</ATCUD>
+        <DocumentStatus>
+          <InvoiceStatus>N</InvoiceStatus>
+          <InvoiceStatusDate>2024-08-03T00:00:00</InvoiceStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>tY9G1OXXmKcSZN6as3KOdGVF7FFfVLLIhfSldjDiO1rbGhxB+7AJfr2LAPnvwzaKkc8c/TcsyMG3GWVFCZcieIzojq0iS9JZhf+1+YtosAcHLIY4kwS81Dq297JkXSmf2pGqy4e3ARMXwaNxe9RWS8UblLHP8ll0IcABX1klkdk=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <InvoiceDate>2024-08-03</InvoiceDate>
+        <InvoiceType>FT</InvoiceType>
+        <SpecialRegimes>
+          <SelfBillingIndicator>0</SelfBillingIndicator>
+          <CashVATSchemeIndicator>0</CashVATSchemeIndicator>
+          <ThirdPartiesBillingIndicator>0</ThirdPartiesBillingIndicator>
+        </SpecialRegimes>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <OrderReferences>
+            <OriginatingON>PO-2024-001</OriginatingON>
+          </OrderReferences>
+          <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+          <ProductDescription>Development services</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>42.5000</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Development services</Description>
+          <CreditAmount>42.50</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+          <SettlementAmount>7.50</SettlementAmount>
+        </Line>
+        <Line>
+          <LineNumber>2</LineNumber>
+          <ProductCode>1b68502e7947cd6ae7904a3d68df3c</ProductCode>
+          <ProductDescription>Exempt item</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>50.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Exempt item</Description>
+          <CreditAmount>50.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>ISE</TaxCode>
+            <TaxPercentage>0</TaxPercentage>
+          </Tax>
+          <TaxExemptionReason>Decreto-Lei n.º 199/96, de 18 de outubro</TaxExemptionReason>
+          <TaxExemptionCode>M15</TaxExemptionCode>
+        </Line>
+        <Line>
+          <LineNumber>3</LineNumber>
+          <OrderReferences>
+            <OriginatingON>PO-2024-001</OriginatingON>
+          </OrderReferences>
+          <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+          <ProductDescription>Development services</ProductDescription>
+          <Quantity>12</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>0.0000000000</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Development services</Description>
+          <CreditAmount>0.00000000</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+          <SettlementAmount>2.43900000</SettlementAmount>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>9.78</TaxPayable>
+          <NetTotal>92.50</NetTotal>
+          <GrossTotal>102.28</GrossTotal>
+          <Settlement>
+            <PaymentTerms>12.34 EUR por pagar com vencimento em 2024-12-23</PaymentTerms>
+          </Settlement>
+          <Payment>
+            <PaymentMechanism>CC</PaymentMechanism>
+            <PaymentAmount>12.34</PaymentAmount>
+            <PaymentDate>2024-08-03</PaymentDate>
+          </Payment>
+        </DocumentTotals>
+      </Invoice>
+      <Invoice>
+        <InvoiceNo>FS SERIES-A/1</InvoiceNo>
+        <ATCUD>AAJFJHNC82-1</ATCUD>
+        <DocumentStatus>
+          <InvoiceStatus>N</InvoiceStatus>
+          <InvoiceStatusDate>2024-08-03T00:00:00</InvoiceStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>XZVjQiI7KsFUnLVTlUSWuhf/XZMCbzTAtBP/uSSJcx8ucgGpJG5jHP+8zWzQUaSgI5XSGAQAABNvuK/Thlt15JaFKoa9zWUCX03ypPh+n1x8s/VaE56RZmB2pIMzWN6g9nU2R+eWO+xas7iKv7EjscKukp6rKmlwKn43fp+7grI=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <InvoiceDate>2024-08-03</InvoiceDate>
+        <InvoiceType>FS</InvoiceType>
+        <SpecialRegimes>
+          <SelfBillingIndicator>0</SelfBillingIndicator>
+          <CashVATSchemeIndicator>0</CashVATSchemeIndicator>
+          <ThirdPartiesBillingIndicator>0</ThirdPartiesBillingIndicator>
+        </SpecialRegimes>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>Consumidor final</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <ProductCode>9abfe5690401407519ed6dd6ab4d08</ProductCode>
+          <ProductDescription>MacBook Air 13</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>item</UnitOfMeasure>
+          <UnitPrice>50.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>MacBook Air 13</Description>
+          <CreditAmount>50.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT-AC</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>16.0</TaxPercentage>
+          </Tax>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>8.00</TaxPayable>
+          <NetTotal>50.00</NetTotal>
+          <GrossTotal>58.00</GrossTotal>
+        </DocumentTotals>
+      </Invoice>
+      <Invoice>
+        <InvoiceNo>FT SERIES-A/2</InvoiceNo>
+        <ATCUD>AAJFJHNC82-2</ATCUD>
+        <DocumentStatus>
+          <InvoiceStatus>N</InvoiceStatus>
+          <InvoiceStatusDate>2024-08-03T00:00:00</InvoiceStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>LlrxXjFyGoKQz9uaTXPJ5cRugTB1FzB+Tq75auNMcRwd4aWWWWyJKdT0ZDsGP2YOOrnqJbgvjoM7B6N/PZZqHCXb6fDr9A1jRUGh2VfubH7pH9h5vCw2b4ec3EVqU5ERnyKtIB7bUjaRnSSDPrrlx4gPnRderPdyjBZfxTzRwbk=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <InvoiceDate>2024-08-03</InvoiceDate>
+        <InvoiceType>FT</InvoiceType>
+        <SpecialRegimes>
+          <SelfBillingIndicator>0</SelfBillingIndicator>
+          <CashVATSchemeIndicator>0</CashVATSchemeIndicator>
+          <ThirdPartiesBillingIndicator>0</ThirdPartiesBillingIndicator>
+        </SpecialRegimes>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <OrderReferences>
+            <OriginatingON>PO-2024-001</OriginatingON>
+          </OrderReferences>
+          <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+          <ProductDescription>Development services</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>42.5000</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Development services</Description>
+          <CreditAmount>42.50</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+          <SettlementAmount>7.50</SettlementAmount>
+        </Line>
+        <Line>
+          <LineNumber>2</LineNumber>
+          <ProductCode>1b68502e7947cd6ae7904a3d68df3c</ProductCode>
+          <ProductDescription>Exempt item</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>50.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Exempt item</Description>
+          <CreditAmount>50.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>ISE</TaxCode>
+            <TaxPercentage>0</TaxPercentage>
+          </Tax>
+          <TaxExemptionReason>Decreto-Lei n.º 199/96, de 18 de outubro</TaxExemptionReason>
+          <TaxExemptionCode>M15</TaxExemptionCode>
+        </Line>
+        <Line>
+          <LineNumber>3</LineNumber>
+          <OrderReferences>
+            <OriginatingON>PO-2024-001</OriginatingON>
+          </OrderReferences>
+          <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+          <ProductDescription>Development services</ProductDescription>
+          <Quantity>12</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>0.0000</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Development services</Description>
+          <CreditAmount>0.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+          <SettlementAmount>2.44</SettlementAmount>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>9.78</TaxPayable>
+          <NetTotal>92.50</NetTotal>
+          <GrossTotal>102.28</GrossTotal>
+          <Settlement>
+            <PaymentTerms>12.34 EUR por pagar com vencimento em 2024-12-23</PaymentTerms>
+          </Settlement>
+          <Payment>
+            <PaymentMechanism>CC</PaymentMechanism>
+            <PaymentAmount>12.34</PaymentAmount>
+            <PaymentDate>2024-08-03</PaymentDate>
+          </Payment>
+        </DocumentTotals>
+      </Invoice>
+      <Invoice>
+        <InvoiceNo>FS SERIES-A/2</InvoiceNo>
+        <ATCUD>AAJFJHNC82-2</ATCUD>
+        <DocumentStatus>
+          <InvoiceStatus>N</InvoiceStatus>
+          <InvoiceStatusDate>2024-08-03T00:00:00</InvoiceStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>Oj95EossgUVX1fMIk5KeuyQQX4KnZoX8Qkrull5jKVjC/6refNJkgc4S5ATvIvY1psIlZW1g2o6h5BYSKB9gp0VDmCurPtqME1nH7ft8zRK7oe3Ky9PKOlnyYFnH71CTrobEyNI53KnLCzOA+Jh/ljqnRgC2BTq0nZo0FB3wLOI=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <InvoiceDate>2024-08-03</InvoiceDate>
+        <InvoiceType>FS</InvoiceType>
+        <SpecialRegimes>
+          <SelfBillingIndicator>0</SelfBillingIndicator>
+          <CashVATSchemeIndicator>0</CashVATSchemeIndicator>
+          <ThirdPartiesBillingIndicator>0</ThirdPartiesBillingIndicator>
+        </SpecialRegimes>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>95b463c8991d1ef55f1781222b0501</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <ProductCode>9abfe5690401407519ed6dd6ab4d08</ProductCode>
+          <ProductDescription>MacBook Air 13</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>item</UnitOfMeasure>
+          <UnitPrice>50.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>MacBook Air 13</Description>
+          <CreditAmount>50.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>ES</TaxCountryRegion>
+            <TaxCode>OUT</TaxCode>
+            <TaxPercentage>21.0</TaxPercentage>
+          </Tax>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>10.50</TaxPayable>
+          <NetTotal>50.00</NetTotal>
+          <GrossTotal>60.50</GrossTotal>
+        </DocumentTotals>
+      </Invoice>
+      <Invoice>
+        <InvoiceNo>FR SERIES-A/1</InvoiceNo>
+        <ATCUD>AAJFJHNC82-1</ATCUD>
+        <DocumentStatus>
+          <InvoiceStatus>N</InvoiceStatus>
+          <InvoiceStatusDate>2024-08-03T00:00:00</InvoiceStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>yBRpZA7/6BRth1x2ikN2z63WkQ2URFNsGETtN7ZYX86ZddI2HOlGBAEjfRF1htnUqyOIJg/kr1rSd2b+sZdGHy72+ykb5omAyPRbP4QmPdjm0U/1L1vJARLHrZ9DDZtcWmcxkcV/xNKATsdoWO09xHqBhLcO9ef8ZsVOmHXh6eo=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <InvoiceDate>2024-08-03</InvoiceDate>
+        <InvoiceType>FR</InvoiceType>
+        <SpecialRegimes>
+          <SelfBillingIndicator>0</SelfBillingIndicator>
+          <CashVATSchemeIndicator>0</CashVATSchemeIndicator>
+          <ThirdPartiesBillingIndicator>0</ThirdPartiesBillingIndicator>
+        </SpecialRegimes>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+          <ProductDescription>Development services</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>item</UnitOfMeasure>
+          <UnitPrice>50.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Development services</Description>
+          <CreditAmount>50.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>11.50</TaxPayable>
+          <NetTotal>50.00</NetTotal>
+          <GrossTotal>61.50</GrossTotal>
+        </DocumentTotals>
+      </Invoice>
+      <Invoice>
+        <InvoiceNo>FT SERIES-A/3</InvoiceNo>
+        <ATCUD>AAJFJHNC82-3</ATCUD>
+        <DocumentStatus>
+          <InvoiceStatus>N</InvoiceStatus>
+          <InvoiceStatusDate>2024-08-03T00:00:00</InvoiceStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>R4jMFfW5XRDDtKNVM0ZnjIYncdoNc985myTTr5AWaWNh50x0zyXEJdHB7M/P3GVb/Fn+BFeFwoBDY6Vephre8gGCLoxQiAmb/OkQsS5nXfqja9oyh02HC1EHTDEq5MBP6/GCtIM/eyhhpxKcld4/0jQVqS6dkFQlS7d3EutTobk=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <InvoiceDate>2024-08-03</InvoiceDate>
+        <InvoiceType>FT</InvoiceType>
+        <SpecialRegimes>
+          <SelfBillingIndicator>0</SelfBillingIndicator>
+          <CashVATSchemeIndicator>0</CashVATSchemeIndicator>
+          <ThirdPartiesBillingIndicator>0</ThirdPartiesBillingIndicator>
+        </SpecialRegimes>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <OrderReferences>
+            <OriginatingON>PO-2024-001</OriginatingON>
+          </OrderReferences>
+          <ProductCode>94a85f27486e0a6dacce8e7b7adffe</ProductCode>
+          <ProductDescription>Pêssego&#65292;fullwidth comma test</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>42.5000</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Pêssego&#65292;fullwidth comma test</Description>
+          <CreditAmount>42.50</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+          <SettlementAmount>7.50</SettlementAmount>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>9.78</TaxPayable>
+          <NetTotal>42.50</NetTotal>
+          <GrossTotal>52.28</GrossTotal>
+        </DocumentTotals>
+      </Invoice>
+      <Invoice>
+        <InvoiceNo>FT SERIES-A/4</InvoiceNo>
+        <ATCUD>AAJFJHNC82-4</ATCUD>
+        <DocumentStatus>
+          <InvoiceStatus>N</InvoiceStatus>
+          <InvoiceStatusDate>2024-08-03T00:00:00</InvoiceStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>Blx371nGdUmOLyalPmuP7jiVazke08KcoJ4X1bpDXNcgEPQas2vQqrDby3BozNzSPB3bKWXndepnrGsPLFOqNyorCGUYjI1yy0WxpW6MfRYspTgIw7riK8hf/0XlOqUGwWff2LhYIDNLmSLjOCbrsjFa6r5OODzugcs5NPsM38c=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <InvoiceDate>2024-08-03</InvoiceDate>
+        <InvoiceType>FT</InvoiceType>
+        <SpecialRegimes>
+          <SelfBillingIndicator>0</SelfBillingIndicator>
+          <CashVATSchemeIndicator>0</CashVATSchemeIndicator>
+          <ThirdPartiesBillingIndicator>0</ThirdPartiesBillingIndicator>
+        </SpecialRegimes>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+          <ProductDescription>Development services</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>40.800000</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Development services</Description>
+          <CreditAmount>40.8000</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+          <SettlementAmount>7.2000</SettlementAmount>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>9.38</TaxPayable>
+          <NetTotal>40.80</NetTotal>
+          <GrossTotal>50.18</GrossTotal>
+          <Currency>
+            <CurrencyCode>USD</CurrencyCode>
+            <CurrencyAmount>52.28</CurrencyAmount>
+            <ExchangeRate>0.96</ExchangeRate>
+          </Currency>
+          <Payment>
+            <PaymentMechanism>CC</PaymentMechanism>
+            <PaymentAmount>11.85</PaymentAmount>
+            <PaymentDate>2024-08-03</PaymentDate>
+          </Payment>
+        </DocumentTotals>
+      </Invoice>
+      <Invoice>
+        <InvoiceNo>FT SERIES-A/5</InvoiceNo>
+        <ATCUD>AAJFJHNC82-5</ATCUD>
+        <DocumentStatus>
+          <InvoiceStatus>N</InvoiceStatus>
+          <InvoiceStatusDate>2024-08-03T00:00:00</InvoiceStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>RdCtiMeS8BxgJpFZ16KqBq1EnYiPVqCo9R7UOuvkoD7X6CFFK1BkDl6nJc/9WcL7hADpcj9w5gaZZH8Wjj/u/J70s41eHCbWsGB29Y1/CncfpwRhmFLC7PgdPqdFux9Wo5VqCVrbfKPayittdbFoMf5aA51EWe4xb2oiwYsfxEQ=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <InvoiceDate>2024-08-03</InvoiceDate>
+        <InvoiceType>FT</InvoiceType>
+        <SpecialRegimes>
+          <SelfBillingIndicator>0</SelfBillingIndicator>
+          <CashVATSchemeIndicator>0</CashVATSchemeIndicator>
+          <ThirdPartiesBillingIndicator>0</ThirdPartiesBillingIndicator>
+        </SpecialRegimes>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <OrderReferences>
+            <OriginatingON>NE SERIES-A/2</OriginatingON>
+          </OrderReferences>
+          <OrderReferences>
+            <OriginatingON>GT SERIES-A/1</OriginatingON>
+            <OrderDate>2024-08-03</OrderDate>
+          </OrderReferences>
+          <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+          <ProductDescription>Development services</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>50.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Development services</Description>
+          <CreditAmount>50.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+        </Line>
+        <Line>
+          <LineNumber>2</LineNumber>
+          <OrderReferences>
+            <OriginatingON>GT SERIES-A/1</OriginatingON>
+            <OrderDate>2024-08-03</OrderDate>
+          </OrderReferences>
+          <ProductCode>7ce5a1a16597a1c45c564033124fed</ProductCode>
+          <ProductDescription>Hardware components</ProductDescription>
+          <Quantity>2</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>75.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Hardware components</Description>
+          <CreditAmount>150.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>46.00</TaxPayable>
+          <NetTotal>200.00</NetTotal>
+          <GrossTotal>246.00</GrossTotal>
+        </DocumentTotals>
+      </Invoice>
+      <Invoice>
+        <InvoiceNo>FT SERIES-A/6</InvoiceNo>
+        <ATCUD>AAJFJHNC82-6</ATCUD>
+        <DocumentStatus>
+          <InvoiceStatus>N</InvoiceStatus>
+          <InvoiceStatusDate>2024-08-03T00:00:00</InvoiceStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>dfKe/Ff6WVDp81gm6rJwJaCxLqvrThwmcVQ5MuEoayBnD3jQM2o02CZvlFOAEfhbOhzqkmUhOoJ39Sc6pckw57gFiV3ylDBYjclD9wUbrvfaaye5TRD5AemIPPKxFEHt9vXCVH7BEWgaq/eE4yseO1MoNwoAfkMqt+yiuTbeaUU=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <InvoiceDate>2024-08-03</InvoiceDate>
+        <InvoiceType>FT</InvoiceType>
+        <SpecialRegimes>
+          <SelfBillingIndicator>0</SelfBillingIndicator>
+          <CashVATSchemeIndicator>0</CashVATSchemeIndicator>
+          <ThirdPartiesBillingIndicator>0</ThirdPartiesBillingIndicator>
+        </SpecialRegimes>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+          <ProductDescription>Development services</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>1000.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Development services</Description>
+          <CreditAmount>1000.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>230.00</TaxPayable>
+          <NetTotal>1000.00</NetTotal>
+          <GrossTotal>1230.00</GrossTotal>
+        </DocumentTotals>
+        <WithholdingTax>
+          <WithholdingTaxType>IRS</WithholdingTaxType>
+          <WithholdingTaxDescription>Art. 101.º CIRS</WithholdingTaxDescription>
+          <WithholdingTaxAmount>250.00</WithholdingTaxAmount>
+        </WithholdingTax>
+      </Invoice>
+    </SalesInvoices>
+    <MovementOfGoods>
+      <NumberOfMovementLines>8</NumberOfMovementLines>
+      <TotalQuantityIssued>8</TotalQuantityIssued>
+      <StockMovement>
+        <DocumentNumber>GR SERIES-A/1</DocumentNumber>
+        <ATCUD>AAJFJHNC82-1</ATCUD>
+        <DocumentStatus>
+          <MovementStatus>N</MovementStatus>
+          <MovementStatusDate>2024-08-03T00:00:00</MovementStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>MhAWn48NJCiYM+ZEPn8klG4bZwC9lgS4Jw31eo+pemSfyMCsPwyT5CDKtkP3zK5iisFofipn+QgVNwwmfc96vCC//3Urv73n99wsvtw1gxe7EldQ5v9p0kGgHxSXU5J5Yv7J96F97tXnDsewZCu/HKIwQQBGguvwbCPs+NG2hfc=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <MovementDate>2024-08-03</MovementDate>
+        <MovementType>GR</MovementType>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <SourceID>SOURCE_ID</SourceID>
+        <MovementComments>Delivery of development services as per contract agreement.</MovementComments>
+        <ShipTo>
+          <Address>
+            <StreetName>Zona Industrial, Lote 23</StreetName>
+            <AddressDetail>Zona Industrial, Lote 23</AddressDetail>
+            <City>Lisboa</City>
+            <PostalCode>1300-300</PostalCode>
+            <Country>PT</Country>
+          </Address>
+        </ShipTo>
+        <ShipFrom>
+          <DeliveryDate>2024-08-03</DeliveryDate>
+          <Address>
+            <StreetName>Rua da Indústria 45</StreetName>
+            <AddressDetail>Rua da Indústria 45</AddressDetail>
+            <City>Porto</City>
+            <PostalCode>4050-300</PostalCode>
+            <Country>PT</Country>
+          </Address>
+        </ShipFrom>
+        <MovementStartTime>2024-08-03T23:59:59</MovementStartTime>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <OrderReferences>
+            <OriginatingON>PO-2024-001</OriginatingON>
+          </OrderReferences>
+          <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+          <ProductDescription>Development services</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>0</UnitPrice>
+          <Description>Development services</Description>
+          <CreditAmount>0</CreditAmount>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>0.00</TaxPayable>
+          <NetTotal>0.00</NetTotal>
+          <GrossTotal>0.00</GrossTotal>
+        </DocumentTotals>
+      </StockMovement>
+      <StockMovement>
+        <DocumentNumber>GR SERIES-A/2</DocumentNumber>
+        <ATCUD>AAJFJHNC82-2</ATCUD>
+        <DocumentStatus>
+          <MovementStatus>N</MovementStatus>
+          <MovementStatusDate>2024-08-03T00:00:00</MovementStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>dXmZcLUWAzJLE78IT4/GWojnSJ692cc+xQT4JuXGN0yDAZ0b7MGTQzwhqX42KGHW+72lLb586ZVyFF1bz7qIUMCSXtAbP4YrRQ9AGmnBEY+SyMS+nbxcCzGG8Am6sscrkL6Et07mx5BcAIFqibh5P0RpyyusoLaCFIF8aD4rdoY=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <MovementDate>2024-08-03</MovementDate>
+        <MovementType>GR</MovementType>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <SourceID>SOURCE_ID</SourceID>
+        <MovementComments>Delivery of development services as per contract agreement.</MovementComments>
+        <ShipTo>
+          <Address>
+            <StreetName>Zona Industrial, Lote 23</StreetName>
+            <AddressDetail>Zona Industrial, Lote 23</AddressDetail>
+            <City>Lisboa</City>
+            <PostalCode>1300-300</PostalCode>
+            <Country>PT</Country>
+          </Address>
+        </ShipTo>
+        <ShipFrom>
+          <DeliveryDate>2024-08-03</DeliveryDate>
+          <Address>
+            <StreetName>Rua da Indústria 45</StreetName>
+            <AddressDetail>Rua da Indústria 45</AddressDetail>
+            <City>Porto</City>
+            <PostalCode>4050-300</PostalCode>
+            <Country>PT</Country>
+          </Address>
+        </ShipFrom>
+        <MovementStartTime>2024-08-03T23:59:59</MovementStartTime>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <OrderReferences>
+            <OriginatingON>PO-2024-001</OriginatingON>
+          </OrderReferences>
+          <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+          <ProductDescription>Development services</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>42.5000</UnitPrice>
+          <Description>Development services</Description>
+          <CreditAmount>42.50</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+          <SettlementAmount>7.50</SettlementAmount>
+        </Line>
+        <Line>
+          <LineNumber>2</LineNumber>
+          <ProductCode>1b68502e7947cd6ae7904a3d68df3c</ProductCode>
+          <ProductDescription>Exempt item</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>50.00</UnitPrice>
+          <Description>Exempt item</Description>
+          <CreditAmount>50.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>ISE</TaxCode>
+            <TaxPercentage>0</TaxPercentage>
+          </Tax>
+          <TaxExemptionReason>Decreto-Lei n.º 199/96, de 18 de outubro</TaxExemptionReason>
+          <TaxExemptionCode>M15</TaxExemptionCode>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>9.78</TaxPayable>
+          <NetTotal>92.50</NetTotal>
+          <GrossTotal>102.28</GrossTotal>
+        </DocumentTotals>
+      </StockMovement>
+      <StockMovement>
+        <DocumentNumber>GD SERIES-A/1</DocumentNumber>
+        <ATCUD>AAJFJHNC82-1</ATCUD>
+        <DocumentStatus>
+          <MovementStatus>N</MovementStatus>
+          <MovementStatusDate>2024-08-03T00:00:00</MovementStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>Eo7HTJLV7i1ybcopzSxKG1gtJ7U6LisPxZkcZDlortkR6wkMl9yPcvgkqhYf5ekJGsn0AxwP1Tcy6ViG3mpzSDhO7ccxQNGOoE9MhfdwDAgBha30cKfyk1OiAk8mfHbz51W/KG7VRph/CTknGP7Obu08QgexND5Q5R4mc8aSwkk=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <MovementDate>2024-08-03</MovementDate>
+        <MovementType>GD</MovementType>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <SourceID>SOURCE_ID</SourceID>
+        <MovementComments>Return of goods to the original supplier.</MovementComments>
+        <ShipTo>
+          <Address>
+            <StreetName>Rua da Indústria 45</StreetName>
+            <AddressDetail>Rua da Indústria 45</AddressDetail>
+            <City>Porto</City>
+            <PostalCode>4050-300</PostalCode>
+            <Country>PT</Country>
+          </Address>
+        </ShipTo>
+        <ShipFrom>
+          <DeliveryDate>2024-08-03</DeliveryDate>
+          <Address>
+            <StreetName>Zona Industrial, Lote 23</StreetName>
+            <AddressDetail>Zona Industrial, Lote 23</AddressDetail>
+            <City>Lisboa</City>
+            <PostalCode>1300-300</PostalCode>
+            <Country>PT</Country>
+          </Address>
+        </ShipFrom>
+        <MovementStartTime>2024-08-03T23:59:59</MovementStartTime>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <ProductCode>fd646ee5b248df3ed051cfb9d36d35</ProductCode>
+          <ProductDescription>Returned development services</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>42.5000</UnitPrice>
+          <Description>Returned development services</Description>
+          <DebitAmount>42.50</DebitAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+          <SettlementAmount>7.50</SettlementAmount>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>9.78</TaxPayable>
+          <NetTotal>42.50</NetTotal>
+          <GrossTotal>52.28</GrossTotal>
+        </DocumentTotals>
+      </StockMovement>
+      <StockMovement>
+        <DocumentNumber>GT SERIES-A/1</DocumentNumber>
+        <ATCUD>AAJFJHNC82-1</ATCUD>
+        <DocumentStatus>
+          <MovementStatus>N</MovementStatus>
+          <MovementStatusDate>2024-08-03T00:00:00</MovementStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>uzamva6QnQOxOk3s8WV6XD9iL8m1HKTHIbEozvBkqIqeRAVn7EL6O3nqpHlOH+swMJFzmjRrHhTJprhuSFYDmLowjI1cZU38woaFU+CrbfcqUy3ajF97wFyor1kc6qeCZpe9iQJoGWtPcRuQiarr9h4nwuunyva29LKyuPsmbDg=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <MovementDate>2024-08-03</MovementDate>
+        <MovementType>GT</MovementType>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>Consumidor final</CustomerID>
+        <SourceID>SOURCE_ID</SourceID>
+        <MovementComments>Global transport guide for goods movement.</MovementComments>
+        <ShipFrom>
+          <DeliveryDate>2024-08-03</DeliveryDate>
+          <Address>
+            <StreetName>Rua da Indústria 45</StreetName>
+            <AddressDetail>Rua da Indústria 45</AddressDetail>
+            <City>Porto</City>
+            <PostalCode>4050-300</PostalCode>
+            <Country>PT</Country>
+          </Address>
+        </ShipFrom>
+        <MovementStartTime>2024-08-03T23:59:59</MovementStartTime>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+          <ProductDescription>Development services</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>42.5000</UnitPrice>
+          <Description>Development services</Description>
+          <CreditAmount>42.50</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+          <SettlementAmount>7.50</SettlementAmount>
+        </Line>
+        <Line>
+          <LineNumber>2</LineNumber>
+          <ProductCode>1b68502e7947cd6ae7904a3d68df3c</ProductCode>
+          <ProductDescription>Exempt item</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>50.00</UnitPrice>
+          <Description>Exempt item</Description>
+          <CreditAmount>50.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>ISE</TaxCode>
+            <TaxPercentage>0</TaxPercentage>
+          </Tax>
+          <TaxExemptionReason>Decreto-Lei n.º 199/96, de 18 de outubro</TaxExemptionReason>
+          <TaxExemptionCode>M15</TaxExemptionCode>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>9.78</TaxPayable>
+          <NetTotal>92.50</NetTotal>
+          <GrossTotal>102.28</GrossTotal>
+        </DocumentTotals>
+      </StockMovement>
+      <StockMovement>
+        <DocumentNumber>GR SERIES-A/3</DocumentNumber>
+        <ATCUD>AAJFJHNC82-3</ATCUD>
+        <DocumentStatus>
+          <MovementStatus>N</MovementStatus>
+          <MovementStatusDate>2024-08-03T00:00:00</MovementStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>fM6SMF6xACY4BJAlj/4ERNXdgXOnYarRm8Xvq8S/uMRvQlHA4pRYmNnXJT+MXJ740V3KFxWhMe6bkZxcfv2AS6z5RoXJ3ue33NwGxQAS/ZZkOkuHMlR5JB4dxiXT+hZwLYDezWTf0jEI8Qnr+n2/dtaLrK1q6LBvMBEqElO/Pl0=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <MovementDate>2024-08-03</MovementDate>
+        <MovementType>GR</MovementType>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <SourceID>SOURCE_ID</SourceID>
+        <MovementComments>Per-stop delivery referencing the originating global transpo</MovementComments>
+        <ShipTo>
+          <Address>
+            <StreetName>Zona Industrial, Lote 23</StreetName>
+            <AddressDetail>Zona Industrial, Lote 23</AddressDetail>
+            <City>Lisboa</City>
+            <PostalCode>1300-300</PostalCode>
+            <Country>PT</Country>
+          </Address>
+        </ShipTo>
+        <ShipFrom>
+          <DeliveryDate>2024-08-03</DeliveryDate>
+          <Address>
+            <StreetName>Rua da Indústria 45</StreetName>
+            <AddressDetail>Rua da Indústria 45</AddressDetail>
+            <City>Porto</City>
+            <PostalCode>4050-300</PostalCode>
+            <Country>PT</Country>
+          </Address>
+        </ShipFrom>
+        <MovementStartTime>2024-08-03T23:59:59</MovementStartTime>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <OrderReferences>
+            <OriginatingON>PO-2024-001</OriginatingON>
+          </OrderReferences>
+          <OrderReferences>
+            <OriginatingON>GT SERIES-A/1</OriginatingON>
+            <OrderDate>2024-08-03</OrderDate>
+          </OrderReferences>
+          <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+          <ProductDescription>Development services</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>42.5000</UnitPrice>
+          <Description>Development services</Description>
+          <CreditAmount>42.50</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+          <SettlementAmount>7.50</SettlementAmount>
+        </Line>
+        <Line>
+          <LineNumber>2</LineNumber>
+          <OrderReferences>
+            <OriginatingON>GT SERIES-A/1</OriginatingON>
+            <OrderDate>2024-08-03</OrderDate>
+          </OrderReferences>
+          <ProductCode>1b68502e7947cd6ae7904a3d68df3c</ProductCode>
+          <ProductDescription>Exempt item</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>50.00</UnitPrice>
+          <Description>Exempt item</Description>
+          <CreditAmount>50.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>ISE</TaxCode>
+            <TaxPercentage>0</TaxPercentage>
+          </Tax>
+          <TaxExemptionReason>Decreto-Lei n.º 199/96, de 18 de outubro</TaxExemptionReason>
+          <TaxExemptionCode>M15</TaxExemptionCode>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>9.78</TaxPayable>
+          <NetTotal>92.50</NetTotal>
+          <GrossTotal>102.28</GrossTotal>
+        </DocumentTotals>
+      </StockMovement>
+    </MovementOfGoods>
+    <WorkingDocuments>
+      <NumberOfEntries>3</NumberOfEntries>
+      <TotalDebit>0</TotalDebit>
+      <TotalCredit>235.00</TotalCredit>
+      <WorkDocument>
+        <DocumentNumber>PF SERIES-A/1</DocumentNumber>
+        <ATCUD>AAJFJHNC82-1</ATCUD>
+        <DocumentStatus>
+          <WorkStatus>N</WorkStatus>
+          <WorkStatusDate>2024-08-03T00:00:00</WorkStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>hSvbIijMUx9IMR9x9NpZKVl1uKCCEvLddGhH1tHSxjslRGC09lPq0QjBwHtKlL1bxt7ejK9IDfKsYyPO18imHfO4+H6zFkvMglk4+qzfrw2RKVhP0DZ0ZYOZhkITl9rAYjZHBQJuwJq/zlUWKH9FEH19zQl7TdMNgSEMUUbnR0s=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <WorkDate>2024-08-03</WorkDate>
+        <WorkType>PF</WorkType>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <OrderReferences>
+            <OriginatingON>PO-2024-001</OriginatingON>
+          </OrderReferences>
+          <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+          <ProductDescription>Development services</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>42.5000</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Development services</Description>
+          <CreditAmount>42.50</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+          <SettlementAmount>7.50</SettlementAmount>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>9.78</TaxPayable>
+          <NetTotal>42.50</NetTotal>
+          <GrossTotal>52.28</GrossTotal>
+        </DocumentTotals>
+      </WorkDocument>
+      <WorkDocument>
+        <DocumentNumber>OU SERIES-A/1</DocumentNumber>
+        <ATCUD>AAJFJHNC82-1</ATCUD>
+        <DocumentStatus>
+          <WorkStatus>N</WorkStatus>
+          <WorkStatusDate>2024-08-03T00:00:00</WorkStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>g4YK/q/UjJLURI1rZZ0TnBTVw0JhSpABSEWRqARq+CRTCZzEsx9ocKJJ2r9Ge6dnrLKuvCgTL3Xb23PaFHbFiVEOJ7Lt1EHDsA4VDSN+HK6+UQ9HO0hxzDbv0XKPwcf8AbJtELu6n/D4FSjzQ/OK5SAWC4R1Z4xxuiwBmcxNOIA=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <WorkDate>2024-08-03</WorkDate>
+        <WorkType>OU</WorkType>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <ProductCode>a97a2cd03647fa716bd25864401dbf</ProductCode>
+          <ProductDescription>Noite em quarto duplo</ProductDescription>
+          <Quantity>2</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>50.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Noite em quarto duplo</Description>
+          <CreditAmount>100.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>23.00</TaxPayable>
+          <NetTotal>100.00</NetTotal>
+          <GrossTotal>123.00</GrossTotal>
+        </DocumentTotals>
+      </WorkDocument>
+      <WorkDocument>
+        <DocumentNumber>NE SERIES-A/1</DocumentNumber>
+        <ATCUD>AAJFJHNC82-1</ATCUD>
+        <DocumentStatus>
+          <WorkStatus>N</WorkStatus>
+          <WorkStatusDate>2024-08-03T00:00:00</WorkStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>AFJVoiMNHeoJKIbI7bifLgm+vP/oZwoHK8rogVBpH3WCGHwFH0O9S6+QX72H/JFKwbzPh7TI7BbUyQZIVs6oktBn30rI1e2aOPunbAxYC7/HSDaj2kjo8ULen3JXlSid3J1U4PlrvQ4ft7CWicdGbK5sLFy6zOFnrmZ6gzHJRaQ=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <WorkDate>2024-08-03</WorkDate>
+        <WorkType>NE</WorkType>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <OrderReferences>
+            <OriginatingON>PO-2024-001</OriginatingON>
+          </OrderReferences>
+          <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+          <ProductDescription>Development services</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>42.5000</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Development services</Description>
+          <CreditAmount>42.50</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+          <SettlementAmount>7.50</SettlementAmount>
+        </Line>
+        <Line>
+          <LineNumber>2</LineNumber>
+          <ProductCode>1b68502e7947cd6ae7904a3d68df3c</ProductCode>
+          <ProductDescription>Exempt item</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>50.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Exempt item</Description>
+          <CreditAmount>50.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>ISE</TaxCode>
+            <TaxPercentage>0</TaxPercentage>
+          </Tax>
+          <TaxExemptionReason>Decreto-Lei n.º 199/96, de 18 de outubro</TaxExemptionReason>
+          <TaxExemptionCode>M15</TaxExemptionCode>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>9.78</TaxPayable>
+          <NetTotal>92.50</NetTotal>
+          <GrossTotal>102.28</GrossTotal>
+        </DocumentTotals>
+      </WorkDocument>
+    </WorkingDocuments>
+    <Payments>
+      <NumberOfEntries>3</NumberOfEntries>
+      <TotalDebit>0</TotalDebit>
+      <TotalCredit>153.85000000</TotalCredit>
+      <Payment>
+        <PaymentRefNo>RG SERIES-A/1</PaymentRefNo>
+        <ATCUD>AAJFJHNC82-1</ATCUD>
+        <Period>8</Period>
+        <TransactionDate>2024-08-03</TransactionDate>
+        <PaymentType>RG</PaymentType>
+        <Description>Settlement split across cash and card</Description>
+        <SystemID>0194d10a-9314-76a0-9c5b-4d3d2f1c5678</SystemID>
+        <DocumentStatus>
+          <PaymentStatus>N</PaymentStatus>
+          <PaymentStatusDate>2024-08-03T00:00:00</PaymentStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourcePayment>P</SourcePayment>
+        </DocumentStatus>
+        <PaymentMethod>
+          <PaymentMechanism>NU</PaymentMechanism>
+          <PaymentAmount>30.00</PaymentAmount>
+          <PaymentDate>2024-08-03</PaymentDate>
+        </PaymentMethod>
+        <PaymentMethod>
+          <PaymentMechanism>CC</PaymentMechanism>
+          <PaymentAmount>31.50</PaymentAmount>
+          <PaymentDate>2024-08-03</PaymentDate>
+        </PaymentMethod>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <SourceDocumentID>
+            <OriginatingON>FT SERIES-A/10</OriginatingON>
+            <InvoiceDate>2024-08-03</InvoiceDate>
+            <Description>Invoice 10</Description>
+          </SourceDocumentID>
+          <CreditAmount>50.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>11.50</TaxPayable>
+          <NetTotal>50.00</NetTotal>
+          <GrossTotal>61.50</GrossTotal>
+        </DocumentTotals>
+      </Payment>
+      <Payment>
+        <PaymentRefNo>RG SERIES-A/2</PaymentRefNo>
+        <ATCUD>AAJFJHNC82-2</ATCUD>
+        <Period>8</Period>
+        <TransactionDate>2024-08-03</TransactionDate>
+        <PaymentType>RG</PaymentType>
+        <Description>Full settlement made in cash</Description>
+        <SystemID>0194d10a-9314-760b-a68c-a3044d45cf9e</SystemID>
+        <DocumentStatus>
+          <PaymentStatus>N</PaymentStatus>
+          <PaymentStatusDate>2024-08-03T00:00:00</PaymentStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourcePayment>P</SourcePayment>
+        </DocumentStatus>
+        <PaymentMethod>
+          <PaymentMechanism>NU</PaymentMechanism>
+          <PaymentAmount>4.74</PaymentAmount>
+          <PaymentDate>2024-08-03</PaymentDate>
+        </PaymentMethod>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <SourceDocumentID>
+            <OriginatingON>FT AGT/11</OriginatingON>
+            <InvoiceDate>2026-05-13</InvoiceDate>
+          </SourceDocumentID>
+          <CreditAmount>3.8499999999999996</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23</TaxPercentage>
+          </Tax>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>0.8854999999999999</TaxPayable>
+          <NetTotal>3.85</NetTotal>
+          <GrossTotal>4.74</GrossTotal>
+        </DocumentTotals>
+      </Payment>
+      <Payment>
+        <PaymentRefNo>RG SERIES-A/3</PaymentRefNo>
+        <ATCUD>AAJFJHNC82-3</ATCUD>
+        <Period>8</Period>
+        <TransactionDate>2024-08-03</TransactionDate>
+        <PaymentType>RG</PaymentType>
+        <Description>Full settlement made in cash</Description>
+        <SystemID>0194d10a-9314-760b-a68c-a3044d45cf9e</SystemID>
+        <DocumentStatus>
+          <PaymentStatus>N</PaymentStatus>
+          <PaymentStatusDate>2024-08-03T00:00:00</PaymentStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourcePayment>P</SourcePayment>
+        </DocumentStatus>
+        <PaymentMethod>
+          <PaymentMechanism>NU</PaymentMechanism>
+          <PaymentAmount>111.50</PaymentAmount>
+          <PaymentDate>2024-08-03</PaymentDate>
+        </PaymentMethod>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <SourceDocumentID>
+            <OriginatingON>FT SERIES-A/1</OriginatingON>
+            <InvoiceDate>2024-08-03</InvoiceDate>
+            <Description>Invoice 1</Description>
+          </SourceDocumentID>
+          <CreditAmount>50.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+        </Line>
+        <Line>
+          <LineNumber>2</LineNumber>
+          <SourceDocumentID>
+            <OriginatingON>FT SERIES-A/2</OriginatingON>
+            <InvoiceDate>2024-08-03</InvoiceDate>
+            <Description>Invoice 2</Description>
+          </SourceDocumentID>
+          <CreditAmount>50.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>ISE</TaxCode>
+            <TaxPercentage>0</TaxPercentage>
+          </Tax>
+          <TaxExemptionReason>Decreto-Lei n.º 199/96, de 18 de outubro</TaxExemptionReason>
+          <TaxExemptionCode>M15</TaxExemptionCode>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>11.50</TaxPayable>
+          <NetTotal>100.00</NetTotal>
+          <GrossTotal>111.50</GrossTotal>
+        </DocumentTotals>
+      </Payment>
+    </Payments>
+  </SourceDocuments>
+</AuditFile>

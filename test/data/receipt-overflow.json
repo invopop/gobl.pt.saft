@@ -1,0 +1,120 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "0194d10a-9314-7687-ac81-5c72e3a8abbf",
+    "dig": {
+      "alg": "sha256",
+      "val": "cb6551ebaa829f6bdb44e6a66b161813bb5acc7839cdd0483ff6d9cd3082f281"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/payment",
+    "$regime": "PT",
+    "$addons": [
+      "pt-saft-v1"
+    ],
+    "uuid": "0194d10a-9314-760b-a68c-a3044d45cf9e",
+    "type": "receipt",
+    "series": "RG SERIES-A",
+    "issue_date": "2024-08-03",
+    "currency": "EUR",
+    "ext": {
+      "pt-saft-payment-type": "RG",
+      "pt-saft-source": "P"
+    },
+    "supplier": {
+      "name": "Innovatech Lda",
+      "tax_id": {
+        "country": "PT",
+        "code": "770013813"
+      },
+      "addresses": [
+        {
+          "street": "Rua das Flores 200 3º Esquerdo",
+          "locality": "Porto",
+          "code": "4050-265",
+          "country": "PT"
+        }
+      ],
+      "registration": {
+        "capital": "100000.00",
+        "office": "Porto"
+      }
+    },
+    "customer": {
+      "name": "Gusto Unipessoal Lda",
+      "tax_id": {
+        "country": "PT",
+        "code": "514329874"
+      },
+      "addresses": [
+        {
+          "street": "Avenida da Liberdade 152 2º Direito",
+          "locality": "Lisboa",
+          "code": "1250-146",
+          "country": "PT"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "gusto@example.com"
+        }
+      ],
+      "websites": [
+        {
+          "url": "https://gusto.example.com"
+        }
+      ],
+      "telephones": [
+        {
+          "num": "+351912345678"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "document": {
+          "type": "standard",
+          "issue_date": "2026-05-13",
+          "series": "FT AGT",
+          "code": "11"
+        },
+        "amount": "4.74",
+        "tax": {
+          "categories": [
+            {
+              "code": "VAT",
+              "rates": [
+                {
+                  "key": "standard",
+                  "ext": {
+                    "pt-region": "PT",
+                    "pt-saft-tax-rate": "NOR"
+                  },
+                  "base": "3.8499999999999996",
+                  "percent": "23%",
+                  "amount": "0.8854999999999999"
+                }
+              ],
+              "amount": "0.8854999999999999"
+            }
+          ],
+          "sum": "0.8854999999999999"
+        }
+      }
+    ],
+    "methods": [
+      {
+        "key": "cash",
+        "description": "Full settlement made in cash",
+        "percent": "100%",
+        "amount": "4.74",
+        "ext": {
+          "pt-saft-payment-means": "NU"
+        }
+      }
+    ],
+    "total": "4.74"
+  }
+}

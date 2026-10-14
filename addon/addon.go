@@ -1,4 +1,4 @@
-// package addon provides the SAF-T addon for Portuguese invoices.
+// Package addon provides the SAF-T addon for Portuguese invoices.
 package addon
 
 import (

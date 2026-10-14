@@ -1,0 +1,111 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "0194020a-1f2e-7000-9ede-4ad7c0a9812c",
+    "dig": {
+      "alg": "sha256",
+      "val": "d19e7dcef187c8bf2f525d197c8249d3154f56f1bfec2a1abc7dc8ea901a6d5d"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/order",
+    "$regime": "PT",
+    "$addons": [
+      "pt-saft-v1"
+    ],
+    "uuid": "0193f36f-9fda-7000-9aff-4f4e28043a88",
+    "type": "sale",
+    "series": "OU SERIES-A",
+    "issue_date": "2024-08-03",
+    "value_date": "2024-08-03",
+    "currency": "EUR",
+    "tax": {
+      "ext": {
+        "pt-saft-source": "P",
+        "pt-saft-work-type": "OU"
+      }
+    },
+    "supplier": {
+      "name": "Innovatech Lda",
+      "tax_id": {
+        "country": "PT",
+        "code": "770013813"
+      },
+      "addresses": [
+        {
+          "street": "Rua das Flores 200 3º Esquerdo",
+          "locality": "Porto",
+          "code": "4050-265",
+          "country": "PT"
+        }
+      ],
+      "registration": {
+        "capital": "100000.00",
+        "office": "Porto"
+      }
+    },
+    "customer": {
+      "name": "Gusto Unipessoal Lda",
+      "tax_id": {
+        "country": "PT",
+        "code": "514329874"
+      }
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "2",
+        "item": {
+          "name": "Noite em quarto duplo",
+          "price": "50.00",
+          "unit": "one",
+          "ext": {
+            "pt-saft-product-type": "S"
+          }
+        },
+        "sum": "100.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "23.0%",
+            "ext": {
+              "pt-region": "PT",
+              "pt-saft-tax-rate": "NOR"
+            }
+          }
+        ],
+        "total": "100.00"
+      }
+    ],
+    "totals": {
+      "sum": "100.00",
+      "total": "100.00",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "key": "standard",
+                "ext": {
+                  "pt-region": "PT",
+                  "pt-saft-tax-rate": "NOR"
+                },
+                "base": "100.00",
+                "percent": "23.0%",
+                "amount": "23.00"
+              }
+            ],
+            "amount": "23.00"
+          }
+        ],
+        "sum": "23.00"
+      },
+      "tax": "23.00",
+      "total_with_tax": "123.00",
+      "payable": "123.00"
+    }
+  }
+}

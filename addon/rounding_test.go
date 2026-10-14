@@ -55,8 +55,9 @@ func awkwardInvoice(t *testing.T) *bill.Invoice {
 
 // assertCurrencyPrecision checks that no amount carries more decimals than
 // the currency supports, which is what the AT will accept.
-func assertCurrencyPrecision(t *testing.T, cur currency.Code, amounts ...*num.Amount) {
+func assertCurrencyPrecision(t *testing.T, amounts ...*num.Amount) {
 	t.Helper()
+	cur := currency.EUR
 	def := cur.Def()
 	require.NotNil(t, def)
 	for _, a := range amounts {
@@ -86,14 +87,14 @@ func TestRoundingToCurrency(t *testing.T) {
 	require.NoError(t, rules.Validate(inv))
 
 	for _, l := range inv.Lines {
-		assertCurrencyPrecision(t, currency.EUR, l.Sum, l.Total)
+		assertCurrencyPrecision(t, l.Sum, l.Total)
 	}
-	assertCurrencyPrecision(t, currency.EUR,
+	assertCurrencyPrecision(t,
 		&inv.Totals.Sum, &inv.Totals.Total, &inv.Totals.TotalWithTax, &inv.Totals.Payable,
 	)
 	for _, cat := range inv.Totals.Taxes.Categories {
 		for _, r := range cat.Rates {
-			assertCurrencyPrecision(t, currency.EUR, &r.Base, &r.Amount)
+			assertCurrencyPrecision(t, &r.Base, &r.Amount)
 		}
 	}
 
@@ -153,7 +154,7 @@ func TestRoundingCurrencyRuleWithPricesIncluded(t *testing.T) {
 	require.NotNil(t, vat)
 	sum := num.MakeAmount(0, 2)
 	for _, r := range vat.Rates {
-		assertCurrencyPrecision(t, currency.EUR, &r.Base, &r.Amount)
+		assertCurrencyPrecision(t, &r.Base, &r.Amount)
 		sum = sum.Add(r.Base)
 	}
 	assert.Equal(t, inv.Totals.Total.String(), sum.String())

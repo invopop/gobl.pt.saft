@@ -1,0 +1,162 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "0194020a-1f2e-7000-9ede-4ad7c0a9810f",
+    "dig": {
+      "alg": "sha256",
+      "val": "09d52a65d9ba3e9e41c96bb00ab5103d07097c6b51a9619727c0ecc55b7d3f36"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "$regime": "PT",
+    "$addons": [
+      "pt-saft-v1"
+    ],
+    "uuid": "0193f36f-9fda-7000-9aff-4f4e28043a66",
+    "type": "standard",
+    "series": "FT SERIES-A",
+    "issue_date": "2024-08-03",
+    "value_date": "2024-08-03",
+    "currency": "USD",
+    "exchange_rates": [
+      {
+        "from": "USD",
+        "to": "EUR",
+        "amount": "0.96"
+      }
+    ],
+    "tax": {
+      "ext": {
+        "pt-saft-invoice-type": "FT",
+        "pt-saft-source": "P"
+      }
+    },
+    "supplier": {
+      "name": "Innovatech Lda",
+      "tax_id": {
+        "country": "PT",
+        "code": "770013813"
+      },
+      "addresses": [
+        {
+          "street": "Rua das Flores 200 3º Esquerdo",
+          "locality": "Porto",
+          "code": "4050-265",
+          "country": "PT"
+        }
+      ],
+      "registration": {
+        "capital": "100000.00",
+        "office": "Porto"
+      }
+    },
+    "customer": {
+      "name": "Gusto Unipessoal Lda",
+      "tax_id": {
+        "country": "PT",
+        "code": "514329874"
+      },
+      "addresses": [
+        {
+          "street": "Avenida da Liberdade 152 2º Direito",
+          "locality": "Lisboa",
+          "code": "1250-146",
+          "country": "PT"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "gusto@example.com"
+        }
+      ],
+      "websites": [
+        {
+          "url": "https://gusto.example.com"
+        }
+      ],
+      "telephones": [
+        {
+          "num": "+351912345678"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "1",
+        "item": {
+          "name": "Development services",
+          "price": "50.00",
+          "unit": "one",
+          "ext": {
+            "pt-saft-product-type": "S"
+          }
+        },
+        "sum": "50.00",
+        "discounts": [
+          {
+            "percent": "15.0%",
+            "amount": "7.50"
+          }
+        ],
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "23.0%",
+            "ext": {
+              "pt-region": "PT",
+              "pt-saft-tax-rate": "NOR"
+            }
+          }
+        ],
+        "total": "42.50"
+      }
+    ],
+    "payment": {
+      "advances": [
+        {
+          "date": "2024-08-03",
+          "key": "card",
+          "description": "Advance payment",
+          "amount": "12.34",
+          "ext": {
+            "pt-saft-payment-means": "CC"
+          }
+        }
+      ]
+    },
+    "totals": {
+      "sum": "42.50",
+      "total": "42.50",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "key": "standard",
+                "ext": {
+                  "pt-region": "PT",
+                  "pt-saft-tax-rate": "NOR"
+                },
+                "base": "42.50",
+                "percent": "23.0%",
+                "amount": "9.78"
+              }
+            ],
+            "amount": "9.78"
+          }
+        ],
+        "sum": "9.78"
+      },
+      "tax": "9.78",
+      "total_with_tax": "52.28",
+      "payable": "52.28",
+      "advance": "12.34",
+      "due": "39.94"
+    }
+  }
+}
