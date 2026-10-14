@@ -1,0 +1,118 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "0194020a-1f2e-7000-9ede-4ad7c0a9810f",
+    "dig": {
+      "alg": "sha256",
+      "val": "c406f07f4c992eb441269f929f42bcd57824ad26c7251498d7ed49bdbb218246"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/delivery",
+    "$regime": "PT",
+    "$addons": [
+      "pt-saft-v1"
+    ],
+    "uuid": "0193f36f-9fda-7000-9aff-4f4e28043a66",
+    "type": "note",
+    "series": "GR SERIES-A",
+    "issue_date": "2024-08-03",
+    "currency": "EUR",
+    "despatch_date": "2024-08-03",
+    "tax": {
+      "ext": {
+        "pt-saft-movement-type": "GR"
+      }
+    },
+    "supplier": {
+      "name": "Innovatech Lda",
+      "tax_id": {
+        "country": "PT",
+        "code": "770013813"
+      },
+      "addresses": [
+        {
+          "street": "Rua das Flores 200 3º Esquerdo",
+          "locality": "Porto",
+          "code": "4050-265",
+          "country": "PT"
+        }
+      ],
+      "registration": {
+        "capital": "100000.00",
+        "office": "Porto"
+      }
+    },
+    "customer": {
+      "name": "Gusto Unipessoal Lda",
+      "tax_id": {
+        "country": "PT",
+        "code": "514329874"
+      },
+      "addresses": [
+        {
+          "street": "Avenida da Liberdade 152 2º Direito",
+          "locality": "Lisboa",
+          "code": "1250-146",
+          "country": "PT"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "gusto@example.com"
+        }
+      ],
+      "websites": [
+        {
+          "url": "https://gusto.example.com"
+        }
+      ],
+      "telephones": [
+        {
+          "num": "+351912345678"
+        }
+      ]
+    },
+    "despatcher": {
+      "name": "Innovatech Logistics",
+      "addresses": [
+        {
+          "street": "Rua da Indústria 45",
+          "locality": "Porto",
+          "code": "4050-300",
+          "country": "PT"
+        }
+      ]
+    },
+    "receiver": {
+      "name": "Gusto Armazém",
+      "addresses": [
+        {
+          "street": "Zona Industrial, Lote 23",
+          "locality": "Lisboa",
+          "code": "1300-300",
+          "country": "PT"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "1",
+        "order": "PO-2024-001",
+        "item": {
+          "name": "Development services",
+          "unit": "one",
+          "ext": {
+            "pt-saft-product-type": "S"
+          }
+        }
+      }
+    ],
+    "notes": [
+      {
+        "text": "Delivery of development services as per contract agreement."
+      }
+    ]
+  }
+}
