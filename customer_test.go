@@ -134,6 +134,41 @@ func TestBuildCustomer(t *testing.T) {
 		})
 	}
 
+	t.Run("Final consumer – generic PT tax ID", func(t *testing.T) {
+		genericTaxID := func() *tax.Identity {
+			return &tax.Identity{Country: "PT", Code: "999999990"}
+		}
+
+		guest1 := saft.BuildCustomer(&org.Party{
+			Name:  "José Mourinho",
+			TaxID: genericTaxID(),
+		})
+		guest2 := saft.BuildCustomer(&org.Party{
+			Name:  "Cristiano Ronaldo",
+			TaxID: genericTaxID(),
+			Addresses: []*org.Address{
+				{Locality: "London", Country: "GB"},
+			},
+		})
+		anonymous := saft.BuildCustomer(&org.Party{TaxID: genericTaxID()})
+
+		for _, c := range []*saft.Customer{guest1, guest2, anonymous} {
+			assert.NotEqual(t, "999999990", c.CustomerID)
+			assert.Equal(t, "999999990", c.CustomerTaxID)
+		}
+
+		assert.Equal(t, "José Mourinho", guest1.CompanyName)
+		assert.Equal(t, "PT", guest1.BillingAddress.Country)
+		assert.Equal(t, "Cristiano Ronaldo", guest2.CompanyName)
+		assert.Equal(t, "GB", guest2.BillingAddress.Country)
+		assert.Equal(t, "Consumidor final", anonymous.CompanyName)
+		assert.Equal(t, "PT", anonymous.BillingAddress.Country)
+
+		assert.NotEqual(t, guest1.CustomerID, guest2.CustomerID)
+		assert.NotEqual(t, guest1.CustomerID, anonymous.CustomerID)
+		assert.Equal(t, anonymous.CustomerID, saft.BuildCustomer(&org.Party{TaxID: genericTaxID()}).CustomerID)
+	})
+
 	t.Run("Missing customer address", func(t *testing.T) {
 		cus := &org.Party{
 			Name: "Innovatech Lda",
