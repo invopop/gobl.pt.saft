@@ -69,6 +69,21 @@
       </BillingAddress>
       <SelfBillingIndicator>0</SelfBillingIndicator>
     </Customer>
+    <Customer>
+      <CustomerID>d6939d1b3bba15f4336babc5766151</CustomerID>
+      <AccountID>Desconhecido</AccountID>
+      <CustomerTaxID>999999990</CustomerTaxID>
+      <CompanyName>Maria Silva</CompanyName>
+      <BillingAddress>
+        <StreetName>Rua Augusta 25</StreetName>
+        <AddressDetail>Rua Augusta 25</AddressDetail>
+        <City>Lisboa</City>
+        <PostalCode>1100-048</PostalCode>
+        <Country>PT</Country>
+      </BillingAddress>
+      <Email>maria@example.com</Email>
+      <SelfBillingIndicator>0</SelfBillingIndicator>
+    </Customer>
     <Product>
       <ProductType>S</ProductType>
       <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
@@ -144,9 +159,9 @@
   </MasterFiles>
   <SourceDocuments>
     <SalesInvoices>
-      <NumberOfEntries>11</NumberOfEntries>
+      <NumberOfEntries>12</NumberOfEntries>
       <TotalDebit>50.00</TotalDebit>
-      <TotalCredit>1668.30000000</TotalCredit>
+      <TotalCredit>1760.80000000</TotalCredit>
       <Invoice>
         <InvoiceNo>NC SERIES-A/1</InvoiceNo>
         <ATCUD>AAJFJHNC82-1</ATCUD>
@@ -527,6 +542,97 @@
           <TaxPayable>10.50</TaxPayable>
           <NetTotal>50.00</NetTotal>
           <GrossTotal>60.50</GrossTotal>
+        </DocumentTotals>
+      </Invoice>
+      <Invoice>
+        <InvoiceNo>FT SERIES-B/1</InvoiceNo>
+        <ATCUD>AAJFJHNC82-1</ATCUD>
+        <DocumentStatus>
+          <InvoiceStatus>N</InvoiceStatus>
+          <InvoiceStatusDate>2024-08-03T00:00:00</InvoiceStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>3QM4m/WvQHS9fZ6gNFXY82s02am5ezKLs3vBN+uMV4v0n3Aebun8GdAR49ULQUU1qzJHQqhGZKqlz6Bo9yosbGeuPqNlF6W0P/kqCFDuJXWvFlNE7XsFlZXdFr7vxT/0G5Fse2Bt/K2UkFTrCfSMye/PpBWFvH6FzxDaiL4JGcw=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <InvoiceDate>2024-08-03</InvoiceDate>
+        <InvoiceType>FT</InvoiceType>
+        <SpecialRegimes>
+          <SelfBillingIndicator>0</SelfBillingIndicator>
+          <CashVATSchemeIndicator>0</CashVATSchemeIndicator>
+          <ThirdPartiesBillingIndicator>0</ThirdPartiesBillingIndicator>
+        </SpecialRegimes>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>d6939d1b3bba15f4336babc5766151</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+          <ProductDescription>Development services</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>42.5000</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Development services</Description>
+          <CreditAmount>42.50</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+          <SettlementAmount>7.50</SettlementAmount>
+        </Line>
+        <Line>
+          <LineNumber>2</LineNumber>
+          <ProductCode>1b68502e7947cd6ae7904a3d68df3c</ProductCode>
+          <ProductDescription>Exempt item</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>50.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Exempt item</Description>
+          <CreditAmount>50.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>ISE</TaxCode>
+            <TaxPercentage>0</TaxPercentage>
+          </Tax>
+          <TaxExemptionReason>Decreto-Lei n.º 199/96, de 18 de outubro</TaxExemptionReason>
+          <TaxExemptionCode>M15</TaxExemptionCode>
+        </Line>
+        <Line>
+          <LineNumber>3</LineNumber>
+          <ProductCode>5fda3df1ffe4720f3a3a1361528739</ProductCode>
+          <ProductDescription>Development services</ProductDescription>
+          <Quantity>12</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>0.0000000000</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Development services</Description>
+          <CreditAmount>0.00000000</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+          <SettlementAmount>2.43900000</SettlementAmount>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>9.78</TaxPayable>
+          <NetTotal>92.50</NetTotal>
+          <GrossTotal>102.28</GrossTotal>
+          <Settlement>
+            <PaymentTerms>12.34 EUR por pagar com vencimento em 2024-12-23</PaymentTerms>
+          </Settlement>
+          <Payment>
+            <PaymentMechanism>CC</PaymentMechanism>
+            <PaymentAmount>12.34</PaymentAmount>
+            <PaymentDate>2024-08-03</PaymentDate>
+          </Payment>
         </DocumentTotals>
       </Invoice>
       <Invoice>

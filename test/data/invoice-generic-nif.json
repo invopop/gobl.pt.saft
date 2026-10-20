@@ -1,0 +1,228 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "0194020a-1f2e-7000-9ede-4ad7c0a98200",
+    "dig": {
+      "alg": "sha256",
+      "val": "80a347194f10877032a0ba75ae999de89ede7254e7dd484b80f2cd8c5f047786"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "$regime": "PT",
+    "$addons": [
+      "pt-saft-v1"
+    ],
+    "uuid": "0193f36f-9fda-7000-9aff-4f4e28043b01",
+    "type": "standard",
+    "series": "FT SERIES-B",
+    "issue_date": "2024-08-03",
+    "value_date": "2024-08-03",
+    "currency": "EUR",
+    "tax": {
+      "ext": {
+        "pt-saft-invoice-type": "FT",
+        "pt-saft-source": "P"
+      }
+    },
+    "supplier": {
+      "name": "Innovatech Lda",
+      "tax_id": {
+        "country": "PT",
+        "code": "770013813"
+      },
+      "addresses": [
+        {
+          "street": "Rua das Flores 200 3º Esquerdo",
+          "locality": "Porto",
+          "code": "4050-265",
+          "country": "PT"
+        }
+      ],
+      "registration": {
+        "capital": "100000.00",
+        "office": "Porto"
+      }
+    },
+    "customer": {
+      "name": "Maria Silva",
+      "tax_id": {
+        "country": "PT",
+        "code": "999999990"
+      },
+      "addresses": [
+        {
+          "street": "Rua Augusta 25",
+          "locality": "Lisboa",
+          "code": "1100-048",
+          "country": "PT"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "maria@example.com"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "1",
+        "item": {
+          "name": "Development services",
+          "price": "50.00",
+          "unit": "one",
+          "ext": {
+            "pt-saft-product-type": "S"
+          }
+        },
+        "sum": "50.00",
+        "discounts": [
+          {
+            "percent": "15.0%",
+            "amount": "7.50"
+          }
+        ],
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "23.0%",
+            "ext": {
+              "pt-region": "PT",
+              "pt-saft-tax-rate": "NOR"
+            }
+          }
+        ],
+        "total": "42.50"
+      },
+      {
+        "i": 2,
+        "quantity": "1",
+        "item": {
+          "name": "Exempt item",
+          "price": "50.00",
+          "unit": "one",
+          "ext": {
+            "pt-saft-product-type": "S"
+          }
+        },
+        "sum": "50.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "exempt",
+            "ext": {
+              "pt-region": "PT",
+              "pt-saft-exemption": "M15",
+              "pt-saft-tax-rate": "ISE"
+            }
+          }
+        ],
+        "total": "50.00",
+        "notes": [
+          {
+            "key": "legal",
+            "code": "M15",
+            "src": "pt-saft-exemption",
+            "text": "Decreto-Lei n.º 199/96, de 18 de outubro"
+          }
+        ]
+      },
+      {
+        "i": 3,
+        "quantity": "12",
+        "item": {
+          "name": "Development services",
+          "price": "0.20325000",
+          "unit": "one",
+          "ext": {
+            "pt-saft-product-type": "S"
+          }
+        },
+        "sum": "2.43900000",
+        "discounts": [
+          {
+            "percent": "100.0%",
+            "amount": "2.43900000"
+          }
+        ],
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "23.0%",
+            "ext": {
+              "pt-region": "PT",
+              "pt-saft-tax-rate": "NOR"
+            }
+          }
+        ],
+        "total": "0.00000000"
+      }
+    ],
+    "payment": {
+      "terms": {
+        "due_dates": [
+          {
+            "date": "2024-12-23",
+            "amount": "12.34"
+          }
+        ]
+      },
+      "advances": [
+        {
+          "date": "2024-08-03",
+          "key": "card",
+          "description": "Advance payment",
+          "amount": "12.34",
+          "ext": {
+            "pt-saft-payment-means": "CC"
+          }
+        }
+      ]
+    },
+    "totals": {
+      "sum": "92.50",
+      "total": "92.50",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "key": "standard",
+                "ext": {
+                  "pt-region": "PT",
+                  "pt-saft-tax-rate": "NOR"
+                },
+                "base": "42.50",
+                "percent": "23.0%",
+                "amount": "9.78"
+              },
+              {
+                "key": "exempt",
+                "ext": {
+                  "pt-region": "PT",
+                  "pt-saft-exemption": "M15",
+                  "pt-saft-tax-rate": "ISE"
+                },
+                "base": "50.00",
+                "amount": "0.00"
+              }
+            ],
+            "amount": "9.78"
+          }
+        ],
+        "sum": "9.78"
+      },
+      "tax": "9.78",
+      "total_with_tax": "102.28",
+      "payable": "102.28",
+      "advance": "12.34",
+      "due": "89.94"
+    }
+  }
+}
