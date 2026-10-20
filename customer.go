@@ -118,13 +118,16 @@ func fax(gcus *org.Party) string {
 }
 
 func determineCustomerID(gcus *org.Party, cus *Customer) string {
-	// If the customer is a PT taxpayer, then use the tax ID
-	if gcus.TaxID != nil && gcus.TaxID.Code != "" && gcus.TaxID.Country == l10n.PT.Tax() {
+	// If the customer is an identified PT taxpayer, then use the tax ID. The generic
+	// final consumer NIF is shared by unrelated people, so it falls through to the hash.
+	if gcus.TaxID != nil &&
+		gcus.TaxID.Code != "" &&
+		gcus.TaxID.Code.String() != GenericCustomerTaxID &&
+		gcus.TaxID.Country == l10n.PT.Tax() {
+
 		return gcus.TaxID.Code.String()
 	}
 
-	// Otherwise, use the hash of the customer data. Any difference in the
-	// SAF-T customer data will result in a different customer ID.
 	hashID := hashID(cus)
 	if hashID == GenericCustomerHash {
 		// If all the data is generic, then use the generic customer ID according
