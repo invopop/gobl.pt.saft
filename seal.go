@@ -104,10 +104,13 @@ func validateDocument(doc sealable, prevSig *Signature, startDate cal.Date) erro
 // validateIssueDate ensures the issue date preserves the chronological order of the
 // series.
 func validateIssueDate(doc sealable, prevSig *Signature, startDate cal.Date) error {
+	d := doc.GetIssueDate()
+	if d.IsZero() {
+		return errors.New("is required")
+	}
+
 	loc := doc.GetRegimeDef().TimeLocation()
 	today := config.TodayIn(loc)
-	d := doc.GetIssueDate()
-
 	if d.After(today.Date) {
 		return fmt.Errorf("must not be after today in %s (%s)", loc.String(), today.String())
 	}

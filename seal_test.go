@@ -222,6 +222,21 @@ func TestCode(t *testing.T) {
 func TestIssueDateValidation(t *testing.T) {
 	certPath := test.Path("test", "certs", "signing_key.pem")
 
+	t.Run("Issue date not set", func(t *testing.T) {
+		env, err := test.LoadEnvelope("invoice-b2b.json")
+		require.NoError(t, err)
+
+		inv, ok := env.Extract().(*bill.Invoice)
+		require.True(t, ok)
+		inv.IssueDate = cal.Date{}
+
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJ3N5YS", &config.Config{
+			CertificateNumber: 456,
+			SigningKeyPath:    certPath,
+		})
+		require.ErrorContains(t, err, "issue_date: is required")
+	})
+
 	// The test envelope is issued on 2024-08-03
 	tests := []struct {
 		name  string
