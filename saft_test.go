@@ -8,6 +8,7 @@ import (
 	"github.com/invopop/gobl.pt.saft/config"
 	"github.com/invopop/gobl.pt.saft/test"
 	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -38,7 +39,7 @@ func TestConvert(t *testing.T) {
 		env, err := test.LoadEnvelope("invoice-b2b.json")
 		require.NoError(t, err)
 
-		_, err = saft.Seal(env, nil, "AAJFJHNC82", &config.Config{
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJHNC82", &config.Config{
 			CertificateNumber: 123,
 			SigningKeyPath:    test.Path("test", "certs", "signing_key.pem"),
 		})
@@ -56,7 +57,7 @@ func TestConvert(t *testing.T) {
 		env, err := test.LoadEnvelope("invoice-b2b.json")
 		require.NoError(t, err)
 
-		_, err = saft.Seal(env, nil, "AAJFJHNC82", &config.Config{
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJHNC82", &config.Config{
 			CertificateNumber: 123,
 			SigningKeyPath:    test.Path("test", "certs", "signing_key.pem"),
 		})
@@ -93,7 +94,7 @@ func TestConvert(t *testing.T) {
 		env, err := test.LoadEnvelope("receipt.json")
 		require.NoError(t, err)
 
-		_, err = saft.Seal(env, nil, "AAJFJHNC82", &config.Config{
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJHNC82", &config.Config{
 			CertificateNumber: 123,
 			SigningKeyPath:    test.Path("test", "certs", "signing_key.pem"),
 		})
@@ -125,7 +126,7 @@ func TestConvert(t *testing.T) {
 		env, err := test.LoadEnvelope("invoice-proforma.json")
 		require.NoError(t, err)
 
-		_, err = saft.Seal(env, nil, "AAJFJHNC82", &config.Config{
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJHNC82", &config.Config{
 			CertificateNumber: 123,
 			SigningKeyPath:    test.Path("test", "certs", "signing_key.pem"),
 		})
@@ -162,7 +163,7 @@ func TestConvert(t *testing.T) {
 		env, err := test.LoadEnvelope("delivery-note.json")
 		require.NoError(t, err)
 
-		_, err = saft.Seal(env, nil, "AAJFJHNC82", &config.Config{
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJHNC82", &config.Config{
 			CertificateNumber: 123,
 			SigningKeyPath:    test.Path("test", "certs", "signing_key.pem"),
 		})
