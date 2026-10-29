@@ -84,6 +84,7 @@ import (
 	"github.com/invopop/gobl"
 	saft "github.com/invopop/gobl.pt.saft"
 	"github.com/invopop/gobl.pt.saft/config"
+	"github.com/invopop/gobl/cal"
 )
 
 func main() {
@@ -96,9 +97,10 @@ func main() {
 		SigningKeyVersion: "1",
 	}
 
-	var prev *saft.Signature // last signature of the series, nil for the first document
+	var prev *saft.Signature            // last signature of the series, nil for the first document
+	start := cal.MakeDate(2024, 1, 1) // start date registered with the AT for the series
 
-	sig, err := saft.Seal(env, prev, "AAJFJHNC82", cfg) // series validation code
+	sig, err := saft.Seal(env, prev, start, "AAJFJHNC82", cfg) // series validation code
 	if err != nil {
 		panic(err)
 	}

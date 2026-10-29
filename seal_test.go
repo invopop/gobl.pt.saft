@@ -200,6 +200,23 @@ func TestCode(t *testing.T) {
 		})
 		assert.ErrorContains(t, err, "code: must not be set")
 	})
+
+	t.Run("Code given on external document", func(t *testing.T) {
+		env, err := test.LoadEnvelope("invoice-b2b.json")
+		require.NoError(t, err)
+
+		inv, ok := env.Extract().(*bill.Invoice)
+		require.True(t, ok)
+
+		inv.Code = "123"
+		inv.Tax.Ext = inv.Tax.Ext.Set(addon.ExtKeySourceRef, "FTM abc/123")
+
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJ3N5YS", &config.Config{
+			CertificateNumber: 456,
+			SigningKeyPath:    certPath,
+		})
+		assert.ErrorContains(t, err, "code: must not be set")
+	})
 }
 
 func TestIssueDateValidation(t *testing.T) {
