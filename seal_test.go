@@ -10,6 +10,7 @@ import (
 	"github.com/invopop/gobl.pt.saft/config"
 	"github.com/invopop/gobl.pt.saft/test"
 	"github.com/invopop/gobl/bill"
+	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/regimes/pt"
 	"github.com/stretchr/testify/assert"
@@ -23,7 +24,7 @@ func TestSeal(t *testing.T) {
 		env, err := test.LoadEnvelope("invoice-b2b.json")
 		require.NoError(t, err)
 
-		sig, err := saft.Seal(env, nil, "AAJFJ3N5YS", &config.Config{
+		sig, err := saft.Seal(env, nil, cal.Date{}, "AAJFJ3N5YS", &config.Config{
 			CertificateNumber: 456,
 			SigningKeyPath:    certPath,
 		})
@@ -46,7 +47,7 @@ func TestSeal(t *testing.T) {
 		env, err := test.LoadEnvelope("invoice-proforma.json")
 		require.NoError(t, err)
 
-		sig, err := saft.Seal(env, nil, "AAJFJ3N5YS", &config.Config{
+		sig, err := saft.Seal(env, nil, cal.Date{}, "AAJFJ3N5YS", &config.Config{
 			CertificateNumber: 456,
 			SigningKeyPath:    certPath,
 		})
@@ -72,7 +73,7 @@ func TestSeal(t *testing.T) {
 		env, err := test.LoadEnvelope("purchase-order.json")
 		require.NoError(t, err)
 
-		sig, err := saft.Seal(env, nil, "AAJFJ3N5YS", &config.Config{
+		sig, err := saft.Seal(env, nil, cal.Date{}, "AAJFJ3N5YS", &config.Config{
 			CertificateNumber: 456,
 			SigningKeyPath:    certPath,
 		})
@@ -98,7 +99,7 @@ func TestSeal(t *testing.T) {
 		env, err := test.LoadEnvelope("receipt.json")
 		require.NoError(t, err)
 
-		sig, err := saft.Seal(env, nil, "AAJFJ3N5YS", &config.Config{
+		sig, err := saft.Seal(env, nil, cal.Date{}, "AAJFJ3N5YS", &config.Config{
 			CertificateNumber: 456,
 			SigningKeyPath:    certPath,
 		})
@@ -124,7 +125,7 @@ func TestSeal(t *testing.T) {
 		env, err := test.LoadEnvelope("delivery-note.json")
 		require.NoError(t, err)
 
-		sig, err := saft.Seal(env, nil, "AAJFJ3N5YS", &config.Config{
+		sig, err := saft.Seal(env, nil, cal.Date{}, "AAJFJ3N5YS", &config.Config{
 			CertificateNumber: 456,
 			SigningKeyPath:    certPath,
 		})
@@ -153,7 +154,7 @@ func TestCode(t *testing.T) {
 		env, err := test.LoadEnvelope("invoice-b2b.json")
 		require.NoError(t, err)
 
-		_, err = saft.Seal(env, nil, "AAJFJ3N5YS", &config.Config{
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJ3N5YS", &config.Config{
 			CertificateNumber: 456,
 			SigningKeyPath:    certPath,
 		})
@@ -169,10 +170,11 @@ func TestCode(t *testing.T) {
 		require.NoError(t, err)
 
 		sig := &saft.Signature{
+			IssueDate:  "2024-08-01",
 			DocumentNo: "FT SERIES-A/123",
 		}
 
-		_, err = saft.Seal(env, sig, "AAJFJ3N5YS", &config.Config{
+		_, err = saft.Seal(env, sig, cal.Date{}, "AAJFJ3N5YS", &config.Config{
 			CertificateNumber: 456,
 			SigningKeyPath:    certPath,
 		})
@@ -192,7 +194,7 @@ func TestCode(t *testing.T) {
 
 		inv.Code = "123"
 
-		_, err = saft.Seal(env, nil, "AAJFJ3N5YS", &config.Config{
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJ3N5YS", &config.Config{
 			CertificateNumber: 456,
 			SigningKeyPath:    certPath,
 		})
@@ -203,16 +205,19 @@ func TestCode(t *testing.T) {
 func TestIssueDateValidation(t *testing.T) {
 	certPath := test.Path("test", "certs", "signing_key.pem")
 
+	// The test envelope is issued on 2024-08-03
 	tests := []struct {
-		name string
-		now  time.Time
-		src  cbc.Code
-		err  string
+		name  string
+		now   time.Time
+		start cal.Date
+		prev  *saft.Signature
+		src   cbc.Code
+		err   string
 	}{
 		{
 			name: "Issue date after today",
 			now:  time.Date(2024, 8, 2, 22, 59, 59, 999999999, time.UTC),
-			err:  "issue_date: must be today in Europe/Lisbon (2024-08-02)",
+			err:  "issue_date: must not be after today in Europe/Lisbon (2024-08-02)",
 		},
 		{
 			name: "Issue date is today (beginning of day)",
@@ -227,29 +232,76 @@ func TestIssueDateValidation(t *testing.T) {
 		{
 			name: "Issue date before today",
 			now:  time.Date(2024, 8, 3, 23, 0, 0, 0, time.UTC),
-			err:  "issue_date: must be today in Europe/Lisbon (2024-08-04)",
+			err:  "",
+		},
+		{
+			name:  "Issue date after series start date",
+			now:   time.Date(2024, 8, 10, 12, 0, 0, 0, time.UTC),
+			start: cal.MakeDate(2024, 8, 1),
+			err:   "",
+		},
+		{
+			name:  "Issue date same as series start date",
+			now:   time.Date(2024, 8, 10, 12, 0, 0, 0, time.UTC),
+			start: cal.MakeDate(2024, 8, 3),
+			err:   "",
+		},
+		{
+			name:  "Issue date before series start date",
+			now:   time.Date(2024, 8, 10, 12, 0, 0, 0, time.UTC),
+			start: cal.MakeDate(2024, 8, 4),
+			err:   "issue_date: must not be before the series start date (2024-08-04)",
+		},
+		{
+			name:  "Issue date after previous document",
+			now:   time.Date(2024, 8, 10, 12, 0, 0, 0, time.UTC),
+			start: cal.MakeDate(2024, 8, 1),
+			prev:  &saft.Signature{IssueDate: "2024-08-02", DocumentNo: "FT SERIES-A/1"},
+			err:   "",
+		},
+		{
+			name:  "Issue date same as previous document",
+			now:   time.Date(2024, 8, 10, 12, 0, 0, 0, time.UTC),
+			start: cal.MakeDate(2024, 8, 1),
+			prev:  &saft.Signature{IssueDate: "2024-08-03", DocumentNo: "FT SERIES-A/1"},
+			err:   "",
+		},
+		{
+			name:  "Issue date before previous document",
+			now:   time.Date(2024, 8, 10, 12, 0, 0, 0, time.UTC),
+			start: cal.MakeDate(2024, 8, 1),
+			prev:  &saft.Signature{IssueDate: "2024-08-04", DocumentNo: "FT SERIES-A/1"},
+			err:   "issue_date: must not be before the previous document's issue date (2024-08-04)",
+		},
+		{
+			name: "Invalid previous document issue date",
+			now:  time.Date(2024, 8, 10, 12, 0, 0, 0, time.UTC),
+			prev: &saft.Signature{IssueDate: "03/08/2024", DocumentNo: "FT SERIES-A/1"},
+			err:  "issue_date: invalid previous document's issue date (03/08/2024)",
 		},
 		{
 			name: "Issue date after today - manual",
-			now:  time.Date(2024, 8, 3, 23, 0, 0, 0, time.UTC),
-			src:  "FTM abc/123",
-			err:  "",
-		},
-		{
-			name: "Issue date is today (beginning of day) - manual",
-			now:  time.Date(2024, 8, 3, 23, 0, 0, 0, time.UTC),
-			src:  "FTM abc/123",
-			err:  "",
-		},
-		{
-			name: "Issue date is today (end of day) - manual",
-			now:  time.Date(2024, 8, 3, 23, 0, 0, 0, time.UTC),
+			now:  time.Date(2024, 8, 2, 22, 59, 59, 999999999, time.UTC),
 			src:  "FTM abc/123",
 			err:  "",
 		},
 		{
 			name: "Issue date before today - manual",
-			now:  time.Date(2024, 8, 2, 23, 0, 0, 0, time.UTC),
+			now:  time.Date(2024, 8, 3, 23, 0, 0, 0, time.UTC),
+			src:  "FTM abc/123",
+			err:  "",
+		},
+		{
+			name:  "Issue date before series start date - manual",
+			now:   time.Date(2024, 8, 10, 12, 0, 0, 0, time.UTC),
+			start: cal.MakeDate(2024, 8, 4),
+			src:   "FTM abc/123",
+			err:   "",
+		},
+		{
+			name: "Issue date before previous document - manual",
+			now:  time.Date(2024, 8, 10, 12, 0, 0, 0, time.UTC),
+			prev: &saft.Signature{IssueDate: "2024-08-04", DocumentNo: "FT SERIES-A/1"},
 			src:  "FTM abc/123",
 			err:  "",
 		},
@@ -268,7 +320,7 @@ func TestIssueDateValidation(t *testing.T) {
 
 			config.Now = func() time.Time { return tt.now }
 
-			_, err = saft.Seal(env, nil, "AAJFJ3N5YS", &config.Config{
+			_, err = saft.Seal(env, tt.prev, tt.start, "AAJFJ3N5YS", &config.Config{
 				CertificateNumber: 456,
 				SigningKeyPath:    certPath,
 			})
@@ -280,7 +332,6 @@ func TestIssueDateValidation(t *testing.T) {
 			}
 		})
 	}
-
 }
 
 func assertStampContains(t *testing.T, env *gobl.Envelope, prv cbc.Key, val string) {
