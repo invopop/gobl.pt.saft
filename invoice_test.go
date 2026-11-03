@@ -494,6 +494,44 @@ func TestBuildInvoice(t *testing.T) {
 		}
 	})
 
+	t.Run("Prices include VAT", func(t *testing.T) {
+		env, err := test.LoadEnvelope("invoice-b2b.json")
+		require.NoError(t, err)
+
+		inv := env.Extract().(*bill.Invoice)
+		inv.Tax.PricesInclude = tax.CategoryVAT
+		inv.Tax.Rounding = tax.RoundingRuleCurrency
+		inv.Lines = []*bill.Line{
+			{
+				Quantity:  num.MakeAmount(3, 0),
+				Item:      &org.Item{Name: "Service", Price: num.NewAmount(12300, 2)},
+				Discounts: []*bill.LineDiscount{{Amount: num.MakeAmount(1000, 2)}},
+				Taxes:     tax.Set{{Category: tax.CategoryVAT, Rate: tax.RateGeneral}},
+			},
+			{
+				Quantity: num.MakeAmount(1, 0),
+				Item:     &org.Item{Name: "Book", Price: num.NewAmount(999, 2)},
+				Taxes:    tax.Set{{Category: tax.CategoryVAT, Rate: tax.RateGeneral}},
+			},
+		}
+		require.NoError(t, inv.Calculate())
+
+		i, err := saft.BuildInvoice(inv, &saft.BuildParams{
+			Products: []*saft.Product{{}, {}},
+		})
+		require.NoError(t, err)
+
+		// SAF-T line amounts are without taxes, and add up to the NetTotal
+		require.Len(t, i.Lines, 2)
+		assert.Equal(t, "97.2900", i.Lines[0].UnitPrice)
+		assert.Equal(t, "291.87", i.Lines[0].CreditAmount)
+		assert.Equal(t, "8.13", i.Lines[0].SettlementAmount)
+		assert.Equal(t, "8.1200", i.Lines[1].UnitPrice)
+		assert.Equal(t, "8.12", i.Lines[1].CreditAmount)
+		assert.Equal(t, "299.99", i.DocumentTotals.NetTotal)
+		assert.Equal(t, "368.99", i.DocumentTotals.GrossTotal)
+	})
+
 	t.Run("Credit sale", func(t *testing.T) {
 		env, err := test.LoadEnvelope("invoice-b2b.json")
 		require.NoError(t, err)
