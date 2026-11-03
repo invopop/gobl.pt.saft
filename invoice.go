@@ -528,16 +528,19 @@ func buildLines(ginv *bill.Invoice, prods []*Product) []*Line {
 	}
 
 	lines := make([]*Line, len(ginv.Lines))
+	nets := netLineTotals(ginv)
 
 	for i, gl := range ginv.Lines {
 		prod := prods[i]
-		lines[i] = buildLine(ginv, gl, prod)
+		lines[i] = buildLine(ginv, gl, prod, nets[i])
 	}
 
 	return lines
 }
 
-func buildLine(ginv *bill.Invoice, gline *bill.Line, prod *Product) *Line {
+// buildLine builds a SAF-T line. net is the line total without the tax included in
+// its price, or nil when the price includes no tax.
+func buildLine(ginv *bill.Invoice, gline *bill.Line, prod *Product, net *num.Amount) *Line {
 	if gline == nil || gline.Item == nil || prod == nil {
 		return nil
 	}
@@ -549,16 +552,16 @@ func buildLine(ginv *bill.Invoice, gline *bill.Line, prod *Product) *Line {
 		ProductDesc:        fit(prod.ProductDesc, 200),
 		Quantity:           gline.Quantity.String(),
 		UnitOfMeasure:      unitOfMeasure(gline),
-		UnitPrice:          unitPrice(gline),
+		UnitPrice:          lineUnitPrice(ginv, gline, net),
 		TaxPointDate:       taxPointDate(ginv),
 		References:         buildReferences(ginv),
 		Description:        fit(prod.ProductDesc, 200),
-		DebitAmount:        debitAmount(ginv, gline),
-		CreditAmount:       creditAmount(ginv, gline),
+		DebitAmount:        debitAmount(ginv, gline, net),
+		CreditAmount:       creditAmount(ginv, gline, net),
 		Tax:                buildTax(gline),
 		TaxExemptionReason: lineTaxExemptionReason(gline),
 		TaxExemptionCode:   lineTaxExemptionCode(gline),
-		SettlementAmount:   settlementAmount(gline),
+		SettlementAmount:   lineSettlementAmount(ginv, gline),
 	}
 }
 
@@ -769,25 +772,25 @@ func taxPointDate(ginv *bill.Invoice) string {
 	return date(ginv.ValueDate)
 }
 
-func debitAmount(ginv *bill.Invoice, gline *bill.Line) string {
+func debitAmount(ginv *bill.Invoice, gline *bill.Line, net *num.Amount) string {
 	if gline == nil {
 		return ""
 	}
 
 	if !isCredited(ginv) {
-		return amountOrZero(gline.Total).String()
+		return lineAmount(gline, net)
 	}
 
 	return ""
 }
 
-func creditAmount(ginv *bill.Invoice, gline *bill.Line) string {
+func creditAmount(ginv *bill.Invoice, gline *bill.Line, net *num.Amount) string {
 	if gline == nil {
 		return ""
 	}
 
 	if isCredited(ginv) {
-		return amountOrZero(gline.Total).String()
+		return lineAmount(gline, net)
 	}
 
 	return ""
@@ -861,12 +864,146 @@ func settlementAmount(gline *bill.Line) string {
 		return ""
 	}
 
+	return discountsTotal(gline).String()
+}
+
+func discountsTotal(gline *bill.Line) num.Amount {
 	total := num.AmountZero
 	for _, d := range gline.Discounts {
 		total = total.MatchPrecision(d.Amount).Add(d.Amount)
 	}
+	return total
+}
 
-	return total.String()
+// lineUnitPrice is the invoice line's UnitPrice: without the tax its price includes.
+// A line without quantity states its item price, without that tax.
+func lineUnitPrice(ginv *bill.Invoice, gline *bill.Line, net *num.Amount) string {
+	if gline == nil || net == nil {
+		return unitPrice(gline)
+	}
+	if gline.Quantity.IsZero() {
+		if c := includedTax(ginv, gline); c != nil && gline.Item != nil && gline.Item.Price != nil {
+			return gline.Item.Price.Upscale(2).Remove(*c.Percent).String()
+		}
+		return unitPrice(gline)
+	}
+	return net.Upscale(2).Divide(gline.Quantity).String()
+}
+
+// lineSettlementAmount is the invoice line's SettlementAmount: without the tax its
+// discounts include.
+func lineSettlementAmount(ginv *bill.Invoice, gline *bill.Line) string {
+	c := includedTax(ginv, gline)
+	if c == nil || len(gline.Discounts) == 0 {
+		return settlementAmount(gline)
+	}
+	total := discountsTotal(gline)
+	return total.Remove(*c.Percent).Rescale(total.Exp()).String()
+}
+
+// lineAmount is the line total SAF-T states: without taxes.
+func lineAmount(gline *bill.Line, net *num.Amount) string {
+	if net != nil {
+		return net.String()
+	}
+	return amountOrZero(gline.Total).String()
+}
+
+// netLineTotals provides, for each line whose price includes a tax, its total
+// without that tax (nil for the other lines). The tax is removed the way GOBL
+// removes it to calculate the invoice totals, so the lines add up to the
+// NetTotal. With the currency rounding rule, each rate's tax comes from the
+// running sum of its tax-inclusive line totals. With the precise rule, each
+// line's base is kept with two extra decimals, each rate's tax comes from the
+// sum of its bases, and each line takes its step of the rounded running total
+// without that tax.
+func netLineTotals(ginv *bill.Invoice) []*num.Amount {
+	nets := make([]*num.Amount, len(ginv.Lines))
+	if ginv.Tax == nil || ginv.Tax.PricesInclude.IsEmpty() {
+		return nets
+	}
+	type rateSum struct {
+		combo    *tax.Combo
+		sum, tax num.Amount // sum: tax-inclusive (currency rule) or base (precise rule)
+	}
+	var sums []*rateSum
+	cur := ginv.Currency
+	if cur == currency.CodeEmpty {
+		cur = currency.EUR
+	}
+	zero := cur.Def().Zero()
+	precise := roundingRule(ginv) != tax.RoundingRuleCurrency
+	exact, rounded := zero.RescaleUp(zero.Exp()+2), zero
+	for i, gl := range ginv.Lines {
+		c := includedTax(ginv, gl)
+		if c == nil || gl.Total == nil {
+			continue
+		}
+		var rs *rateSum
+		for _, s := range sums {
+			if sameRate(s.combo, c) {
+				rs = s
+				break
+			}
+		}
+		if rs == nil {
+			rs = &rateSum{combo: c, sum: zero, tax: zero}
+			sums = append(sums, rs)
+		}
+		var net num.Amount
+		if precise {
+			total := gl.Total.RescaleUp(zero.Exp() + 2)
+			base := total.Remove(*c.Percent)
+			rs.sum = rs.sum.MatchPrecision(base).Add(base)
+			t := c.Percent.Of(rs.sum)
+			exact = exact.MatchPrecision(total).Add(total).Subtract(t.Subtract(rs.tax))
+			rs.tax = t
+			next := exact.Rescale(zero.Exp())
+			net = next.Subtract(rounded)
+			rounded = next
+		} else {
+			total := gl.Total.Rescale(zero.Exp())
+			rs.sum = rs.sum.Add(total)
+			t := c.Percent.From(rs.sum.Upscale(4)).Rescale(zero.Exp())
+			net = total.Subtract(t.Subtract(rs.tax))
+			rs.tax = t
+		}
+		nets[i] = &net
+	}
+	return nets
+}
+
+// includedTax provides the line's tax that the invoice prices include, if any.
+// A zero rate includes nothing, so the line keeps its own amounts.
+func includedTax(ginv *bill.Invoice, gline *bill.Line) *tax.Combo {
+	if ginv == nil || gline == nil || ginv.Tax == nil || ginv.Tax.PricesInclude.IsEmpty() {
+		return nil
+	}
+	c := gline.Taxes.Get(ginv.Tax.PricesInclude)
+	if c == nil || c.Percent == nil || c.Percent.IsZero() {
+		return nil
+	}
+	return c
+}
+
+// roundingRule is the rule GOBL calculates the invoice with.
+func roundingRule(ginv *bill.Invoice) cbc.Key {
+	if ginv.Tax != nil && ginv.Tax.Rounding != "" {
+		return ginv.Tax.Rounding
+	}
+	return ginv.RegimeDef().GetRoundingRule()
+}
+
+// sameRate tells whether two taxes add up into the same rate total, as GOBL
+// groups them.
+func sameRate(a, b *tax.Combo) bool {
+	if !a.Ext.Equals(b.Ext) || a.Country != b.Country || !a.Percent.Equals(*b.Percent) {
+		return false
+	}
+	if a.Surcharge == nil || b.Surcharge == nil {
+		return a.Surcharge == nil && b.Surcharge == nil
+	}
+	return a.Surcharge.Equals(*b.Surcharge)
 }
 
 func taxPayable(ginv *bill.Invoice) string {
