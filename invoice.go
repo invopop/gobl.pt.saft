@@ -918,7 +918,11 @@ func netLineTotals(ginv *bill.Invoice) []*num.Amount {
 		gross, tax num.Amount
 	}
 	var sums []*rateSum
-	zero := ginv.Currency.Def().Zero()
+cur := ginv.Currency
+	if cur == currency.CodeEmpty {
+		cur = currency.EUR
+	}
+	zero := cur.Def().Zero()
 	exact, rounded := zero.RescaleUp(zero.Exp()+2), zero
 	for i, gl := range ginv.Lines {
 		c := includedTax(ginv, gl)
