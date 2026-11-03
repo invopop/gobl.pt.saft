@@ -905,40 +905,33 @@ func lineAmount(gline *bill.Line, net *num.Amount) string {
 // netLineTotals provides, for each line whose price includes a tax, its total
 // without that tax (nil for the other lines). The tax is removed the way GOBL
 // removes it to calculate the invoice totals, so the lines add up to the
-// NetTotal: from the running sum of each rate's tax-inclusive line totals with
-// the currency rounding rule; with the precise rule, from each line with two
-// extra decimals, each line taking its step of the rounded running sum.
+// NetTotal. With the currency rounding rule, each rate's tax comes from the
+// running sum of its tax-inclusive line totals. With the precise rule, each
+// line's base is kept with two extra decimals, each rate's tax comes from the
+// sum of its bases, and each line takes its step of the rounded running total
+// without that tax.
 func netLineTotals(ginv *bill.Invoice) []*num.Amount {
 	nets := make([]*num.Amount, len(ginv.Lines))
 	if ginv.Tax == nil || ginv.Tax.PricesInclude.IsEmpty() {
 		return nets
 	}
 	type rateSum struct {
-		combo      *tax.Combo
-		gross, tax num.Amount
+		combo    *tax.Combo
+		sum, tax num.Amount // sum: tax-inclusive (currency rule) or base (precise rule)
 	}
 	var sums []*rateSum
-cur := ginv.Currency
+	cur := ginv.Currency
 	if cur == currency.CodeEmpty {
 		cur = currency.EUR
 	}
 	zero := cur.Def().Zero()
+	precise := roundingRule(ginv) != tax.RoundingRuleCurrency
 	exact, rounded := zero.RescaleUp(zero.Exp()+2), zero
 	for i, gl := range ginv.Lines {
 		c := includedTax(ginv, gl)
 		if c == nil || gl.Total == nil {
 			continue
 		}
-		total := *gl.Total
-		if roundingRule(ginv) != tax.RoundingRuleCurrency {
-			exact = exact.Add(total.RescaleUp(zero.Exp() + 2).Remove(*c.Percent).Rescale(exact.Exp()))
-			next := exact.Rescale(zero.Exp())
-			net := next.Subtract(rounded)
-			rounded = next
-			nets[i] = &net
-			continue
-		}
-		total = total.Rescale(zero.Exp())
 		var rs *rateSum
 		for _, s := range sums {
 			if sameRate(s.combo, c) {
@@ -947,25 +940,40 @@ cur := ginv.Currency
 			}
 		}
 		if rs == nil {
-			rs = &rateSum{combo: c, gross: num.MakeAmount(0, total.Exp()), tax: num.MakeAmount(0, total.Exp())}
+			rs = &rateSum{combo: c, sum: zero, tax: zero}
 			sums = append(sums, rs)
 		}
-		rs.gross = rs.gross.Add(total)
-		running := c.Percent.From(rs.gross.Upscale(4)).Rescale(total.Exp())
-		net := total.Subtract(running.Subtract(rs.tax))
-		rs.tax = running
+		var net num.Amount
+		if precise {
+			total := gl.Total.RescaleUp(zero.Exp() + 2)
+			base := total.Remove(*c.Percent)
+			rs.sum = rs.sum.MatchPrecision(base).Add(base)
+			t := c.Percent.Of(rs.sum)
+			exact = exact.MatchPrecision(total).Add(total).Subtract(t.Subtract(rs.tax))
+			rs.tax = t
+			next := exact.Rescale(zero.Exp())
+			net = next.Subtract(rounded)
+			rounded = next
+		} else {
+			total := gl.Total.Rescale(zero.Exp())
+			rs.sum = rs.sum.Add(total)
+			t := c.Percent.From(rs.sum.Upscale(4)).Rescale(zero.Exp())
+			net = total.Subtract(t.Subtract(rs.tax))
+			rs.tax = t
+		}
 		nets[i] = &net
 	}
 	return nets
 }
 
 // includedTax provides the line's tax that the invoice prices include, if any.
+// A zero rate includes nothing, so the line keeps its own amounts.
 func includedTax(ginv *bill.Invoice, gline *bill.Line) *tax.Combo {
 	if ginv == nil || gline == nil || ginv.Tax == nil || ginv.Tax.PricesInclude.IsEmpty() {
 		return nil
 	}
 	c := gline.Taxes.Get(ginv.Tax.PricesInclude)
-	if c == nil || c.Percent == nil {
+	if c == nil || c.Percent == nil || c.Percent.IsZero() {
 		return nil
 	}
 	return c

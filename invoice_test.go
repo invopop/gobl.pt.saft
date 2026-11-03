@@ -532,6 +532,83 @@ func TestBuildInvoice(t *testing.T) {
 		assert.Equal(t, "368.99", i.DocumentTotals.GrossTotal)
 	})
 
+	t.Run("Prices include VAT, precise rounding", func(t *testing.T) {
+		env, err := test.LoadEnvelope("invoice-b2b.json")
+		require.NoError(t, err)
+
+		inv := env.Extract().(*bill.Invoice)
+		inv.Tax.PricesInclude = tax.CategoryVAT
+		inv.Tax.Rounding = "" // the regime's default: precise
+		inv.Lines = []*bill.Line{
+			{
+				Quantity: num.MakeAmount(1, 0),
+				Item:     &org.Item{Name: "Service", Price: num.NewAmount(26768, 2)},
+				Taxes:    tax.Set{{Category: tax.CategoryVAT, Rate: tax.RateIntermediate}},
+			},
+			{
+				Quantity: num.MakeAmount(1, 0),
+				Item:     &org.Item{Name: "Collection", Price: num.NewAmount(5000, 2)},
+				Taxes: tax.Set{
+					{
+						Category: tax.CategoryVAT,
+						Ext: tax.ExtensionsOf(cbc.CodeMap{
+							pt.ExtKeyRegion:       pt.RegionMainland,
+							addon.ExtKeyExemption: "M15",
+							addon.ExtKeyTaxRate:   addon.TaxRateExempt,
+						}),
+					},
+				},
+			},
+			{
+				Quantity: num.MakeAmount(1, 0),
+				Item:     &org.Item{Name: "Book", Price: num.NewAmount(1230, 2)},
+				Taxes:    tax.Set{{Category: tax.CategoryVAT, Rate: tax.RateGeneral}},
+			},
+			{
+				Quantity: num.MakeAmount(2, 0),
+				Item:     &org.Item{Name: "Zero", Price: num.NewAmount(999, 2)},
+				Taxes:    tax.Set{{Category: tax.CategoryVAT, Percent: num.NewPercentage(0, 3)}},
+			},
+		}
+		require.NoError(t, inv.Calculate())
+
+		i, err := saft.BuildInvoice(inv, &saft.BuildParams{
+			Products: []*saft.Product{{}, {}, {}, {}},
+		})
+		require.NoError(t, err)
+
+		// GOBL takes each rate's tax from the sum of its bases: 267.68 - 30.7951 = 236.8849
+		require.Len(t, i.Lines, 4)
+		assert.Equal(t, "236.88", i.Lines[0].CreditAmount)
+		assert.Equal(t, "50.00", i.Lines[1].CreditAmount)
+		assert.Equal(t, "10.00", i.Lines[2].CreditAmount)
+		assert.Equal(t, "10.0000", i.Lines[2].UnitPrice)
+		// a zero rate includes no tax: the line keeps its own amounts
+		assert.Equal(t, "9.99", i.Lines[3].UnitPrice)
+		assert.Equal(t, "19.98", i.Lines[3].CreditAmount)
+		assert.Equal(t, "316.86", i.DocumentTotals.NetTotal)
+	})
+
+	t.Run("Prices include VAT, no currency", func(t *testing.T) {
+		inv := &bill.Invoice{
+			Tax: &bill.Tax{PricesInclude: tax.CategoryVAT},
+			Lines: []*bill.Line{
+				{
+					Quantity: num.MakeAmount(1, 0),
+					Item:     &org.Item{Price: num.NewAmount(12300, 2)},
+					Taxes:    tax.Set{{Category: tax.CategoryVAT, Percent: num.NewPercentage(230, 3)}},
+					Total:    num.NewAmount(12300, 2),
+				},
+			},
+		}
+
+		i, err := saft.BuildInvoice(inv, &saft.BuildParams{Products: []*saft.Product{{}}})
+		require.NoError(t, err)
+
+		require.Len(t, i.Lines, 1)
+		assert.Equal(t, "100.00", i.Lines[0].CreditAmount)
+	})
+
 	t.Run("Credit sale", func(t *testing.T) {
 		env, err := test.LoadEnvelope("invoice-b2b.json")
 		require.NoError(t, err)

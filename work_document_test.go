@@ -7,6 +7,7 @@ import (
 	saft "github.com/invopop/gobl.pt.saft"
 	"github.com/invopop/gobl.pt.saft/addon"
 	"github.com/invopop/gobl.pt.saft/config"
+	"github.com/invopop/gobl.pt.saft/test"
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cal"
 	"github.com/invopop/gobl/cbc"
@@ -272,6 +273,33 @@ func TestBuildWorkDocumentFromInvoice(t *testing.T) {
 				assert.Equal(t, "1.23", curr.ExchangeRate)
 			}
 		}
+	})
+
+	t.Run("Prices include VAT", func(t *testing.T) {
+		env, err := test.LoadEnvelope("invoice-proforma.json")
+		require.NoError(t, err)
+
+		inv := env.Extract().(*bill.Invoice)
+		inv.Tax.PricesInclude = tax.CategoryVAT
+		inv.Lines = []*bill.Line{
+			{
+				Quantity: num.MakeAmount(2, 0),
+				Item:     &org.Item{Name: "Service", Price: num.NewAmount(12300, 2)},
+				Taxes:    tax.Set{{Category: tax.CategoryVAT, Rate: tax.RateGeneral}},
+			},
+		}
+		require.NoError(t, inv.Calculate())
+
+		wd, err := saft.BuildWorkDocumentFromInvoice(inv, &saft.BuildParams{
+			Products: []*saft.Product{{}},
+		})
+		require.NoError(t, err)
+
+		// work document lines are built like invoice lines: without the included tax
+		require.Len(t, wd.Lines, 1)
+		assert.Equal(t, "100.0000", wd.Lines[0].UnitPrice)
+		assert.Equal(t, "200.00", wd.Lines[0].CreditAmount)
+		assert.Equal(t, "200.00", wd.DocumentTotals.NetTotal)
 	})
 
 	t.Run("1 decimal gross total from invoice", func(t *testing.T) {
