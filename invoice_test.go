@@ -609,6 +609,28 @@ func TestBuildInvoice(t *testing.T) {
 		assert.Equal(t, "100.00", i.Lines[0].CreditAmount)
 	})
 
+	t.Run("Prices include VAT, zero quantity", func(t *testing.T) {
+		inv := &bill.Invoice{
+			Tax: &bill.Tax{PricesInclude: tax.CategoryVAT},
+			Lines: []*bill.Line{
+				{
+					Quantity: num.MakeAmount(0, 3),
+					Item:     &org.Item{Price: num.NewAmount(1230, 2)},
+					Taxes:    tax.Set{{Category: tax.CategoryVAT, Percent: num.NewPercentage(230, 3)}},
+					Total:    num.NewAmount(0, 2),
+				},
+			},
+		}
+
+		i, err := saft.BuildInvoice(inv, &saft.BuildParams{Products: []*saft.Product{{}}})
+		require.NoError(t, err)
+
+		// no quantity to divide by: the item price, without the included tax
+		require.Len(t, i.Lines, 1)
+		assert.Equal(t, "10.0000", i.Lines[0].UnitPrice)
+		assert.Equal(t, "0.00", i.Lines[0].CreditAmount)
+	})
+
 	t.Run("Credit sale", func(t *testing.T) {
 		env, err := test.LoadEnvelope("invoice-b2b.json")
 		require.NoError(t, err)

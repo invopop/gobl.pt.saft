@@ -552,7 +552,7 @@ func buildLine(ginv *bill.Invoice, gline *bill.Line, prod *Product, net *num.Amo
 		ProductDesc:        fit(prod.ProductDesc, 200),
 		Quantity:           gline.Quantity.String(),
 		UnitOfMeasure:      unitOfMeasure(gline),
-		UnitPrice:          lineUnitPrice(gline, net),
+		UnitPrice:          lineUnitPrice(ginv, gline, net),
 		TaxPointDate:       taxPointDate(ginv),
 		References:         buildReferences(ginv),
 		Description:        fit(prod.ProductDesc, 200),
@@ -876,8 +876,15 @@ func discountsTotal(gline *bill.Line) num.Amount {
 }
 
 // lineUnitPrice is the invoice line's UnitPrice: without the tax its price includes.
-func lineUnitPrice(gline *bill.Line, net *num.Amount) string {
+// A line without quantity states its item price, without that tax.
+func lineUnitPrice(ginv *bill.Invoice, gline *bill.Line, net *num.Amount) string {
 	if gline == nil || net == nil {
+		return unitPrice(gline)
+	}
+	if gline.Quantity.IsZero() {
+		if c := includedTax(ginv, gline); c != nil && gline.Item != nil && gline.Item.Price != nil {
+			return gline.Item.Price.Upscale(2).Remove(*c.Percent).String()
+		}
 		return unitPrice(gline)
 	}
 	return net.Upscale(2).Divide(gline.Quantity).String()
