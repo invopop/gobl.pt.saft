@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"cloud.google.com/go/civil"
 	"github.com/invopop/gobl"
 	"github.com/invopop/gobl.pt.saft/addon"
 	"github.com/invopop/gobl.pt.saft/config"
@@ -32,7 +33,7 @@ type sealable interface {
 
 // Seal generates the signature, ATCUD, and QR code for a GOBL invoice envelope and
 // appends them as stamps to the envelope.
-func Seal(env *gobl.Envelope, prevSig *Signature, valCode string, cfg *config.Config) (*Signature, error) {
+func Seal(env *gobl.Envelope, prevSig *Signature, startDate cal.Date, valCode string, cfg *config.Config) (*Signature, error) {
 	// Validate envelope for sealing
 	if err := validateEnvelope(env); err != nil {
 		return nil, err
@@ -45,7 +46,7 @@ func Seal(env *gobl.Envelope, prevSig *Signature, valCode string, cfg *config.Co
 	}
 
 	// Validate document for sealing
-	if err := validateDocument(gdoc); err != nil {
+	if err := validateDocument(gdoc, prevSig, startDate); err != nil {
 		return nil, err
 	}
 
@@ -80,7 +81,7 @@ func validateEnvelope(env *gobl.Envelope) error {
 
 // validateDocument validates the document can be sealed. These validations specific
 // to the sealing process, not to the regime, the addon or the saft conversion.
-func validateDocument(doc sealable) error {
+func validateDocument(doc sealable, prevSig *Signature, startDate cal.Date) error {
 	errs := make(validation.Errors)
 
 	if doc.GetCode() != cbc.CodeEmpty {
@@ -88,18 +89,43 @@ func validateDocument(doc sealable) error {
 	}
 
 	if !isExternal(doc) { // Issue date of external documents cannot be validated because it is not controlled by the application
-		loc := doc.GetRegimeDef().TimeLocation()
-		today := config.TodayIn(loc)
-		if d := doc.GetIssueDate(); d != today {
-			errs["issue_date"] = fmt.Errorf(
-				"must be today in %s (%s)",
-				loc.String(),
-				today.Time().Format("2006-01-02"),
-			)
+		if err := validateIssueDate(doc, prevSig, startDate); err != nil {
+			errs["issue_date"] = err
 		}
+	}
 
-		if len(errs) > 0 {
-			return errs
+	if len(errs) > 0 {
+		return errs
+	}
+
+	return nil
+}
+
+// validateIssueDate ensures the issue date preserves the chronological order of the
+// series.
+func validateIssueDate(doc sealable, prevSig *Signature, startDate cal.Date) error {
+	d := doc.GetIssueDate()
+	if d.IsZero() {
+		return errors.New("is required")
+	}
+
+	loc := doc.GetRegimeDef().TimeLocation()
+	today := config.TodayIn(loc)
+	if d.After(today.Date) {
+		return fmt.Errorf("must not be after today in %s (%s)", loc.String(), today.String())
+	}
+
+	if !startDate.IsZero() && d.Before(startDate.Date) {
+		return fmt.Errorf("must not be before the series start date (%s)", startDate.String())
+	}
+
+	if prevSig != nil {
+		prevDate, err := civil.ParseDate(prevSig.IssueDate)
+		if err != nil {
+			return fmt.Errorf("invalid previous document's issue date (%s)", prevSig.IssueDate)
+		}
+		if d.Before(prevDate) {
+			return fmt.Errorf("must not be before the previous document's issue date (%s)", prevSig.IssueDate)
 		}
 	}
 

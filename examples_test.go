@@ -50,7 +50,7 @@ func TestConvertExamples(t *testing.T) {
 	sigs := make(map[cbc.Code]*saft.Signature) // to store the last signature for each series
 	for _, env := range envs {
 		series := extractSeries(env)
-		sigs[series], err = saft.Seal(env, sigs[series], "AAJFJHNC82", &config.Config{
+		sigs[series], err = saft.Seal(env, sigs[series], cal.Date{}, "AAJFJHNC82", &config.Config{
 			CertificateNumber: 123,
 			SigningKeyPath:    test.Path("test", "certs", "signing_key.pem"),
 		})

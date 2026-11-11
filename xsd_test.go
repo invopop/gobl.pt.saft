@@ -26,7 +26,7 @@ func TestValidateXSD(t *testing.T) {
 		env, err := test.LoadEnvelope(name)
 		require.NoError(t, err)
 
-		_, err = saft.Seal(env, nil, "AAJFJHNC82", &config.Config{
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJHNC82", &config.Config{
 			CertificateNumber: 123,
 			SigningKeyPath:    test.Path("test", "certs", "signing_key.pem"),
 		})

@@ -25,7 +25,7 @@ func TestBuildRegisterWork(t *testing.T) {
 			CertificateNumber: 123,
 			SigningKeyPath:    test.Path("test", "certs", "signing_key.pem"),
 		}
-		_, err = saft.Seal(env, nil, "AAJFJHNC82", cfg)
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJHNC82", cfg)
 		require.NoError(t, err)
 
 		err = test.SignEnvelope(env)
@@ -93,7 +93,7 @@ func TestBuildRegisterWork(t *testing.T) {
 			CertificateNumber: 123,
 			SigningKeyPath:    test.Path("test", "certs", "signing_key.pem"),
 		}
-		_, err = saft.Seal(env, nil, "AAJFJHNC82", cfg)
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJHNC82", cfg)
 		require.NoError(t, err)
 
 		err = test.SignEnvelope(env)
@@ -123,7 +123,7 @@ func TestBuildRegisterWork(t *testing.T) {
 			CertificateNumber: 123,
 			SigningKeyPath:    test.Path("test", "certs", "signing_key.pem"),
 		}
-		_, err = saft.Seal(env, nil, "AAJFJHNC82", cfg)
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJHNC82", cfg)
 		require.NoError(t, err)
 
 		err = test.SignEnvelope(env)
@@ -170,7 +170,7 @@ func TestBuildRegisterWork(t *testing.T) {
 			CertificateNumber: 123,
 			SigningKeyPath:    test.Path("test", "certs", "signing_key.pem"),
 		}
-		_, err = saft.Seal(env, nil, "AAJFJHNC82", cfg)
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJHNC82", cfg)
 		require.NoError(t, err)
 
 		err = test.SignEnvelope(env)
@@ -221,7 +221,7 @@ func TestBuildChangeWorkStatus(t *testing.T) {
 			CertificateNumber: 123,
 			SigningKeyPath:    test.Path("test", "certs", "signing_key.pem"),
 		}
-		_, err = saft.Seal(env, nil, "AAJFJHNC82", cfg)
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJHNC82", cfg)
 		require.NoError(t, err)
 
 		err = test.SignEnvelope(env)
@@ -280,7 +280,7 @@ func TestBuildChangeWorkStatus(t *testing.T) {
 			CertificateNumber: 123,
 			SigningKeyPath:    test.Path("test", "certs", "signing_key.pem"),
 		}
-		_, err = saft.Seal(env, nil, "AAJFJHNC82", cfg)
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJHNC82", cfg)
 		require.NoError(t, err)
 
 		err = test.SignEnvelope(env)
@@ -310,7 +310,7 @@ func TestBuildChangeWorkStatus(t *testing.T) {
 			CertificateNumber: 123,
 			SigningKeyPath:    test.Path("test", "certs", "signing_key.pem"),
 		}
-		_, err = saft.Seal(env, nil, "AAJFJHNC82", cfg)
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJHNC82", cfg)
 		require.NoError(t, err)
 
 		err = test.SignEnvelope(env)
@@ -357,7 +357,7 @@ func TestBuildChangeWorkStatus(t *testing.T) {
 			CertificateNumber: 123,
 			SigningKeyPath:    test.Path("test", "certs", "signing_key.pem"),
 		}
-		_, err = saft.Seal(env, nil, "AAJFJHNC82", cfg)
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJHNC82", cfg)
 		require.NoError(t, err)
 
 		err = test.SignEnvelope(env)
