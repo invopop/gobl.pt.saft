@@ -54,6 +54,30 @@ func TestBuildRegisterInvoice(t *testing.T) {
 		}
 	})
 
+	t.Run("Advance payment deductions", func(t *testing.T) {
+		af := generateAuditFileFor(t, "invoice-deductions.json")
+
+		res, err := realtime.BuildRegisterInvoice(af)
+		require.NoError(t, err)
+
+		ls := res.InvoiceData.LineSummaries
+		require.Len(t, ls, 3)
+		assert.Equal(t, "C", ls[0].DebitCreditIndicator)
+		assert.Equal(t, "300.00", ls[0].Amount)
+		assert.Empty(t, ls[0].OrderReferences)
+		for i, exp := range []struct{ ref, amount string }{
+			{"FT SERIES-A/1", "50.00"},
+			{"FT SERIES-A/2", "100.00"},
+		} {
+			l := ls[i+1]
+			assert.Equal(t, "D", l.DebitCreditIndicator)
+			assert.Equal(t, exp.amount, l.Amount)
+			require.Len(t, l.OrderReferences, 1)
+			assert.Equal(t, exp.ref, l.OrderReferences[0].OriginatingON)
+			assert.Empty(t, l.References)
+		}
+	})
+
 	t.Run("AuditFile is nil", func(t *testing.T) {
 		_, err := realtime.BuildRegisterInvoice(nil)
 		require.Error(t, err)
@@ -342,8 +366,14 @@ func TestBuildChangeInvoiceStatus(t *testing.T) {
 
 func generateAuditFile(t *testing.T) *saft.AuditFile {
 	t.Helper()
+	return generateAuditFileFor(t, "invoice-b2b.json")
+}
 
-	env, err := test.LoadEnvelope("invoice-b2b.json")
+// generateAuditFileFor seals the given test envelope and builds an audit file with it.
+func generateAuditFileFor(t *testing.T, name string) *saft.AuditFile {
+	t.Helper()
+
+	env, err := test.LoadEnvelope(name)
 	require.NoError(t, err)
 
 	cfg := &config.Config{

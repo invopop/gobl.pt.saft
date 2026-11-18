@@ -45,3 +45,37 @@ func TestBuildProduct(t *testing.T) {
 		require.Equal(t, "4006381333931", p.ProductNumberCode)
 	})
 }
+
+func TestBuildDeductionProduct(t *testing.T) {
+	t.Run("General case", func(t *testing.T) {
+		p := saft.BuildDeductionProduct(&bill.Discount{
+			Key:    addon.DiscountKeyDeduction,
+			Reason: "Deposit for 1 hotel room",
+		})
+
+		assert.Equal(t, "O", p.ProductType)
+		assert.Equal(t, "Deposit for 1 hotel room", p.ProductDesc)
+		assert.NotEmpty(t, p.ProductCode)
+		assert.Equal(t, p.ProductCode, p.ProductNumberCode)
+	})
+
+	t.Run("Without reason", func(t *testing.T) {
+		p := saft.BuildDeductionProduct(&bill.Discount{Key: addon.DiscountKeyDeduction})
+		assert.Equal(t, "Adiantamento", p.ProductDesc)
+	})
+
+	t.Run("Only deductions", func(t *testing.T) {
+		inv := &bill.Invoice{
+			Discounts: []*bill.Discount{
+				{Key: addon.DiscountKeyDeduction, Reason: "A"},
+				{Reason: "Promo"},
+				{Key: addon.DiscountKeyDeduction, Reason: "B"},
+			},
+		}
+		ps := saft.BuildDeductionProducts(inv)
+		require.Len(t, ps, 2)
+		assert.Equal(t, "A", ps[0].ProductDesc)
+		assert.Equal(t, "B", ps[1].ProductDesc)
+		assert.Nil(t, saft.BuildDeductionProducts(nil))
+	})
+}

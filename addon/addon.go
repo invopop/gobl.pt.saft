@@ -48,6 +48,7 @@ func init() {
 		rules.GOBL.Add("PT-SAFT"),
 		is.InContext(tax.AddonIn(V1)),
 		billInvoiceRules(),
+		billDiscountRules(),
 		billPaymentRules(),
 		billDeliveryRules(),
 		billOrderRules(),
