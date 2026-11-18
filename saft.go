@@ -88,6 +88,9 @@ func Convert(env *gobl.Envelope, sourceID string, cfg *config.Config) (*ConvertR
 	sup := BuildSupplier(gdoc.GetSupplier())
 	cus := BuildCustomer(gdoc.GetCustomer())
 	pds := BuildProducts(gdoc.GetBillLines())
+	if inv, ok := goblwrap.Unwrap(gdoc).(*bill.Invoice); ok {
+		pds = append(pds, BuildDeductionProducts(inv)...)
+	}
 	tes := BuildTaxTableEntries(gdoc.GetBillTotals())
 
 	// Build the SAF-T source document

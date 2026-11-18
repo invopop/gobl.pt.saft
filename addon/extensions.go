@@ -15,6 +15,7 @@ const (
 	ExtKeySource       cbc.Key = "pt-saft-source"
 	ExtKeySourceRef    cbc.Key = "pt-saft-source-ref"
 	ExtKeyCashVAT      cbc.Key = "pt-saft-cash-vat"
+	ExtKeyReference    cbc.Key = "pt-saft-reference"
 
 	// Document types extensions
 	ExtKeyInvoiceType  cbc.Key = "pt-saft-invoice-type"
@@ -1343,6 +1344,58 @@ var extensions = []*cbc.Definition{
 						"pt-saft-source": "M",
 						"pt-saft-source-ref": "FTD FT SERIESA/123"
 					},
+					// ...
+				}
+				~~~
+			`),
+		},
+	},
+	{
+		Key: ExtKeyReference,
+		Name: i18n.String{
+			i18n.EN: "Document Reference",
+			i18n.PT: "Referência do documento",
+		},
+		Desc: i18n.String{
+			i18n.EN: here.Doc(`
+				GOBL provides the ~pt-saft-reference~ extension to link an element of a document to one of
+				the invoice's preceding documents, using the SAF-T document number (e.g. "FT SERIES-A/1").
+
+				It is used on advance payment deductions (document discounts with the ~deduction~ key) to
+				identify the advance payment invoice being deducted. The value must match one of the
+				invoice's ~preceding~ entries. It is required when the invoice has more than one preceding
+				document, and defaults to the only preceding document otherwise.
+
+				Example:
+
+				~~~js
+				{
+					"$schema": "https://gobl.org/draft-0/bill/invoice",
+					// ...
+					"preceding": [
+						{
+							"series": "FT SERIES-A",
+							"code": "1",
+							"issue_date": "2024-07-01"
+						}
+					],
+					// ...
+					"discounts": [
+						{
+							"key": "deduction",
+							"reason": "Deposit for 1 hotel room",
+							"amount": "50.00",
+							"taxes": [
+								{
+									"cat": "VAT",
+									"rate": "general"
+								}
+							],
+							"ext": {
+								"pt-saft-reference": "FT SERIES-A/1"
+							}
+						}
+					],
 					// ...
 				}
 				~~~

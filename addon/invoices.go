@@ -59,6 +59,7 @@ func normalizeInvoice(inv *bill.Invoice) {
 	normalizeInvoiceTax(inv)
 	normalizeInvoiceAdvances(inv)
 	normalizeInvoiceValueDate(inv)
+	normalizeInvoiceDiscounts(inv)
 }
 
 func normalizeInvoiceTax(inv *bill.Invoice) {
@@ -157,8 +158,11 @@ func billInvoiceRules() *rules.Set {
 				),
 			),
 		),
-		rules.Field("preceding",
-			rules.Assert("11", "the length must be no more than 1", is.Length(0, 1)),
+		// Several preceding documents are only allowed to deduct advance payments
+		rules.When(is.Not(is.Func("has deductions", invoiceHasDeductions)),
+			rules.Field("preceding",
+				rules.Assert("11", "the length must be no more than 1", is.Length(0, 1)),
+			),
 		),
 		// Tax ext requires source
 		rules.Assert("12", fmt.Sprintf("tax requires '%s' extension", ExtKeySource),
@@ -173,6 +177,18 @@ func billInvoiceRules() *rules.Set {
 		// Source ref format validation
 		rules.Assert("14", "source ref format is invalid",
 			is.FuncError("source ref format", invoiceSourceRefValid),
+		),
+		// Deductions
+		rules.When(is.Func("has deductions", invoiceHasDeductions),
+			rules.Assert("18", "discount deductions are only supported in invoices (FT, FS, FR)",
+				is.Func("deductible doc type", invoiceIsDeductible),
+			),
+			rules.Field("preceding",
+				rules.Assert("20", "discount deductions require a preceding document", is.Present),
+			),
+		),
+		rules.Assert("21", fmt.Sprintf("discount deduction '%s' must match a preceding document", ExtKeyReference),
+			is.Func("deduction references found", invoiceDeductionReferencesFound),
 		),
 	)
 }

@@ -6,6 +6,10 @@ import (
 	"github.com/invopop/gobl/org"
 )
 
+// deductionDefaultDesc is the product description of advance payment deductions without
+// a reason.
+const deductionDefaultDesc = "Adiantamento"
+
 // Product represents a product or service in the SAF-T file
 type Product struct {
 	ProductType       string          `xml:"ProductType"`
@@ -55,5 +59,41 @@ func BuildProduct(gline *bill.Line) *Product {
 	if p.ProductNumberCode == "" {
 		p.ProductNumberCode = p.ProductCode
 	}
+	return p
+}
+
+// BuildDeductionProducts builds the list of products for the advance payment deductions of
+// a GOBL invoice, in the same order as their SAF-T lines.
+func BuildDeductionProducts(ginv *bill.Invoice) []*Product {
+	ds := deductions(ginv)
+	if len(ds) == 0 {
+		return nil
+	}
+
+	prods := make([]*Product, len(ds))
+	for i, d := range ds {
+		prods[i] = BuildDeductionProduct(d)
+	}
+	return prods
+}
+
+// BuildDeductionProduct builds a product from an advance payment deduction, using the
+// "other" product type that SAF-T reserves for received advances.
+func BuildDeductionProduct(d *bill.Discount) *Product {
+	if d == nil {
+		return nil
+	}
+
+	desc := d.Reason
+	if desc == "" {
+		desc = deductionDefaultDesc
+	}
+
+	p := &Product{
+		ProductType: addon.ProductTypeOther.String(),
+		ProductDesc: fit(desc, 200),
+	}
+	p.ProductCode = hashID(p)
+	p.ProductNumberCode = p.ProductCode
 	return p
 }
