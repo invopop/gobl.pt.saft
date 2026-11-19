@@ -104,6 +104,9 @@ var extensions = []*cbc.Definition{
 				| ~ND~ | Debit Note          | ~debit-note~  |                 |
 				| ~NC~ | Credit Note         | ~credit-note~ |                 |
 
+				Standard invoices fully paid in advance (no amount due) will be set to ~FR~
+				automatically, unless ~FT~ has been set explicitly in the extension.
+
 				Example:
 
 				~~~js
