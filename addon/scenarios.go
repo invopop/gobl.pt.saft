@@ -41,7 +41,12 @@ var invoiceScenarios = &tax.ScenarioSet{
 				if !ok {
 					return false
 				}
-				return inv.HasTags(pt.TagInvoiceReceipt) || inv.Totals.Paid()
+				if inv.HasTags(pt.TagInvoiceReceipt) {
+					return true
+				}
+				// Issuing an FR when fully paid in advance is optional, so an
+				// explicit FT is respected (to be followed by an RC receipt).
+				return inv.Totals.Paid() && invoiceTaxExt(inv).Get(ExtKeyInvoiceType) != InvoiceTypeStandard
 			},
 			Ext: tax.ExtensionsOf(cbc.CodeMap{
 				ExtKeyInvoiceType: InvoiceTypeInvoiceReceipt,
