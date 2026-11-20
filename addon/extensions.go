@@ -105,7 +105,8 @@ var extensions = []*cbc.Definition{
 				| ~NC~ | Credit Note         | ~credit-note~ |                 |
 
 				Standard invoices fully paid in advance are also set to ~FR~, unless ~FT~ is set
-				explicitly in the extension (e.g. to issue an FT followed by an RC receipt).
+				explicitly in the extension (e.g. to issue an FT followed by an RC receipt) and the
+				~invoice-receipt~ tag is not used. The tag always sets ~FR~.
 
 				Example:
 
