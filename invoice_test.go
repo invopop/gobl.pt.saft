@@ -1472,7 +1472,7 @@ func deductionTestInvoice() *bill.Invoice {
 func TestBuildInvoiceDeductions(t *testing.T) {
 	t.Run("deduction lines", func(t *testing.T) {
 		inv := deductionTestInvoice()
-		prods := append(saft.BuildProducts(inv.Lines), saft.BuildDeductionProducts(inv)...)
+		prods := saft.BuildProducts(inv.Lines, inv.Discounts)
 
 		i, err := saft.BuildInvoice(inv, &saft.BuildParams{Products: prods})
 		require.NoError(t, err)
@@ -1512,21 +1512,6 @@ func TestBuildInvoiceDeductions(t *testing.T) {
 		}
 	})
 
-	t.Run("reference defaults to the only preceding document", func(t *testing.T) {
-		inv := deductionTestInvoice()
-		inv.Preceding = inv.Preceding[:1]
-		inv.Discounts = inv.Discounts[:1]
-		inv.Discounts[0].Ext = tax.Extensions{}
-		prods := append(saft.BuildProducts(inv.Lines), saft.BuildDeductionProducts(inv)...)
-
-		i, err := saft.BuildInvoice(inv, &saft.BuildParams{Products: prods})
-		require.NoError(t, err)
-		require.Len(t, i.Lines, 2)
-		assert.Empty(t, i.Lines[0].References)
-		require.Len(t, i.Lines[1].OrderReferences, 1)
-		assert.Equal(t, "FT SERIES-A/1", i.Lines[1].OrderReferences[0].OriginatingON)
-	})
-
 	t.Run("exempt deduction", func(t *testing.T) {
 		inv := deductionTestInvoice()
 		inv.Discounts[0].Taxes = tax.Set{{
@@ -1536,7 +1521,7 @@ func TestBuildInvoiceDeductions(t *testing.T) {
 				addon.ExtKeyExemption: "M16",
 			}),
 		}}
-		prods := append(saft.BuildProducts(inv.Lines), saft.BuildDeductionProducts(inv)...)
+		prods := saft.BuildProducts(inv.Lines, inv.Discounts)
 
 		i, err := saft.BuildInvoice(inv, &saft.BuildParams{Products: prods})
 		require.NoError(t, err)
@@ -1547,7 +1532,7 @@ func TestBuildInvoiceDeductions(t *testing.T) {
 	t.Run("products missing for deductions", func(t *testing.T) {
 		inv := deductionTestInvoice()
 
-		i, err := saft.BuildInvoice(inv, &saft.BuildParams{Products: saft.BuildProducts(inv.Lines)})
+		i, err := saft.BuildInvoice(inv, &saft.BuildParams{Products: saft.BuildProducts(inv.Lines, nil)})
 		require.NoError(t, err)
 		assert.Nil(t, i.Lines)
 	})

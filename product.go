@@ -26,15 +26,16 @@ type CustomsDetails struct {
 	UNNumber string `xml:"UNNumber,omitempty"`
 }
 
-// BuildProducts builds the list of products from GOBL lines
-func BuildProducts(gls []*bill.Line) []*Product {
-	if gls == nil {
-		return nil
+// BuildProducts builds the products of the GOBL lines followed by those of the advance payment deductions, in document order.
+func BuildProducts(lines []*bill.Line, discounts []*bill.Discount) []*Product {
+	var prods []*Product
+	for _, l := range lines {
+		prods = append(prods, BuildProduct(l))
 	}
-
-	prods := make([]*Product, len(gls))
-	for i, gl := range gls {
-		prods[i] = BuildProduct(gl)
+	for _, d := range discounts {
+		if d != nil && d.Key == addon.DiscountKeyDeduction {
+			prods = append(prods, BuildDeductionProduct(d))
+		}
 	}
 	return prods
 }
@@ -60,21 +61,6 @@ func BuildProduct(gline *bill.Line) *Product {
 		p.ProductNumberCode = p.ProductCode
 	}
 	return p
-}
-
-// BuildDeductionProducts builds the list of products for the advance payment deductions of
-// a GOBL invoice, in the same order as their SAF-T lines.
-func BuildDeductionProducts(ginv *bill.Invoice) []*Product {
-	ds := deductions(ginv)
-	if len(ds) == 0 {
-		return nil
-	}
-
-	prods := make([]*Product, len(ds))
-	for i, d := range ds {
-		prods[i] = BuildDeductionProduct(d)
-	}
-	return prods
 }
 
 // BuildDeductionProduct builds a product from an advance payment deduction, using the

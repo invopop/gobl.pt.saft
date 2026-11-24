@@ -72,10 +72,10 @@ func TestBuildDeductionProduct(t *testing.T) {
 				{Key: addon.DiscountKeyDeduction, Reason: "B"},
 			},
 		}
-		ps := saft.BuildDeductionProducts(inv)
+		ps := saft.BuildProducts(nil, inv.Discounts)
 		require.Len(t, ps, 2)
 		assert.Equal(t, "A", ps[0].ProductDesc)
 		assert.Equal(t, "B", ps[1].ProductDesc)
-		assert.Nil(t, saft.BuildDeductionProducts(nil))
+		assert.Nil(t, saft.BuildProducts(nil, nil))
 	})
 }

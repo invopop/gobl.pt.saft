@@ -47,6 +47,7 @@ type convertible interface {
 	GetSupplier() *org.Party
 	GetCustomer() *org.Party
 	GetBillLines() []*bill.Line
+	GetBillDiscounts() []*bill.Discount
 	GetBillTotals() *bill.Totals
 }
 
@@ -87,10 +88,7 @@ func Convert(env *gobl.Envelope, sourceID string, cfg *config.Config) (*ConvertR
 	// Build the SAF-T master files
 	sup := BuildSupplier(gdoc.GetSupplier())
 	cus := BuildCustomer(gdoc.GetCustomer())
-	pds := BuildProducts(gdoc.GetBillLines())
-	if inv, ok := goblwrap.Unwrap(gdoc).(*bill.Invoice); ok {
-		pds = append(pds, BuildDeductionProducts(inv)...)
-	}
+	pds := BuildProducts(gdoc.GetBillLines(), gdoc.GetBillDiscounts())
 	tes := BuildTaxTableEntries(gdoc.GetBillTotals())
 
 	// Build the SAF-T source document

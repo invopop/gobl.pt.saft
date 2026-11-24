@@ -553,9 +553,6 @@ func buildCurrency(ginv *bill.Invoice) *Currency {
 	}
 }
 
-// buildLines builds the SAF-T lines of an invoice: one per GOBL line followed by one per
-// advance payment deduction. Products must be in the same order, as BuildProducts and
-// BuildDeductionProducts return them.
 func buildLines(ginv *bill.Invoice, prods []*Product) []*Line {
 	if ginv == nil {
 		return nil
@@ -603,44 +600,30 @@ func buildLine(ginv *bill.Invoice, gline *bill.Line, prod *Product) *Line {
 	}
 }
 
-// buildDeductionLine builds the SAF-T line that deducts an advance payment invoice, with
-// its amount on the opposite side of the invoice's item lines.
 func buildDeductionLine(ginv *bill.Invoice, d *bill.Discount, n int, prod *Product) *Line {
 	if d == nil || prod == nil {
 		return nil
 	}
 
-	line := &Line{
-		LineNumber:      n,
-		OrderReferences: buildDeductionOrderReferences(ginv, d),
-		ProductCode:     fit(prod.ProductCode, 60),
-		ProductDesc:     fit(prod.ProductDesc, 200),
-		Quantity:        "1",
-		UnitOfMeasure:   org.UnitOne.String(),
-		UnitPrice:       d.Amount.String(),
-		TaxPointDate:    taxPointDate(ginv),
-		Description:     fit(prod.ProductDesc, 200),
-		Tax:             buildVATTax(d.Taxes.Get(tax.CategoryVAT)),
+	return &Line{
+		LineNumber:         n,
+		OrderReferences:    buildDeductionOrderReferences(ginv, d),
+		ProductCode:        fit(prod.ProductCode, 60),
+		ProductDesc:        fit(prod.ProductDesc, 200),
+		Quantity:           "1",
+		UnitOfMeasure:      org.UnitOne.String(),
+		UnitPrice:          d.Amount.String(),
+		TaxPointDate:       taxPointDate(ginv),
+		Description:        fit(prod.ProductDesc, 200),
+		DebitAmount:        d.Amount.String(),
+		Tax:                buildVATTax(d.Taxes.Get(tax.CategoryVAT)),
+		TaxExemptionReason: deductionTaxExemptionReason(d),
+		TaxExemptionCode:   deductionTaxExemptionCode(d),
 	}
-
-	if isCredited(ginv) {
-		line.DebitAmount = d.Amount.String()
-	} else {
-		line.CreditAmount = d.Amount.String()
-	}
-
-	if vat := d.Taxes.Get(tax.CategoryVAT); vat != nil {
-		line.TaxExemptionCode = taxExemptionCode(vat.Ext)
-		line.TaxExemptionReason = fit(exemptionText(line.TaxExemptionCode), 60)
-	}
-
-	return line
 }
 
-// buildDeductionOrderReferences returns the order reference to the advance payment invoice
-// deducted by a discount.
 func buildDeductionOrderReferences(ginv *bill.Invoice, d *bill.Discount) []*OrderReference {
-	docNo := deductionDocNumber(ginv, d)
+	docNo := d.Ext.Get(addon.ExtKeyReference).String()
 	if docNo == "" {
 		return nil
 	}
@@ -655,7 +638,6 @@ func buildDeductionOrderReferences(ginv *bill.Invoice, d *bill.Discount) []*Orde
 	return []*OrderReference{or}
 }
 
-// deductions returns the invoice's advance payment deductions.
 func deductions(ginv *bill.Invoice) []*bill.Discount {
 	if ginv == nil {
 		return nil
@@ -670,22 +652,10 @@ func deductions(ginv *bill.Invoice) []*bill.Discount {
 	return ds
 }
 
-// deductionDocNumber returns the SAF-T document number of the advance payment invoice
-// deducted by a discount, defaulting to the invoice's only preceding document.
-func deductionDocNumber(ginv *bill.Invoice, d *bill.Discount) string {
-	if ref := d.Ext.Get(addon.ExtKeyReference); ref != cbc.CodeEmpty {
-		return ref.String()
-	}
-	if len(ginv.Preceding) == 1 && ginv.Preceding[0] != nil {
-		return DocNumber(ginv.Preceding[0].Series, ginv.Preceding[0].Code)
-	}
-	return ""
-}
-
 // isDeducted reports whether a preceding document number is deducted as an advance payment.
 func isDeducted(ginv *bill.Invoice, docNo string) bool {
 	for _, d := range deductions(ginv) {
-		if deductionDocNumber(ginv, d) == docNo {
+		if d.Ext.Get(addon.ExtKeyReference).String() == docNo {
 			return true
 		}
 	}
@@ -964,6 +934,19 @@ func lineTaxExemptionCode(gline *bill.Line) string {
 func lineTaxExemptionReason(gline *bill.Line) string {
 	code := lineTaxExemptionCode(gline)
 	return taxExemptionReason(code, gline.Notes)
+}
+
+func deductionTaxExemptionCode(d *bill.Discount) string {
+	vat := d.Taxes.Get(tax.CategoryVAT)
+	if vat == nil {
+		return ""
+	}
+
+	return taxExemptionCode(vat.Ext)
+}
+
+func deductionTaxExemptionReason(d *bill.Discount) string {
+	return fit(exemptionText(deductionTaxExemptionCode(d)), 60)
 }
 
 func taxExemptionCode(ext tax.Extensions) string {
