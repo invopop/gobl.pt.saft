@@ -1417,3 +1417,175 @@ func TestInvoiceGetStatusDate(t *testing.T) {
 		assert.Equal(t, "2024-03-01T10:20:30", i.GetStatusDate())
 	})
 }
+
+// deductionTestInvoice returns a standard invoice with one line that deducts two advance
+// payment invoices and also has a transport document as preceding.
+func deductionTestInvoice() *bill.Invoice {
+	vat := tax.Set{{
+		Category: tax.CategoryVAT,
+		Percent:  num.NewPercentage(230, 3),
+		Ext: tax.ExtensionsOf(cbc.CodeMap{
+			pt.ExtKeyRegion:     "PT",
+			addon.ExtKeyTaxRate: addon.TaxRateNormal,
+		}),
+	}}
+	return &bill.Invoice{
+		Tax: &bill.Tax{
+			Ext: tax.ExtensionsOf(cbc.CodeMap{
+				addon.ExtKeyInvoiceType: addon.InvoiceTypeStandard,
+			}),
+		},
+		ValueDate: cal.NewDate(2024, 8, 3),
+		Preceding: []*org.DocumentRef{
+			{Series: "FT SERIES-A", Code: "1", IssueDate: cal.NewDate(2024, 8, 1)},
+			{Series: "GT SERIES-A", Code: "1", IssueDate: cal.NewDate(2024, 8, 2)},
+			{Series: "FT SERIES-A", Code: "2", IssueDate: cal.NewDate(2024, 8, 2)},
+		},
+		Lines: []*bill.Line{
+			{
+				Index:    1,
+				Quantity: num.MakeAmount(3, 0),
+				Item:     &org.Item{Price: num.NewAmount(10000, 2)},
+				Taxes:    vat,
+				Total:    num.NewAmount(30000, 2),
+			},
+		},
+		Discounts: []*bill.Discount{
+			{
+				Key:    addon.DiscountKeyDeduction,
+				Reason: "Deposit for 1 hotel room",
+				Amount: num.MakeAmount(5000, 2),
+				Taxes:  vat,
+				Ext:    tax.ExtensionsOf(cbc.CodeMap{addon.ExtKeyReference: "FT SERIES-A/1"}),
+			},
+			{
+				Key:    addon.DiscountKeyDeduction,
+				Reason: "Deposit for 2 hotel rooms",
+				Amount: num.MakeAmount(10000, 2),
+				Taxes:  vat,
+				Ext:    tax.ExtensionsOf(cbc.CodeMap{addon.ExtKeyReference: "FT SERIES-A/2"}),
+			},
+		},
+	}
+}
+
+func TestBuildInvoiceDeductions(t *testing.T) {
+	t.Run("deduction lines", func(t *testing.T) {
+		inv := deductionTestInvoice()
+		prods := saft.BuildProducts(inv.Lines, inv.Discounts)
+
+		i, err := saft.BuildInvoice(inv, &saft.BuildParams{Products: prods})
+		require.NoError(t, err)
+		require.Len(t, i.Lines, 3)
+
+		item := i.Lines[0]
+		assert.Equal(t, "300.00", item.CreditAmount)
+		assert.Empty(t, item.References)
+		require.Len(t, item.OrderReferences, 1)
+		assert.Equal(t, "GT SERIES-A/1", item.OrderReferences[0].OriginatingON)
+
+		for n, exp := range []struct{ ref, date, desc, amount string }{
+			{"FT SERIES-A/1", "2024-08-01", "Deposit for 1 hotel room", "50.00"},
+			{"FT SERIES-A/2", "2024-08-02", "Deposit for 2 hotel rooms", "100.00"},
+		} {
+			line := i.Lines[n+1]
+			assert.Equal(t, n+2, line.LineNumber)
+			require.Len(t, line.OrderReferences, 1)
+			assert.Equal(t, exp.ref, line.OrderReferences[0].OriginatingON)
+			assert.Equal(t, exp.date, line.OrderReferences[0].OrderDate)
+			assert.Equal(t, prods[n+1].ProductCode, line.ProductCode)
+			assert.Equal(t, exp.desc, line.ProductDesc)
+			assert.Equal(t, exp.desc, line.Description)
+			assert.Equal(t, "1", line.Quantity)
+			assert.Equal(t, "one", line.UnitOfMeasure)
+			assert.Equal(t, exp.amount, line.UnitPrice)
+			assert.Equal(t, "2024-08-03", line.TaxPointDate)
+			assert.Equal(t, exp.amount, line.DebitAmount)
+			assert.Empty(t, line.CreditAmount)
+			assert.Empty(t, line.References)
+			if assert.NotNil(t, line.Tax) {
+				assert.Equal(t, "IVA", line.Tax.TaxType)
+				assert.Equal(t, "PT", line.Tax.TaxCountryRegion)
+				assert.Equal(t, "NOR", line.Tax.TaxCode)
+				assert.Equal(t, "23.0", line.Tax.TaxPercentage)
+			}
+		}
+	})
+
+	t.Run("exempt deduction", func(t *testing.T) {
+		inv := deductionTestInvoice()
+		inv.Discounts[0].Taxes = tax.Set{{
+			Category: tax.CategoryVAT,
+			Ext: tax.ExtensionsOf(cbc.CodeMap{
+				addon.ExtKeyTaxRate:   addon.TaxRateExempt,
+				addon.ExtKeyExemption: "M16",
+			}),
+		}}
+		prods := saft.BuildProducts(inv.Lines, inv.Discounts)
+
+		i, err := saft.BuildInvoice(inv, &saft.BuildParams{Products: prods})
+		require.NoError(t, err)
+		assert.Equal(t, "M16", i.Lines[1].TaxExemptionCode)
+		assert.NotEmpty(t, i.Lines[1].TaxExemptionReason)
+	})
+
+	t.Run("products missing for deductions", func(t *testing.T) {
+		inv := deductionTestInvoice()
+
+		i, err := saft.BuildInvoice(inv, &saft.BuildParams{Products: saft.BuildProducts(inv.Lines, nil)})
+		require.NoError(t, err)
+		assert.Nil(t, i.Lines)
+	})
+
+	t.Run("convert adds deduction products", func(t *testing.T) {
+		config.Now = func() time.Time {
+			return time.Date(2024, 8, 3, 0, 0, 0, 0, pt.New().TimeLocation())
+		}
+
+		env, err := test.LoadEnvelope("invoice-deductions.json")
+		require.NoError(t, err)
+
+		_, err = saft.Seal(env, nil, cal.Date{}, "AAJFJHNC82", &config.Config{
+			CertificateNumber: 123,
+			SigningKeyPath:    test.Path("test", "certs", "signing_key.pem"),
+		})
+		require.NoError(t, err)
+
+		res, err := saft.Convert(env, "SOURCE_ID", &config.Config{SigningKeyVersion: "3"})
+		require.NoError(t, err)
+
+		require.Len(t, res.Products, 3)
+		assert.Equal(t, "Deposit for 1 hotel room", res.Products[1].ProductDesc)
+		assert.Equal(t, "O", res.Products[1].ProductType)
+		assert.Equal(t, "Deposit for 2 hotel rooms", res.Products[2].ProductDesc)
+
+		inv := res.Document.(*saft.Invoice)
+		require.Len(t, inv.Lines, 3)
+		assert.Equal(t, "150.00", inv.DocumentTotals.NetTotal)
+		assert.Equal(t, "34.50", inv.DocumentTotals.TaxPayable)
+		assert.Equal(t, "184.50", inv.DocumentTotals.GrossTotal)
+	})
+}
+
+func TestInvoiceDeductionValidation(t *testing.T) {
+	t.Run("deducted invoices allowed as preceding", func(t *testing.T) {
+		_, err := saft.BuildInvoice(deductionTestInvoice(), nil)
+		require.NoError(t, err)
+	})
+
+	t.Run("invoice preceding not deducted", func(t *testing.T) {
+		inv := deductionTestInvoice()
+		inv.Discounts = inv.Discounts[:1]
+
+		_, err := saft.BuildInvoice(inv, nil)
+		assert.ErrorContains(t, err, "preceding: (2: document type (FT) is not supported.)")
+	})
+
+	t.Run("other document discounts", func(t *testing.T) {
+		inv := deductionTestInvoice()
+		inv.Discounts = append(inv.Discounts, &bill.Discount{Reason: "Promo", Amount: num.MakeAmount(1000, 2)})
+
+		_, err := saft.BuildInvoice(inv, nil)
+		assert.ErrorContains(t, err, "discounts: not supported, use line discounts instead")
+	})
+}

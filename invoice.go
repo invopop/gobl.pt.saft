@@ -1,6 +1,7 @@
 package saft
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -9,6 +10,7 @@ import (
 	"github.com/invopop/gobl/bill"
 	"github.com/invopop/gobl/cbc"
 	"github.com/invopop/gobl/currency"
+	"github.com/invopop/gobl/i18n"
 	"github.com/invopop/gobl/l10n"
 	"github.com/invopop/gobl/num"
 	"github.com/invopop/gobl/org"
@@ -313,9 +315,8 @@ func validateInvoice(ginv *bill.Invoice) error {
 		),
 		validation.Field(&ginv.Preceding,
 			validation.When(!isCorrection(ginv),
-				// The addon already ensures there's at most one
 				validation.Each(
-					validation.By(validateTransportPreceding),
+					validation.By(validateInvoicePreceding(ginv)),
 					validation.Skip,
 				),
 				validation.Skip,
@@ -332,7 +333,7 @@ func validateInvoice(ginv *bill.Invoice) error {
 			validation.Skip,
 		),
 		validation.Field(&ginv.Discounts,
-			validation.Empty.Error("not supported, use line discounts instead"),
+			validation.By(validateDiscounts),
 			validation.Skip,
 		),
 		validation.Field(&ginv.Charges,
@@ -434,6 +435,36 @@ func validateTransportPreceding(val any) error {
 	return nil
 }
 
+// validateInvoicePreceding validates a preceding document of an invoice that is not a
+// correction, which must be a transport document or an invoice deducted as an advance payment.
+func validateInvoicePreceding(ginv *bill.Invoice) validation.RuleFunc {
+	return func(val any) error {
+		ref, _ := val.(*org.DocumentRef)
+		if ref == nil {
+			return nil
+		}
+
+		docNo := DocNumber(ref.Series, ref.Code)
+		docType, _, _ := DocNumberParts(docNo)
+		if isDeducted(ginv, docNo) && docType.In(correctableTypes...) {
+			return nil
+		}
+
+		return validateTransportPreceding(ref)
+	}
+}
+
+// validateDiscounts ensures that advance payment deductions are the only document discounts.
+func validateDiscounts(val any) error {
+	ds, _ := val.([]*bill.Discount)
+	for _, d := range ds {
+		if d != nil && d.Key != addon.DiscountKeyDeduction {
+			return errors.New("not supported, use line discounts instead")
+		}
+	}
+	return nil
+}
+
 func validateLine(val any) error {
 	gline, _ := val.(*bill.Line)
 	if gline == nil {
@@ -523,15 +554,22 @@ func buildCurrency(ginv *bill.Invoice) *Currency {
 }
 
 func buildLines(ginv *bill.Invoice, prods []*Product) []*Line {
-	if ginv == nil || len(ginv.Lines) != len(prods) {
+	if ginv == nil {
 		return nil
 	}
 
-	lines := make([]*Line, len(ginv.Lines))
+	ds := deductions(ginv)
+	if len(ginv.Lines)+len(ds) != len(prods) {
+		return nil
+	}
 
+	lines := make([]*Line, 0, len(prods))
 	for i, gl := range ginv.Lines {
-		prod := prods[i]
-		lines[i] = buildLine(ginv, gl, prod)
+		lines = append(lines, buildLine(ginv, gl, prods[i]))
+	}
+	for i, d := range ds {
+		n := len(ginv.Lines) + i
+		lines = append(lines, buildDeductionLine(ginv, d, n+1, prods[n]))
 	}
 
 	return lines
@@ -560,6 +598,68 @@ func buildLine(ginv *bill.Invoice, gline *bill.Line, prod *Product) *Line {
 		TaxExemptionCode:   lineTaxExemptionCode(gline),
 		SettlementAmount:   settlementAmount(gline),
 	}
+}
+
+func buildDeductionLine(ginv *bill.Invoice, d *bill.Discount, n int, prod *Product) *Line {
+	if d == nil || prod == nil {
+		return nil
+	}
+
+	return &Line{
+		LineNumber:         n,
+		OrderReferences:    buildDeductionOrderReferences(ginv, d),
+		ProductCode:        fit(prod.ProductCode, 60),
+		ProductDesc:        fit(prod.ProductDesc, 200),
+		Quantity:           "1",
+		UnitOfMeasure:      org.UnitOne.String(),
+		UnitPrice:          d.Amount.String(),
+		TaxPointDate:       taxPointDate(ginv),
+		Description:        fit(prod.ProductDesc, 200),
+		DebitAmount:        d.Amount.String(),
+		Tax:                buildVATTax(d.Taxes.Get(tax.CategoryVAT)),
+		TaxExemptionReason: deductionTaxExemptionReason(d),
+		TaxExemptionCode:   deductionTaxExemptionCode(d),
+	}
+}
+
+func buildDeductionOrderReferences(ginv *bill.Invoice, d *bill.Discount) []*OrderReference {
+	docNo := d.Ext.Get(addon.ExtKeyReference).String()
+	if docNo == "" {
+		return nil
+	}
+
+	or := &OrderReference{OriginatingON: docNo}
+	for _, ref := range ginv.Preceding {
+		if ref != nil && DocNumber(ref.Series, ref.Code) == docNo {
+			or.OrderDate = date(ref.IssueDate)
+			break
+		}
+	}
+	return []*OrderReference{or}
+}
+
+func deductions(ginv *bill.Invoice) []*bill.Discount {
+	if ginv == nil {
+		return nil
+	}
+
+	var ds []*bill.Discount
+	for _, d := range ginv.Discounts {
+		if d != nil && d.Key == addon.DiscountKeyDeduction {
+			ds = append(ds, d)
+		}
+	}
+	return ds
+}
+
+// isDeducted reports whether a preceding document number is deducted as an advance payment.
+func isDeducted(ginv *bill.Invoice, docNo string) bool {
+	for _, d := range deductions(ginv) {
+		if d.Ext.Get(addon.ExtKeyReference).String() == docNo {
+			return true
+		}
+	}
+	return false
 }
 
 func buildOrderReferences(gprec []*org.DocumentRef, gline *bill.Line) []*OrderReference {
@@ -611,6 +711,9 @@ func buildReferences(ginv *bill.Invoice) []*References {
 		if docType.In(transportDocTypes...) {
 			continue // transport docs go to OrderReferences, not References
 		}
+		if isDeducted(ginv, docNo) {
+			continue // deducted advance payments go to the deduction line's OrderReferences
+		}
 		refs = append(refs, &References{
 			Reference: docNo,
 			Reason:    fit(ref.Reason, 50),
@@ -625,7 +728,11 @@ func buildTax(gline *bill.Line) *Tax {
 		return nil
 	}
 
-	vat := gline.Taxes.Get(tax.CategoryVAT)
+	return buildVATTax(gline.Taxes.Get(tax.CategoryVAT))
+}
+
+// buildVATTax builds the SAF-T tax of a line from its VAT combo.
+func buildVATTax(vat *tax.Combo) *Tax {
 	if vat == nil {
 		return nil
 	}
@@ -829,6 +936,19 @@ func lineTaxExemptionReason(gline *bill.Line) string {
 	return taxExemptionReason(code, gline.Notes)
 }
 
+func deductionTaxExemptionCode(d *bill.Discount) string {
+	vat := d.Taxes.Get(tax.CategoryVAT)
+	if vat == nil {
+		return ""
+	}
+
+	return taxExemptionCode(vat.Ext)
+}
+
+func deductionTaxExemptionReason(d *bill.Discount) string {
+	return fit(exemptionText(deductionTaxExemptionCode(d)), 60)
+}
+
 func taxExemptionCode(ext tax.Extensions) string {
 	return ext.Get(addon.ExtKeyExemption).String()
 }
@@ -844,6 +964,18 @@ func taxExemptionReason(code string, notes []*org.Note) string {
 	}
 
 	return fit(r, 60)
+}
+
+// exemptionText returns the Portuguese description of a VAT exemption code.
+func exemptionText(code string) string {
+	if code == "" {
+		return ""
+	}
+	cd := tax.ExtensionForKey(addon.ExtKeyExemption).CodeDef(cbc.Code(code))
+	if cd == nil {
+		return ""
+	}
+	return cd.Name.In(i18n.PT)
 }
 
 func taxExemptionReasons(notes []*org.Note) map[string]string {

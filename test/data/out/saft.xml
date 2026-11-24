@@ -110,6 +110,24 @@
     </Product>
     <Product>
       <ProductType>S</ProductType>
+      <ProductCode>5576ed1a49416035d81b77a49995cc</ProductCode>
+      <ProductDescription>Hotel room night</ProductDescription>
+      <ProductNumberCode>5576ed1a49416035d81b77a49995cc</ProductNumberCode>
+    </Product>
+    <Product>
+      <ProductType>O</ProductType>
+      <ProductCode>f5736505dc0a7273e807f709de65c2</ProductCode>
+      <ProductDescription>Deposit for 1 hotel room</ProductDescription>
+      <ProductNumberCode>f5736505dc0a7273e807f709de65c2</ProductNumberCode>
+    </Product>
+    <Product>
+      <ProductType>O</ProductType>
+      <ProductCode>dedce5b87df658db80c34b56bbeb7b</ProductCode>
+      <ProductDescription>Deposit for 2 hotel rooms</ProductDescription>
+      <ProductNumberCode>dedce5b87df658db80c34b56bbeb7b</ProductNumberCode>
+    </Product>
+    <Product>
+      <ProductType>S</ProductType>
       <ProductCode>94a85f27486e0a6dacce8e7b7adffe</ProductCode>
       <ProductDescription>Pêssego&#65292;fullwidth comma test</ProductDescription>
       <ProductNumberCode>94a85f27486e0a6dacce8e7b7adffe</ProductNumberCode>
@@ -159,9 +177,9 @@
   </MasterFiles>
   <SourceDocuments>
     <SalesInvoices>
-      <NumberOfEntries>12</NumberOfEntries>
-      <TotalDebit>50.00</TotalDebit>
-      <TotalCredit>1760.80000000</TotalCredit>
+      <NumberOfEntries>14</NumberOfEntries>
+      <TotalDebit>250.00</TotalDebit>
+      <TotalCredit>2260.80000000</TotalCredit>
       <Invoice>
         <InvoiceNo>NC SERIES-A/1</InvoiceNo>
         <ATCUD>AAJFJHNC82-1</ATCUD>
@@ -542,6 +560,159 @@
           <TaxPayable>10.50</TaxPayable>
           <NetTotal>50.00</NetTotal>
           <GrossTotal>60.50</GrossTotal>
+        </DocumentTotals>
+      </Invoice>
+      <Invoice>
+        <InvoiceNo>FT SERIES-D/1</InvoiceNo>
+        <ATCUD>AAJFJHNC82-1</ATCUD>
+        <DocumentStatus>
+          <InvoiceStatus>N</InvoiceStatus>
+          <InvoiceStatusDate>2024-08-03T00:00:00</InvoiceStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>CASByE9Dr5vo8AXOTOPScm9xgS1rEzQygGY8MxvKOFBFxaYcczIuacIUVXINXZUlaIlLkHQK9QcQchP7iWh/Mc3Q03BKCWD4HGqN9OqAgPWr9N+A6FNes07moR03cqrgYMXc0kgFc6LPb5yYgN0Y4bysDpVr6TF7/HmbB3lEYiM=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <InvoiceDate>2024-08-03</InvoiceDate>
+        <InvoiceType>FT</InvoiceType>
+        <SpecialRegimes>
+          <SelfBillingIndicator>0</SelfBillingIndicator>
+          <CashVATSchemeIndicator>0</CashVATSchemeIndicator>
+          <ThirdPartiesBillingIndicator>0</ThirdPartiesBillingIndicator>
+        </SpecialRegimes>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <ProductCode>5576ed1a49416035d81b77a49995cc</ProductCode>
+          <ProductDescription>Hotel room night</ProductDescription>
+          <Quantity>2</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>100.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Hotel room night</Description>
+          <CreditAmount>200.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+        </Line>
+        <Line>
+          <LineNumber>2</LineNumber>
+          <OrderReferences>
+            <OriginatingON>FT SERIES-A/1</OriginatingON>
+            <OrderDate>2024-08-01</OrderDate>
+          </OrderReferences>
+          <ProductCode>f5736505dc0a7273e807f709de65c2</ProductCode>
+          <ProductDescription>Deposit for 1 hotel room</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>50.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Deposit for 1 hotel room</Description>
+          <DebitAmount>50.00</DebitAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>34.50</TaxPayable>
+          <NetTotal>150.00</NetTotal>
+          <GrossTotal>184.50</GrossTotal>
+        </DocumentTotals>
+      </Invoice>
+      <Invoice>
+        <InvoiceNo>FT SERIES-D/2</InvoiceNo>
+        <ATCUD>AAJFJHNC82-2</ATCUD>
+        <DocumentStatus>
+          <InvoiceStatus>N</InvoiceStatus>
+          <InvoiceStatusDate>2024-08-03T00:00:00</InvoiceStatusDate>
+          <SourceID>SOURCE_ID</SourceID>
+          <SourceBilling>P</SourceBilling>
+        </DocumentStatus>
+        <Hash>kmOG143AKu8oALxHKAFEGbmZo46U6lgzvMDfx+SNhg7DefIgYUwT1sb94OE8IMRITK2v298L59uAmDjdFdMfnZ0S3gK6o4I40SaA0g4ozCrbVYlz6t8Pf/UV98J+AR+Wbw/44dE9e9gh2U8fxMQzTSNM/+/lfE0z/Qh08JWt210=</Hash>
+        <HashControl>3</HashControl>
+        <Period>8</Period>
+        <InvoiceDate>2024-08-03</InvoiceDate>
+        <InvoiceType>FT</InvoiceType>
+        <SpecialRegimes>
+          <SelfBillingIndicator>0</SelfBillingIndicator>
+          <CashVATSchemeIndicator>0</CashVATSchemeIndicator>
+          <ThirdPartiesBillingIndicator>0</ThirdPartiesBillingIndicator>
+        </SpecialRegimes>
+        <SourceID>SOURCE_ID</SourceID>
+        <SystemEntryDate>2024-08-03T00:00:00</SystemEntryDate>
+        <CustomerID>514329874</CustomerID>
+        <Line>
+          <LineNumber>1</LineNumber>
+          <ProductCode>5576ed1a49416035d81b77a49995cc</ProductCode>
+          <ProductDescription>Hotel room night</ProductDescription>
+          <Quantity>3</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>100.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Hotel room night</Description>
+          <CreditAmount>300.00</CreditAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+        </Line>
+        <Line>
+          <LineNumber>2</LineNumber>
+          <OrderReferences>
+            <OriginatingON>FT SERIES-A/1</OriginatingON>
+            <OrderDate>2024-08-01</OrderDate>
+          </OrderReferences>
+          <ProductCode>f5736505dc0a7273e807f709de65c2</ProductCode>
+          <ProductDescription>Deposit for 1 hotel room</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>50.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Deposit for 1 hotel room</Description>
+          <DebitAmount>50.00</DebitAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+        </Line>
+        <Line>
+          <LineNumber>3</LineNumber>
+          <OrderReferences>
+            <OriginatingON>FT SERIES-A/2</OriginatingON>
+            <OrderDate>2024-08-02</OrderDate>
+          </OrderReferences>
+          <ProductCode>dedce5b87df658db80c34b56bbeb7b</ProductCode>
+          <ProductDescription>Deposit for 2 hotel rooms</ProductDescription>
+          <Quantity>1</Quantity>
+          <UnitOfMeasure>one</UnitOfMeasure>
+          <UnitPrice>100.00</UnitPrice>
+          <TaxPointDate>2024-08-03</TaxPointDate>
+          <Description>Deposit for 2 hotel rooms</Description>
+          <DebitAmount>100.00</DebitAmount>
+          <Tax>
+            <TaxType>IVA</TaxType>
+            <TaxCountryRegion>PT</TaxCountryRegion>
+            <TaxCode>NOR</TaxCode>
+            <TaxPercentage>23.0</TaxPercentage>
+          </Tax>
+        </Line>
+        <DocumentTotals>
+          <TaxPayable>34.50</TaxPayable>
+          <NetTotal>150.00</NetTotal>
+          <GrossTotal>184.50</GrossTotal>
         </DocumentTotals>
       </Invoice>
       <Invoice>

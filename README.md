@@ -182,7 +182,7 @@ if err != nil {
 Summary of unsupported features:
 
 - SAF-T for accounting
-- Invoice-level charges and discounts
+- Invoice-level charges and discounts, except advance payment deductions (`deduction` key)
 - Discounts at the time of payment (Settlements)
 - Tax types:
   - IS – Imposto de Selo (Stamp duty)
