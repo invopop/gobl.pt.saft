@@ -1082,7 +1082,7 @@ var extensions = []*cbc.Definition{
 				| ~CC~ | Cartão crédito                                     | ~card~ or ~card+credit~                               |
 				| ~CD~ | Cartão débito                                      | ~card+debit~                                          |
 				| ~CH~ | Cheque bancário                                    | ~cheque~                                              |
-				| ~CI~ | Letter of credit                                   | (*)                                                   |
+				| ~CI~ | Crédito documentário internacional                 | (*)                                                   |
 				| ~CO~ | Cheque ou cartão oferta                            | (*)                                                   |
 				| ~CS~ | Compensação de saldos em conta corrente            | ~netting~                                             |
 				| ~DE~ | Dinheiro eletrónico                                | ~online~                                              |
@@ -1164,7 +1164,7 @@ var extensions = []*cbc.Definition{
 				Code: "CI",
 				Name: i18n.String{
 					i18n.EN: "International documentary credit",
-					i18n.PT: "Letter of credit",
+					i18n.PT: "Crédito documentário internacional",
 				},
 			},
 			{
